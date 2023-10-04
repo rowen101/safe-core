@@ -1,22 +1,43 @@
-import { createApp } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createApp } from "vue";
+import store from "./store"
+import "./bootstrap";
+import App from "./App.vue";
+import axios from "axios";
+import router from "./router";
 
-// Import components
-import App from './components/App.vue';
-import ProductList from './components/ProductList.vue';
-import ProductForm from './components/ProductForm.vue';
-import Product from './components/Product.vue';
-
-const router = createRouter({
-    history: createWebHistory(),
-    routes: [
-        { path: '/', component: ProductList },
-        { path: '/products/create', component: ProductForm },
-        { path: '/products/:id', component: Product },
-        { path: '/products/:id/edit', component: ProductForm },
-    ]
-});
 
 const app = createApp(App);
+app.config.globalProperties.$axios = axios;
 app.use(router);
-app.mount('#app');
+
+// Check if a token exists in localStorage
+const token = localStorage.getItem("token");
+
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      console.log(store.getters.isLoggedIn);
+      if (!token) {
+        next({
+          name: "login",
+        })
+      } else {
+        next()
+      }
+    } else if (to.matched.some(record => record.meta.requiresVisitor)) {
+      console.log(store.getters.isLoggedIn);
+      if (token) {
+        next({
+          name: "dashboard",
+        })
+      } else {
+        next()
+      }
+    } {
+      next()
+    }
+  });
+
+  app.use(store); // Use the Vuex store
+
+app.mount("#app");
