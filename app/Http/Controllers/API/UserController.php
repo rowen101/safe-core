@@ -4,16 +4,17 @@ namespace App\Http\Controllers\API;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    //
+
 
     public function login(Request $request)
     {
+
         try {
             $user = User::where('email', $request->email)->first();
 
@@ -40,14 +41,24 @@ class UserController extends Controller
     }
 
 
- public function register(Request $request){
-
+    public function register(Request $request){
+        // Validate the incoming data
         $data = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed'
+            'email' => 'required|string|email',
+            'password' => 'required|string|confirmed',
         ]);
 
+        // Check if the email already exists in the 'users' table
+        $existingUser = User::where('email', $data['email'])->first();
+
+        if ($existingUser) {
+            return response([
+                'message' => 'The provided email address is already registered.'
+            ], 422); // Return a 422 status code for validation errors
+        }
+
+        // Continue with user registration
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -60,8 +71,10 @@ class UserController extends Controller
             'user' => $user,
             'token' => $token
         ];
-        return response($res, 201);
+
+        return response($res, 201); // Return a success response
     }
+
 
     public function logout(Request $request) {
         $request->user()->currentAccessToken()->delete();
