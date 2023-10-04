@@ -5,10 +5,9 @@ import About from '../pages/About.vue';
 import Register from '../pages/Register.vue';
 import Login from '../pages/Login.vue';
 import Dashboard from '../pages/Dashboard.vue';
-
-import Books from '../components/Books.vue';
-import AddBook from '../components/AddBook.vue';
-import EditBook from '../components/EditBook.vue';
+import Books from '../pages/book/Books.vue';
+import AddBook from '../pages/book/AddBook.vue';
+import EditBook from '../pages/book/EditBook.vue';
 
 const routes = [
     {

@@ -23,7 +23,7 @@ Route::post('logout', [App\Http\Controllers\API\UserController::class, 'logout']
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::group(['prefix' => 'books', 'middleware' => 'auth:sanctum'], function () {
+Route::group(['prefix' => 'api', 'middleware' => 'auth:sanctum'], function () {
     Route::get('/', [BookController::class, 'index']);
     Route::post('add', [App\Http\Controllers\API\BookController::class, 'add']);
     Route::get('edit/{id}', [App\Http\Controllers\API\BookController::class, 'edit']);

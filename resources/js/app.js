@@ -1,9 +1,9 @@
 import { createApp } from "vue";
 import store from "./store"
 import "./bootstrap";
-import App from "./App.vue";
+import App from "./app/App.vue";
 import axios from "axios";
-import router from "./router";
+import router from "./app/router";
 
 
 const app = createApp(App);
@@ -16,7 +16,6 @@ const token = localStorage.getItem("token");
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
-      console.log(store.getters.isLoggedIn);
       if (!token) {
         next({
           name: "login",
@@ -25,7 +24,6 @@ router.beforeEach((to, from, next) => {
         next()
       }
     } else if (to.matched.some(record => record.meta.requiresVisitor)) {
-      console.log(store.getters.isLoggedIn);
       if (token) {
         next({
           name: "dashboard",

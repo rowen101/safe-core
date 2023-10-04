@@ -78,7 +78,8 @@ export default {
                 .dispatch("login", this.credentials)
                 .then((resp) => {
                     // miniToastr.success("Login " + resp.data.success);
-                    this.$router.push("dashboard");
+                
+                    window.location.href = "/dashboard";
                 })
                 .catch((err) => {
                     console.log(err)

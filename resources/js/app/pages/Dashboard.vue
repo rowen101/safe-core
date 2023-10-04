@@ -14,8 +14,9 @@ export default {
     },
     created() {
         if (this.$store.getters.isLoggedIn) {
-            this.name = this.$store.getters.id
+            this.name = this.$store.getters.user.name
         }
+
     },
 
 }

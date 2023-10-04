@@ -11,7 +11,7 @@ const store = createStore({
     return {
       status: "",
       token: localStorage.getItem("token") || null,
-      user: localStorage.getItem("vuex"),
+      user: {},
     };
   },
   plugins: [createPersistedState()],
@@ -23,9 +23,13 @@ const store = createStore({
       state.status = "success";
       state.token = token;
     },
-    auth_user(state, id) {
-      state.id = id;
+    clearToken(state) {
+        localStorage.removeItem("token");
+        state.token = "";
     },
+    auth_user(state, user) {
+        state.user = user;
+      },
     auth_error(state) {
       state.status = "error";
     },
@@ -35,10 +39,10 @@ const store = createStore({
     email(state, email) {
       state.email = email;
     },
-    destroyToken(state) {
+    RESET_STATE(state) {
       state.token = null;
       state.status = "";
-      state.id = "";
+      state.user = "";
     },
   },
   actions: {
@@ -58,9 +62,11 @@ const store = createStore({
 
             const token = resp.data.token;
             const user = resp.data.user;
+
             localStorage.setItem("token", token);
             commit("auth_success", token);
             commit("auth_user", user);
+
             resolve(resp);
           })
           .catch((err) => {
@@ -71,25 +77,10 @@ const store = createStore({
           });
       });
     },
-    destroyToken(context, userparam) {
-      return new Promise((resolve, reject) => {
-        axios({
-          data: userparam,
-          method: "POST",
-        })
-          .then((response) => {
-            localStorage.removeItem("token");
-            context.commit("destroyToken");
-            delete axios.defaults.headers.common["Authorization"];
-            resolve(response);
-          })
-          .catch((error) => {
-            localStorage.removeItem("token");
-            context.commit("destroyToken");
-            reject(error);
-          });
-      });
-    },
+    logout({ commit }) {
+        // Clear Vuex state
+        commit('RESET_STATE')
+      },
   },
   getters: {
     isLoggedIn: (state) => state.token,
