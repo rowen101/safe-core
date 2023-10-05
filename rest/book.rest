@@ -1,7 +1,3 @@
 GET http://127.0.0.1:8000/api/book HTTP/1.1
 content-type: application/json
-Authorization: Bearer 57|nKlPzKEvkJ5dxrIMMsktdCHxScatHvIhReq4f2lU671e50bc
-
-{
-
-}
+Authorization: Bearer 74|2PIvtS1wKyC7Jra0nRdK6CR0G4zMv4ls6J7LxmPefd70c333

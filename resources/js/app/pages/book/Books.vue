@@ -61,15 +61,12 @@ export default {
         };
     },
     created() {
-        // Assuming you have already configured your Axios instance as 'this.$axios'
 
-        // First, get the CSRF cookie
         this.$axios
             .get("/sanctum/csrf-cookie")
             .then(() => {
-                // Then, add the token from localStorage to the headers and make the /api/books request
-                const token = localStorage.getItem("token");
 
+           const token = localStorage.getItem("token");
                 if (token) {
                     this.$axios.defaults.headers.common[
                         "Authorization"
@@ -77,7 +74,7 @@ export default {
                 }
 
                 this.$axios
-                    .get("/api/books")
+                    .get("api/books")
                     .then((response) => {
                         this.books = response.data;
                     })
