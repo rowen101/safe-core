@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
@@ -39,7 +40,8 @@
     <div id="app">
 
     </div>
-   
+
+    <script src="{{asset('assets/js/app.js')}}"></script>
 
 </body>
 

@@ -1,17 +1,25 @@
 <template>
     <div class="wrapper">
-        <sidebar/>
+        <DefaulSidebar/>
+        <div class="main">
+            <DefaultHeaderVue/>
+            <main class="content">
         <router-view />
+            </main>
+        </div>
     </div>
 
 </template>
 
 <script>
-import sidebar from "./containers/SideBar.vue";
+import DefaultHeaderVue from './containers/DefaultHeader.vue';
+import DefaulSidebar from "./containers/DefaulSidebar.vue";
+
 export default {
     name: "App",
      components: {
-    sidebar
+    DefaulSidebar,
+    DefaultHeaderVue
   },
     data() {
         return {

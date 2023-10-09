@@ -1,15 +1,12 @@
 <template>
     <div class="container-fluid p-0">
-        <h1 class="h3 mb-3">Books</h1>
-
+        <h1 class="h3 mb-3">Tech Recommendation</h1>
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Empty card</h5>
-                    </div>
+
                     <div class="card-body">
-                        <h4 class="text-center">All Books</h4>
+
                         <br />
                         <table class="table table-bordered">
                             <thead>
@@ -38,6 +35,14 @@
                                                 }"
                                                 class="btn btn-primary"
                                                 >Edit
+                                            </router-link>
+                                             <router-link
+                                                :to="{
+                                                    name: 'editbook',
+                                                    params: { id: book.id },
+                                                }"
+                                                class="btn btn-success"
+                                                ><i class="align-middle me-2" data-feather="eye"></i>
                                             </router-link>
                                             <button
                                                 class="btn btn-danger"

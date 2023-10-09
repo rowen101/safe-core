@@ -3,7 +3,7 @@ import store from "./store"
 import App from "./app/App.vue";
 import axios from "axios";
 import router from "./app/router";
-
+import feather from "feather-icons";
 
 const app = createApp(App);
 app.config.globalProperties.$axios = axios;
@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
       next()
     }
   });
-
+  app.use(feather);
   app.use(store); // Use the Vuex store
 
 app.mount("#app");
