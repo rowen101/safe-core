@@ -1,12 +1,5 @@
 <template>
-  <div>
-    <!-- Other layout content -->
-    <router-view></router-view>
-  </div>
+    <main class="d-flex w-100">
+        <router-view />
+    </main>
 </template>
-
-<script>
-export default {
-  // Component logic for the main app layout
-};
-</script>

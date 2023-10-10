@@ -4,9 +4,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-
                     <div class="card-body">
-
                         <br />
                         <table class="table table-bordered">
                             <thead>
@@ -20,8 +18,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="book in books" :key="book.id">
-                                    <td>{{ book.id }}</td>
+                                <tr
+                                    v-for="(book, index) in items"
+                                    :key="book.id"
+                                >
+                                    <td>{{ index + 1 }}</td>
                                     <td>{{ book.name }}</td>
                                     <td>{{ book.author }}</td>
                                     <td>{{ book.created_at }}</td>
@@ -30,25 +31,54 @@
                                         <div class="btn-group" role="group">
                                             <router-link
                                                 :to="{
-                                                    name: 'editbook',
+                                                    name: 'edit-recommendation',
                                                     params: { id: book.id },
                                                 }"
                                                 class="btn btn-primary"
-                                                >Edit
+                                            >
+                                                <i
+                                                    v-html="
+                                                        $feather.icons[
+                                                            'edit'
+                                                        ].toSvg({
+                                                            width: 24,
+                                                            height: 24,
+                                                        })
+                                                    "
+                                                ></i>
                                             </router-link>
-                                             <router-link
+                                            <router-link
                                                 :to="{
-                                                    name: 'editbook',
+                                                    name: 'edit-recommendation',
                                                     params: { id: book.id },
                                                 }"
                                                 class="btn btn-success"
-                                                ><i class="align-middle me-2" data-feather="eye"></i>
+                                            >
+                                                <i
+                                                    v-html="
+                                                        $feather.icons[
+                                                            'eye'
+                                                        ].toSvg({
+                                                            width: 24,
+                                                            height: 24,
+                                                        })
+                                                    "
+                                                ></i>
                                             </router-link>
                                             <button
                                                 class="btn btn-danger"
                                                 @click="deleteBook(book.id)"
                                             >
-                                                Delete
+                                                <i
+                                                    v-html="
+                                                        $feather.icons[
+                                                            'trash'
+                                                        ].toSvg({
+                                                            width: 24,
+                                                            height: 24,
+                                                        })
+                                                    "
+                                                ></i>
                                             </button>
                                         </div>
                                     </td>
@@ -59,9 +89,17 @@
                         <button
                             type="button"
                             class="btn btn-info"
-                            @click="this.$router.push('/books/add')"
+                            @click="onClickNewTechRecomm()"
                         >
-                            Add Book
+                            <i
+                                v-html="
+                                    $feather.icons['file-plus'].toSvg({
+                                        width: 24,
+                                        height: 24,
+                                    })
+                                "
+                            ></i>
+                            Recommendation
                         </button>
                     </div>
                 </div>
@@ -74,7 +112,7 @@
 export default {
     data() {
         return {
-            books: [],
+            items: [],
         };
     },
     created() {
@@ -89,9 +127,9 @@ export default {
                 }
 
                 this.$axios
-                    .get("api/books")
+                    .get("api/tech/recomm")
                     .then((response) => {
-                        this.books = response.data;
+                        this.items = response.data;
                     })
                     .catch(function (error) {
                         console.error(error);
@@ -105,15 +143,18 @@ export default {
         deleteBook(id) {
             this.$axios.get("/sanctum/csrf-cookie").then((response) => {
                 this.$axios
-                    .delete(`/api/books/delete/${id}`)
+                    .delete(`/api/tech/recomm/${id}`)
                     .then((response) => {
-                        let i = this.books.map((item) => item.id).indexOf(id); // find index of your object
-                        this.books.splice(i, 1);
+                        let i = this.items.map((item) => item.id).indexOf(id); // find index of your object
+                        this.items.splice(i, 1);
                     })
                     .catch(function (error) {
                         console.error(error);
                     });
             });
+        },
+        onClickNewTechRecomm: function () {
+            this.$router.push("/recommendation/add");
         },
     },
 };

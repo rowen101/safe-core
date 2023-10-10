@@ -1,59 +1,48 @@
 <template>
-    <div class="wrapper">
-        <DefaulSidebar/>
-        <div class="main">
-            <DefaultHeaderVue/>
-            <main class="content">
-        <router-view />
-            </main>
-        </div>
-    </div>
+
+    <notifications position="top right"/>
+    <!-- Use dynamic layout based on the route -->
+    <component :is="currentLayout">
+      <router-view />
+    </component>
 
 </template>
 
 <script>
-import DefaultHeaderVue from './containers/DefaultHeader.vue';
-import DefaulSidebar from "./containers/DefaulSidebar.vue";
-
+import DashboardLayout from "./layouts/DashboardLayout.vue";
+import LoginLayout from "./layouts/AuthLayout.vue";
+import DefaultLayout from "./layouts/DefaultLayout.vue";
 export default {
-    name: "App",
-     components: {
-    DefaulSidebar,
-    DefaultHeaderVue
+  name: "App",
+  data() {
+    return {
+      isLoggedIn: false,
+    };
   },
-    data() {
-        return {
-            isLoggedIn: false,
-        };
+  created() {
+    if (this.$store.getters.isLoggedIn) {
+      this.isLoggedIn = true;
+    }
+  },
+  computed: {
+    // Determine the current layout component based on the route
+    currentLayout() {
+      // Check the route's meta property to decide the layout
+      const route = this.$route;
+      if (route.meta.requiresAuth) {
+        // Use the DashboardLayout for authenticated routes
+        return DashboardLayout;
+      } else if (route.meta.requiresVisitor) {
+        // Use the LoginLayout for visitor (non-authenticated) routes
+        return LoginLayout;
+      } else {
+        // Default layout if no specific layout is defined
+        return DefaultLayout;
+      }
     },
-    created() {
-        if (this.$store.getters.isLoggedIn) {
-            this.isLoggedIn = true;
-        }
-    },
-    methods: {
-        logout() {
-            const token = localStorage.getItem("token"); // Get the token from localStorage
-            this.$axios.get("/sanctum/csrf-cookie").then((response) => {
-                this.$axios
-                    .post("/api/logout", null, {
-                        // Pass null as the request body for logout
-                        headers: {
-                            Authorization: `Bearer ${token}`, // Include the token in the request headers
-                        },
-                    })
-                    .then((resp) => {
-                        localStorage.removeItem("token");
-                        // Commit the logout action to clear Vuex state
-                        this.$store.dispatch("logout");
-                        // Redirect to the login page
-                         window.location.href = "/login"; // Replace "/login" with your login page URL
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            });
-        },
-    },
+  },
+  methods: {
+
+  },
 };
 </script>

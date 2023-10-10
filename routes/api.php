@@ -30,3 +30,7 @@ Route::group(['prefix' => 'books', 'middleware' => 'auth:sanctum'], function () 
     Route::post('update/{id}', [App\Http\Controllers\API\BookController::class, 'update']);
     Route::delete('delete/{id}', [App\Http\Controllers\API\BookController::class, 'delete']);
 });
+
+Route::group(['prefix' => 'tech', 'middleware' => 'auth:sanctum'], function () {
+    Route::resource('recomm',BookController::class);
+});

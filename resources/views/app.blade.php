@@ -10,8 +10,9 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Icons -->
+ 
 
-    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <!-- Fonts -->
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">

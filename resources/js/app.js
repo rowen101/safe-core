@@ -4,9 +4,13 @@ import App from "./app/App.vue";
 import axios from "axios";
 import router from "./app/router";
 import feather from "feather-icons";
+import Notifications from '@kyvg/vue3-notification'
+// import VueMoment  from 'vue-moment';
 
 const app = createApp(App);
 app.config.globalProperties.$axios = axios;
+// Register feather-icons as a global property
+app.config.globalProperties.$feather = feather;
 app.use(router);
 
 // Check if a token exists in localStorage
@@ -34,7 +38,9 @@ router.beforeEach((to, from, next) => {
       next()
     }
   });
-  app.use(feather);
+
   app.use(store); // Use the Vuex store
+  app.use(Notifications)
+//   app.use(VueMoment);
 
 app.mount("#app");

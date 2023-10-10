@@ -5,9 +5,7 @@ import About from "../pages/About.vue";
 import Register from "../pages/Register.vue";
 import Login from "../pages/Login.vue";
 import Dashboard from "../pages/Dashboard.vue";
-import Books from "../pages/book/Books.vue";
-import AddBook from "../pages/book/AddBook.vue";
-import EditBook from "../pages/book/EditBook.vue";
+
 
 import AuthLayout from "../layouts/AuthLayout.vue";
 
@@ -15,7 +13,30 @@ import Recomm from "../pages/recommendation/Recomm.vue";
 import AddRecomm from "../pages/recommendation/AddRecomm.vue";
 import EditRecomm from "../pages/recommendation/EditRecomm.vue";
 
+import Profile from "../pages/Profile/index.vue";
+import AddProfile from "../pages/Profile/add.vue";
+import EditProfile from "../pages/Profile/edit.vue";
+
+import NotFound from "../pages/NotFound.vue";
 const routes = [
+    {
+        path: "/",
+        redirect: "/login", // Redirect to the login page by default
+      },
+      {
+        path: "/login",
+        component: AuthLayout,
+        children: [
+          {
+            path: "",
+            name: "login",
+            component: Login,
+            meta: {
+              requiresVisitor: true,
+            },
+          },
+        ],
+      },
     {
         name: "home",
         path: "/",
@@ -33,21 +54,14 @@ const routes = [
         },
     },
     {
-        name: "register",
-        path: "/register",
+        name: "signup",
+        path: "/signup",
         component: Register,
         meta: {
             requiresVisitor: true,
         },
     },
-    {
-        name: "login",
-        path: "/login",
-        component: Login,
-        meta: {
-            requiresVisitor: true,
-        },
-    },
+
     {
         path: "/dashboard",
         name: "dashboard",
@@ -56,34 +70,11 @@ const routes = [
             requiresAuth: true,
         },
     },
-    {
-        name: "books",
-        path: "/books",
-        component: Books,
-        meta: {
-            requiresAuth: true,
-        },
-    },
-    {
-        name: "addbook",
-        path: "/books/add",
-        component: AddBook,
-        meta: {
-            requiresAuth: true,
-        },
-    },
-    {
-        name: "editbook",
-        path: "/books/edit/:id",
-        component: EditBook,
-        meta: {
-            requiresAuth: true,
-        },
-    },
+
     //recommedation
     {
-        name: "recommendations",
-        path: "/recommendations",
+        name: "recommendation",
+        path: "/recommendation",
         component: Recomm,
         meta: {
             requiresAuth: true,
@@ -91,7 +82,7 @@ const routes = [
     },
     {
         name: "add-recommendation",
-        path: "/recommedations/add",
+        path: "/recommendation/add",
         component: AddRecomm,
         meta: {
             requiresAuth: true,
@@ -99,17 +90,52 @@ const routes = [
     },
     {
         name: "edit-recommendation",
-        path: "/recommedations/edit/:id",
+        path: "/recommendation/edit/:id",
         component: EditRecomm,
         meta: {
             requiresAuth: true,
         },
     },
+  //Profile
+  {
+    name: "profile",
+    path: "/profile",
+    component: Profile,
+    meta: {
+        requiresAuth: true,
+    },
+},
+{
+    name: "add-profile",
+    path: "/profile/add",
+    component: AddProfile,
+    meta: {
+        requiresAuth: true,
+    },
+},
+{
+    name: "edit-profile",
+    path: "/profile/edit/:id",
+    component: EditProfile,
+    meta: {
+        requiresAuth: true,
+    },
+},
+
+    {
+        path: "/:catchAll(.*)",
+        component: NotFound,
+        meta: {
+          requiresVisitor: true, // You can customize this meta property if needed
+        },
+      },
 ];
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
+    mode: "history", // Add this line to enable history mode
+    linkActiveClass: "active", // Add this line to set the active link class
 });
 
 // Add a navigation guard to check if the user is authenticated before navigating to the dashboard

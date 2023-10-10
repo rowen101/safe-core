@@ -1,15 +1,15 @@
 <template>
     <div>
-        <h4 class="text-center">Add Book</h4>
+       <h1 class="h3 mb-3">{{appendtext}} Tech Recommendation</h1>
         <div class="row">
             <div class="col-md-6">
-                <form @submit.prevent="addBook">
+                <form @submit.prevent="addtech">
                     <div class="form-group">
                         <label>Name</label>
                         <input
                             type="text"
                             class="form-control"
-                            v-model="book.name"
+                            v-model="form.company"
                         />
                     </div>
                     <div class="form-group">
@@ -17,11 +17,11 @@
                         <input
                             type="text"
                             class="form-control"
-                            v-model="book.author"
+                            v-model="form.branch"
                         />
                     </div>
                     <button type="submit" class="btn btn-primary">
-                        Add Book
+                        Add Tech Recommendation
                     </button>
                 </form>
             </div>
@@ -30,35 +30,40 @@
 </template>
 
 <script>
-import api from "../../services/api";
+
 export default {
     data() {
         return {
-            book: {},
+            appendtext: this.$route.params.id == undefined ? "Create" : "Update",
+            form: {
+                id: this.$route.params.id == undefined ? "" : this.$route.params.id,
+                techno:"",
+                company:"",
+                branch:"",
+                department:"",
+                warehouse:"",
+                user:"",
+                report:"",
+                udetails:"",
+                ass_conducted:"",
+                recommendation:"",
+                createdby:""
+            },
         };
     },
     methods: {
-        addBook() {
-            // this.$axios.get("/sanctum/csrf-cookie").then((response) => {
-            //     api.instance
-            //         .post("/api/books/add", this.book)
-            //         .then((resp) => {
-            //             console.log(resp);
-            //         })
-            //         .catch((err) => {
-            //             api.httpMsg(self, err.status, err.data);
-            //         });
-            // });
+        addtech() {
+
              const token = localStorage.getItem("token"); // Get the token from localStorage
             this.$axios.get("/sanctum/csrf-cookie").then((response) => {
                 this.$axios
-                    .post("/api/books/add", this.book, {
+                    .post("/api/tech/recomm", this.book, {
                         headers: {
                             Authorization: `Bearer ${token}`, // Include the token in the request headers
                         },
                     })
                     .then((response) => {
-                        this.$router.push({ name: "books" });
+                        this.$router.push({ name: "recommendation" });
                     })
                     .catch(function (error) {
                         console.error(error);
