@@ -6,12 +6,15 @@
                 <div class="card">
                     <div class="card-body">
                         <br />
-                        <table class="table table-bordered">
+
+                        <!-- <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Author</th>
+                                    <th>Techno</th>
+                                    <th>Company</th>
+                                     <th>Branch</th>
+                                      <th>Department</th>
                                     <th>Created At</th>
                                     <th>Updated At</th>
                                     <th>Actions</th>
@@ -19,20 +22,23 @@
                             </thead>
                             <tbody>
                                 <tr
-                                    v-for="(book, index) in items"
-                                    :key="book.id"
+                                    v-for="(items, index) in items"
+                                    :key="items.id"
                                 >
                                     <td>{{ index + 1 }}</td>
-                                    <td>{{ book.name }}</td>
-                                    <td>{{ book.author }}</td>
-                                    <td>{{ book.created_at }}</td>
-                                    <td>{{ book.updated_at }}</td>
+                                    <td>{{ items.techno }}</td>
+                                    <td>{{ items.company }}</td>
+                                      <td>{{ items.branch }}</td>
+                                       <td>{{ items.department }}</td>
+                                        <td>{{ items.user }}</td>
+                                    <td>{{ items.created_at }}</td>
+                                    <td>{{ items.updated_at }}</td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             <router-link
                                                 :to="{
                                                     name: 'edit-recommendation',
-                                                    params: { id: book.id },
+                                                    params: { id: items.id },
                                                 }"
                                                 class="btn btn-primary"
                                             >
@@ -50,7 +56,7 @@
                                             <router-link
                                                 :to="{
                                                     name: 'edit-recommendation',
-                                                    params: { id: book.id },
+                                                    params: { id: items.id },
                                                 }"
                                                 class="btn btn-success"
                                             >
@@ -67,7 +73,7 @@
                                             </router-link>
                                             <button
                                                 class="btn btn-danger"
-                                                @click="deleteBook(book.id)"
+                                                @click="deleteBook(items.id)"
                                             >
                                                 <i
                                                     v-html="
@@ -84,8 +90,11 @@
                                     </td>
                                 </tr>
                             </tbody>
-                        </table>
-
+                        </table> -->
+                        <data-table
+                            :options="options"
+                            :data="items"
+                        ></data-table>
                         <button
                             type="button"
                             class="btn btn-info"
@@ -109,12 +118,26 @@
 </template>
 
 <script>
+import DataTable from 'datatables.net-vue3';
+import DataTablesLib from 'datatables.net';
+
+DataTable.use(DataTablesLib);
 export default {
+    components: {
+        DataTable,
+    },
     data() {
         return {
             items: [],
+            options: {
+                // DataTable options
+                paging: true,
+                searching: true,
+                // Add more options as needed
+            },
         };
     },
+
     created() {
         this.$axios
             .get("/sanctum/csrf-cookie")

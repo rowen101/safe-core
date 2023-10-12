@@ -5,7 +5,11 @@ import axios from "axios";
 import router from "./app/router";
 import feather from "feather-icons";
 import Notifications from '@kyvg/vue3-notification'
-// import VueMoment  from 'vue-moment';
+import VueToast from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
+
+// Import the setCsrfCookie function from the csrf.js file
+import { setCsrfCookie } from './csrf';
 
 const app = createApp(App);
 app.config.globalProperties.$axios = axios;
@@ -41,6 +45,22 @@ router.beforeEach((to, from, next) => {
 
   app.use(store); // Use the Vuex store
   app.use(Notifications)
-//   app.use(VueMoment);
+  app.use(VueToast); // Add this line to use VueToast
+
+  // Set the base URL for your API if needed
+// axios.defaults.baseURL = 'api/';
+
+// Add an Axios request interceptor to set the CSRF cookie
+// axios.interceptors.request.use(
+//   async (config) => {
+//     // Call the setCsrfCookie function before the request
+//     await setCsrfCookie();
+
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 app.mount("#app");

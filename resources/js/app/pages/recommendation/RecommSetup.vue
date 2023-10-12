@@ -5,19 +5,19 @@
             <div class="col-md-6">
                 <form @submit.prevent="addtech">
                     <div class="form-group">
-                        <label>Name</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            v-model="form.company"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <label>Author</label>
+                        <label>Branch</label>
                         <input
                             type="text"
                             class="form-control"
                             v-model="form.branch"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            v-model="form.department"
                         />
                     </div>
                     <button type="submit" class="btn btn-primary">
@@ -57,7 +57,7 @@ export default {
              const token = localStorage.getItem("token"); // Get the token from localStorage
             this.$axios.get("/sanctum/csrf-cookie").then((response) => {
                 this.$axios
-                    .post("/api/tech/recomm", this.book, {
+                    .post("/api/tech/recomm", this.form, {
                         headers: {
                             Authorization: `Bearer ${token}`, // Include the token in the request headers
                         },

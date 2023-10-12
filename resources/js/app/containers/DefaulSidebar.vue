@@ -30,7 +30,12 @@
                         <span class="align-middle">Recommendation</span></router-link
                     >
                 </li>
-
+  <li :class="['sidebar-item', { 'active': $route.path === '/student' }]">
+                    <router-link class="sidebar-link" to="/student">
+                      <i v-html="$feather.icons['layers'].toSvg({ width: 24, height: 24 })"></i>
+                        <span class="align-middle">Student</span></router-link
+                    >
+                </li>
 
             </ul>
             <ul class="sidebar-nav" v-else>

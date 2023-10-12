@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\BookController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\TechRecomController;
+use App\Http\Controllers\API\StudentController;
+use App\Http\Controllers\API\ClassesController;
+use App\Http\Controllers\API\SectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +36,19 @@ Route::group(['prefix' => 'books', 'middleware' => 'auth:sanctum'], function () 
 });
 
 Route::group(['prefix' => 'tech', 'middleware' => 'auth:sanctum'], function () {
-    Route::resource('recomm',BookController::class);
+    Route::resource('recomm',TechRecomController::class);
+});
+
+Route::group(['prefix' => 'school', 'middleware' => 'auth:sanctum'], function () {
+
+    Route::get('/students', [App\Http\Controllers\API\StudentController::class, 'index']);
+
+    Route::get('/classes', [App\Http\Controllers\API\ClassesController::class, 'index']);
+    Route::get('/sections', [App\Http\Controllers\API\SectionController::class, 'index']);
+
+    Route::delete('student/delete/{student}', [App\Http\Controllers\API\StudentController::class, 'destroy']);
+    Route::delete('students/massDestroy/{students}', [App\Http\Controllers\API\StudentController::class, 'massDestroy']);
+
+    Route::get('students/export/{students}', [App\Http\Controllers\API\StudentController::class, 'export']);
+
 });

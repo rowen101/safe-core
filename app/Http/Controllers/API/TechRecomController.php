@@ -30,16 +30,16 @@ class TechRecomController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name'          => 'required',
-        ]);
+        // $request->validate([
+        //     'company'  => 'required',
+        // ]);
        Tech::updateOrCreate([
             'id' => $request->id,
             'updated_by' => $request->updated_by
        ],
        [
             'techno' => $request->techno,
-            'company' => $request->company,
+            'company' => "Safexpress Logistics Inc",
             'branch' => $request->branch,
             'department' => $request->department,
             'warehouse' => $request->warehouse,

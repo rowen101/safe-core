@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('teches', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('techno',50);
-            $table->string('company',50);
-            $table->string('branch',50);
-            $table->string('department',50);
-            $table->string('warehouse',50);
-            $table->string('user',50);
-            $table->text('report');
+            $table->string('techno',50)->nullable();
+            $table->string('company',50)->nullable();
+            $table->string('branch',50)->nullable();
+            $table->string('department',50)->nullable();
+            $table->string('warehouse',50)->nullable();
+            $table->string('user',50)->nullable();
+            $table->text('report')->nullable();
             $table->text('udetails')->nullable();
-            $table->text('ass_conducted');
-            $table->text('recommendation');
-            $table->integer('created_by');
+            $table->text('ass_conducted')->nullable();
+            $table->text('recommendation')->nullable();
+            $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
