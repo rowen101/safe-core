@@ -10,16 +10,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/app/adminlte.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/fontawesome-free/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/app/font-awesome.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/app/ionicons.min.css') }}" />
-     <!-- Google Font: Source Sans Pro -->
-     <link rel="stylesheet"
-     href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-
-        <!-- overlayScrollbars -->
-        <link rel="stylesheet" href="{{ asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-    <!-- Scripts -->
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>

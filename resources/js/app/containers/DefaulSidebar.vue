@@ -80,7 +80,7 @@
                             alt="User Image">
                     </div>
                     <div class="info">
-                            {{name}}
+                           <a href="#"> {{name}}</a>
                     </div>
                 </div>
 
@@ -90,7 +90,7 @@
                         data-accordion="false">
                          <li class="nav-item">
                     <router-link class="nav-link" to="/dashboard">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <i class="nav-icon fa fa-dashboard"></i>
                         <p>Dashboard</p></router-link
                     >
                 </li>
@@ -102,7 +102,7 @@
                 </li>
                  <li class="nav-item">
                     <router-link class="nav-link" to="/preventive">
-                        <i class="fa fa-sign-out-alt nav-icon"></i>
+                        <i class="fa fa-user nav-icon"></i>
                         <p>Preventive Meantenace</p></router-link
                     >
                 </li>
