@@ -1,5 +1,5 @@
 <template>
-    <nav id="sidebar" class="sidebar js-sidebar">
+    <!-- <nav id="sidebar" class="sidebar js-sidebar">
         <div class="sidebar-content js-simplebar">
             <a class="sidebar-brand" href="index.html">
                 <span class="align-middle">SLI Monitoring</span>
@@ -12,12 +12,12 @@
                         <span class="align-middle">Dashboard</span></router-link
                     >
                 </li>
-                <!-- <li class="sidebar-item">
+                <li class="sidebar-item">
                     <router-link class="sidebar-link" to="/">
                         <i class="align-middle" data-feather="sliders"></i>
                         <span class="align-middle">Home</span></router-link
                     >
-                </li> -->
+                </li>
                  <li :class="['sidebar-item', { 'active': $route.path === '/profile' }]">
                     <router-link class="sidebar-link" to="/profile">
                      <i v-html="$feather.icons['user'].toSvg({ width: 24, height: 24 })"></i>
@@ -60,7 +60,58 @@
                 </li>
             </ul>
         </div>
-    </nav>
+    </nav> -->
+
+     <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="#" class="brand-link">
+                <img :src="'backend/images/AdminLTELogo.png'" alt="Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">Admin</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img :src="'backend/images/avatar5.png'" class="img-circle elevation-2"
+                            alt="User Image">
+                    </div>
+                    <div class="info">
+                            {{name}}
+                    </div>
+                </div>
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                         <li class="nav-item">
+                    <router-link class="nav-link" to="/dashboard">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard</p></router-link
+                    >
+                </li>
+                 <li class="nav-item">
+                    <router-link class="nav-link" to="/recommendation">
+                        <i class="nav-icon fa fa-gear"></i>
+                        <p>Tech Recommendation</p></router-link
+                    >
+                </li>
+                 <li class="nav-item">
+                    <router-link class="nav-link" to="/preventive">
+                        <i class="fa fa-sign-out-alt nav-icon"></i>
+                        <p>Preventive Meantenace</p></router-link
+                    >
+                </li>
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
 </template>
 <script>
 export default {
@@ -68,11 +119,13 @@ export default {
     data() {
         return {
             isLoggedIn: false,
+            name: null,
         };
     },
     created() {
         if (this.$store.getters.isLoggedIn) {
             this.isLoggedIn = true;
+             this.name = "Hi! " + this.$store.getters.user.name
         }
     },
    methods: {

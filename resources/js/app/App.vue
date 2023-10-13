@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import DashboardLayout from "./layouts/DashboardLayout.vue";
+
 import LoginLayout from "./layouts/AuthLayout.vue";
 import DefaultLayout from "./layouts/DefaultLayout.vue";
 export default {
@@ -30,8 +30,8 @@ export default {
       // Check the route's meta property to decide the layout
       const route = this.$route;
       if (route.meta.requiresAuth) {
-        // Use the DashboardLayout for authenticated routes
-        return DashboardLayout;
+        // Use the DefaultLayout for authenticated routes
+        return DefaultLayout;
       } else if (route.meta.requiresVisitor) {
         // Use the LoginLayout for visitor (non-authenticated) routes
         return LoginLayout;

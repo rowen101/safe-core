@@ -9,7 +9,7 @@ import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 
 // Import the setCsrfCookie function from the csrf.js file
-import { setCsrfCookie } from './csrf';
+
 
 const app = createApp(App);
 app.config.globalProperties.$axios = axios;
