@@ -1,6 +1,14 @@
 <template>
-    <div>
-       <h1 class="h3 mb-3">{{appendtext}} Tech Recommendation</h1>
+    <section class="content">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+
+                     <h3 class="card-title">{{appendtext}} Tech Recommendation</h3>
+    
+            </div>
+            <div class="card-body">
+
+
         <div class="row">
             <div class="col-md-6">
                 <form @submit.prevent="addtech">
@@ -26,7 +34,10 @@
                 </form>
             </div>
         </div>
-    </div>
+
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>

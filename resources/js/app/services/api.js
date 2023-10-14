@@ -8,19 +8,27 @@ const instance = axios.create({
   baseURL: baseURL,
 });
 
-// Function to set the Authorization header
-function setAuthorizationHeader(token) {
-  if (token) {
-    instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  }
-}
-
 // Function to fetch CSRF cookie
 function fetchCsrfCookie() {
   return instance.get('/sanctum/csrf-cookie');
 }
 
-// Function to handle HTTP messages
+// Add an interceptor to include the token in the request headers
+instance.interceptors.request.use(
+  async (config) => {
+    const userToken = localStorage.getItem("token");
+
+    if (userToken) {
+      config.headers["Authorization"] = `Bearer ${userToken}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 function httpMsg(obj, statuscode, msg) {
   if (statuscode === 401) {
     obj.$store.dispatch("logout").then(() => {
@@ -38,7 +46,6 @@ function httpMsg(obj, statuscode, msg) {
 export default {
   instance,
   baseURL,
-  setAuthorizationHeader,
-  fetchCsrfCookie,
   httpMsg,
+  fetchCsrfCookie, // Export the CSRF cookie fetch function
 };

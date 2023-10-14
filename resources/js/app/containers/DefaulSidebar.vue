@@ -90,13 +90,13 @@
                         data-accordion="false">
                          <li class="nav-item">
                     <router-link class="nav-link" to="/dashboard">
-                        <i class="nav-icon fa fa-dashboard"></i>
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p></router-link
                     >
                 </li>
                  <li class="nav-item">
                     <router-link class="nav-link" to="/recommendation">
-                        <i class="nav-icon fa fa-gear"></i>
+                        <i class="nav-icon fas fa-tools"></i>
                         <p>Tech Recommendation</p></router-link
                     >
                 </li>
@@ -104,6 +104,13 @@
                     <router-link class="nav-link" to="/preventive">
                         <i class="fa fa-user nav-icon"></i>
                         <p>Preventive Meantenace</p></router-link
+                    >
+                </li>
+                <li class="nav-item">
+
+                    <router-link class="nav-link" to="/sign-out">
+                        <i class="far fas fa-sign-out-alt nav-icon"></i>
+                        <p>Sign Out</p></router-link
                     >
                 </li>
                     </ul>

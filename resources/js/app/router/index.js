@@ -7,7 +7,7 @@ import Login from "../pages/Login.vue";
 import Dashboard from "../pages/Dashboard.vue";
 
 import AuthLayout from "../layouts/AuthLayout.vue";
-
+import SignOut from "../pages/Signout.vue";
 import Recomm from "../pages/recommendation/Recomm.vue";
 import RecommSetup from "../pages/recommendation/RecommSetup.vue";
 import EditRecomm from "../pages/recommendation/EditRecomm.vue";
@@ -20,17 +20,14 @@ import StudentIndex from "../pages/student/StudentIndex.vue";
 
 import NotFound from "../pages/NotFound.vue";
 const routes = [
-    {
-        path: "/",
-        redirect: "/login", // Redirect to the login page by default
-    },
+
     {
         path: "/login",
         component: AuthLayout,
         children: [
             {
                 path: "",
-                name: "login",
+                name: "Login",
                 component: Login,
                 meta: {
                     requiresVisitor: true,
@@ -55,7 +52,7 @@ const routes = [
         },
     },
     {
-        name: "signup",
+        name: "Register",
         path: "/signup",
         component: Register,
         meta: {
@@ -65,7 +62,7 @@ const routes = [
 
     {
         path: "/dashboard",
-        name: "dashboard",
+        name: "Dashboard",
         component: Dashboard,
         meta: {
             requiresAuth: true,
@@ -82,7 +79,7 @@ const routes = [
         },
     },
     {
-        name: "add-recommendation",
+        name: "Create Recommendation",
         path: "/recommendation/add",
         component: RecommSetup,
         meta: {
@@ -90,7 +87,7 @@ const routes = [
         },
     },
     {
-        name: "edit-recommendation",
+        name: "Modify recommendation",
         path: "/recommendation/edit/:id",
         component: RecommSetup,
         meta: {
@@ -107,7 +104,7 @@ const routes = [
         },
     },
     {
-        name: "add-profile",
+        name: "Create Profile",
         path: "/profile/add",
         component: AddProfile,
         meta: {
@@ -115,9 +112,17 @@ const routes = [
         },
     },
     {
-        name: "edit-profile",
+        name: "Modify Profile",
         path: "/profile/edit/:id",
         component: EditProfile,
+        meta: {
+            requiresAuth: true,
+        },
+    },
+    {
+
+        path: "/sign-out",
+        component: SignOut,
         meta: {
             requiresAuth: true,
         },
@@ -142,28 +147,29 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
-    mode: "history", // Add this line to enable history mode
     linkActiveClass: "active", // Add this line to set the active link class
 });
 
 // Add a navigation guard to check if the user is authenticated before navigating to the dashboard
 router.beforeEach((to, from, next) => {
-    if (to.matched.some((record) => record.meta.requiresAuth)) {
-        // You can add your authentication logic here.
-        // For example, check if the user is logged in and has a valid token.
-        const isAuthenticated = localStorage.getItem("token");
-        /* Add your authentication check here */ true;
-        if (!isAuthenticated) {
-            // If not authenticated, redirect to the login page
-            next({ name: "login" });
+    const token = localStorage.getItem("token");
+
+    if(!token){
+        if (to.name === 'Login' || to.name === 'Registration') {
+            return next()
         } else {
-            // If authenticated, proceed to the dashboard
-            next();
+            return next ({
+                name: 'Login'
+            })
         }
-    } else {
-        // If the route doesn't require authentication, proceed as usual
-        next();
     }
+    if (to.name === 'Login' || to.name === 'Registration' && token) {
+        return next({
+            name: 'Dashboard'
+        })
+    }
+    next()
+
 });
 
 export default router;

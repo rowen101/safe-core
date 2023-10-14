@@ -14,7 +14,7 @@
             <div class="icon">
               <i class="fa fa-pencil-square"></i>
             </div>
-            <a href="http://safexpress.com.ph/admin/post" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="http://safexpress.com.ph/admin/post" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -29,7 +29,7 @@
             <div class="icon">
               <i class="ion ion-chatbubble"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -44,7 +44,7 @@
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="http://safexpress.com.ph/admin/user" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="http://safexpress.com.ph/admin/user" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -59,7 +59,7 @@
             <div class="icon">
               <i class="ion ion-pie-graph"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->

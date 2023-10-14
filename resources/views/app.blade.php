@@ -8,9 +8,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/app/adminlte.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/app.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/app/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/css/app/font/css/all.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/css/app/ionicons.min.css') }}" />
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -42,7 +43,7 @@
     <script src="{{ asset('backend/js/app/jquery.min.js') }}"></script>
     <script src="{{ asset('backend/js/app/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('backend/js/app/adminlte.min.js') }}"></script>
-    <script src="{{ asset('backend/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+
 
 </body>
 
