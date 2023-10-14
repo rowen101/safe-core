@@ -33,12 +33,27 @@ class TechRecomController extends Controller
         // $request->validate([
         //     'company'  => 'required',
         // ]);
-       Tech::updateOrCreate([
+
+        // Find the latest "techno" entry in the database
+        $latestTechno = Tech::orderBy('id', 'desc')->first();
+
+        // Determine the next "techno" number
+        if ($latestTechno) {
+            $lastNumber = intval(substr($latestTechno->techno, 3)); // Assuming the current format is TEC####
+            $nextNumber = $lastNumber + 1;
+        } else {
+            $nextNumber = 1; // If no previous record exists, start from 1
+        }
+
+        // Generate the new "techno" value
+        $techno = 'TECH' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT); // Padded to 4 digits
+
+        Tech::updateOrCreate([
             'id' => $request->id,
             'updated_by' => $request->updated_by
-       ],
-       [
-            'techno' => $request->techno,
+        ],
+        [
+            'techno' => $techno, // Updated 'techno' with the generated value
             'company' => "Safexpress Logistics Inc",
             'branch' => $request->branch,
             'department' => $request->department,
@@ -49,19 +64,19 @@ class TechRecomController extends Controller
             'ass_conducted' => $request->ass_conducted,
             'recommendation' => $request->recommendation,
             'created_by' => $request->created_by,
-
-       ]);
-
+        ]);
 
         return response()->json(['success' => 'Record saved successfully!']);
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $tech = Tech::find($id);
+        return response()->json($tech);
     }
 
     /**

@@ -2,7 +2,7 @@ import axios from "axios";
 import miniToastr from "mini-toastr";
 miniToastr.init();
 
-const baseURL = "api/";
+const baseURL = "/api/";
 
 const instance = axios.create({
   baseURL: baseURL,

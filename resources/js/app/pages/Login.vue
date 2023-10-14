@@ -77,7 +77,10 @@
                     </div>
                     <div class="text-center mb-3">
                         Don't have an account?
-                        <a href="/signup">Sign up</a>
+
+                         <router-link to="/signup">
+                         Sign up
+                         </router-link>
                     </div>
                 </div>
             </div>
@@ -103,7 +106,7 @@ export default {
             this.$store
                 .dispatch("login", this.credentials)
                 .then((resp) => {
-                  
+
 
                     // window.location.href = "/dashboard";
                     window.location.replace("/dashboard");

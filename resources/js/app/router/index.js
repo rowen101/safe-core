@@ -10,7 +10,7 @@ import AuthLayout from "../layouts/AuthLayout.vue";
 import SignOut from "../pages/Signout.vue";
 import Recomm from "../pages/recommendation/Recomm.vue";
 import RecommSetup from "../pages/recommendation/RecommSetup.vue";
-import EditRecomm from "../pages/recommendation/EditRecomm.vue";
+
 
 import Profile from "../pages/Profile/index.vue";
 import AddProfile from "../pages/Profile/add.vue";
