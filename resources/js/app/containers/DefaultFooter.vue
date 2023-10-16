@@ -1,19 +1,24 @@
 <template>
-     <!-- Main Footer -->
-        <footer class="main-footer">
-            <!-- To the right -->
-            <div class="float-right d-none d-sm-inline">
-                Anything you want
-            </div>
-            <!-- Default to the left -->
-            <strong>Copyright &copy; 2023 <a href="#">SLI Monitoring</a>.</strong> All rights
-            reserved.
-        </footer>
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+      {{ authUserStore }}
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2023.</strong> All rights reserved.
+  </footer>
 </template>
+
 <script>
-
-
 export default {
-    name: "DefaulFooter",
+  computed: {
+    authUserStore() {
+      if (this.$store.getters.isLoggedIn) {
+        return this.$store.getters.user.name;
+      }
+      return null; // or any default value you prefer
+    },
+  },
 }
 </script>

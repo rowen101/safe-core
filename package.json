@@ -9,8 +9,8 @@
         "@popperjs/core": "^2.11.6",
         "@vue/compiler-sfc": "^3.0.5",
         "axios": "^1.1.2",
-        "bootstrap": "^4.0.0",
         "laravel-vite-plugin": "^0.7.5",
+        "lodash": "^4.17.19",
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.56.1",
         "vite": "^4.0.0",
@@ -19,6 +19,7 @@
     "dependencies": {
         "@kyvg/vue3-notification": "^3.0.2",
         "@vitejs/plugin-vue": "^4.4.0",
+        "admin-lte": "^3.2.0",
         "ag-grid-community": "^30.2.0",
         "ag-grid-vue3": "^30.2.0",
         "bootstrap-vue": "^2.23.1",
@@ -29,13 +30,17 @@
         "jspdf": "^2.5.1",
         "jsvectormap": "1.5.3",
         "laravel-vue-pagination": "^4.1.1",
+        "lodash": "^4.17.21",
         "mini-toastr": "^0.8.1",
+        "pinia": "^2.1.7",
         "simplebar": "5.3.9",
         "vue-moment": "^4.1.0",
         "vue-router": "^4.2.5",
         "vue-toast-notification": "^3.1.1",
+        "vue-validate": "^1.0.1",
         "vuetify": "^3.1.12",
         "vuex": "^4.1.0",
-        "vuex-persistedstate": "^4.1.0"
+        "vuex-persistedstate": "^4.1.0",
+        "yup": "^1.3.2"
     }
 }

@@ -8,16 +8,14 @@ import Dashboard from "../pages/Dashboard.vue";
 
 import AuthLayout from "../layouts/AuthLayout.vue";
 import SignOut from "../pages/Signout.vue";
-import Recomm from "../pages/recommendation/Recomm.vue";
+import RecommList from "../pages/recommendation/RecommList.vue";
 import RecommSetup from "../pages/recommendation/RecommSetup.vue";
-
-
 import Profile from "../pages/Profile/index.vue";
 import AddProfile from "../pages/Profile/add.vue";
 import EditProfile from "../pages/Profile/edit.vue";
-
 import StudentIndex from "../pages/student/StudentIndex.vue";
 
+import UserList from '../pages/users/UserList.vue';
 import NotFound from "../pages/NotFound.vue";
 const routes = [
 
@@ -60,6 +58,7 @@ const routes = [
         },
     },
 
+
     {
         path: "/dashboard",
         name: "Dashboard",
@@ -73,7 +72,7 @@ const routes = [
     {
         name: "recommendation",
         path: "/recommendation",
-        component: Recomm,
+        component: RecommList,
         meta: {
             requiresAuth: true,
         },
@@ -131,6 +130,14 @@ const routes = [
         name: "student",
         path: "/student",
         component: StudentIndex,
+        meta: {
+            requiresAuth: true,
+        },
+    },
+    {
+        path: '/admin/users',
+        name: 'admin.users',
+        component: UserList,
         meta: {
             requiresAuth: true,
         },
