@@ -6,7 +6,7 @@ import 'admin-lte/dist/js/adminlte.min.js';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
-import store from "./store/store"
+import store from "./store/AuthUserStore"
 import App from "./app/App.vue";
 import axios from "axios";
 import router from "./app/router";

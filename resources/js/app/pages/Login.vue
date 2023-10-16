@@ -78,7 +78,7 @@
                     <div class="text-center mb-3">
                         Don't have an account?
 
-                         <router-link to="/signup">
+                         <router-link to="/register">
                          Sign up
                          </router-link>
                     </div>

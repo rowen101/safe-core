@@ -31,6 +31,14 @@ const routes = [
                     requiresVisitor: true,
                 },
             },
+            {
+                name: "Registration",
+                path: "/register",
+                component: Register,
+                meta: {
+                    requiresVisitor: true,
+                },
+            },
         ],
     },
     {
@@ -49,14 +57,7 @@ const routes = [
             requiresVisitor: true,
         },
     },
-    {
-        name: "Register",
-        path: "/signup",
-        component: Register,
-        meta: {
-            requiresVisitor: true,
-        },
-    },
+
 
 
     {
@@ -136,7 +137,7 @@ const routes = [
     },
     {
         path: '/admin/users',
-        name: 'admin.users',
+        name: 'Users',
         component: UserList,
         meta: {
             requiresAuth: true,
