@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../app/services/api";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useStorage } from '@vueuse/core'
@@ -15,7 +15,7 @@ export const useSettingStore = defineStore('SettingStore', () => {
     };
 
     const getSetting = async () => {
-        await axios.get('/api/settings')
+        await api.instance.get('/settings')
             .then((response) => {
                 setting.value = response.data;
             });

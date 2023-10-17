@@ -13,8 +13,17 @@ class TechRecomController extends Controller
      */
     public function index()
     {
-        $tech = Tech::all()->toArray();
+        $tech = Tech::paginate(10);
         return response()->json($tech);
+        
+    //     $tech = Tech::query()
+    //     ->when(request('query'), function ($query, $searchQuery) {
+    //         $query->where('name', 'like', "%{$searchQuery}%");
+    //     })
+    //     ->latest()
+    //     ->paginate(setting('pagination_limit'));
+
+    // return $tech;
     }
 
     /**

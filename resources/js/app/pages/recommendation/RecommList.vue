@@ -1,589 +1,287 @@
-<template>
-    <section class="content">
-        <!-- <div class="card">
-            <div class="card-body">
-                <br />
+<script setup>
+import api from "../../services/api.js";
+import { ref, onMounted, reactive, watch } from 'vue';
+import { Form, Field, useResetForm } from 'vue-validate';
+import * as yup from 'yup';
+import { useToastr } from '../../../toastr.js';
+import RecommListItem from './RecommListItem.vue';
+import { debounce } from 'lodash';
+import { Bootstrap4Pagination } from 'laravel-vue-pagination';
 
-                <table id="expdf" class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Techno</th>
-                            <th>Company</th>
-                            <th>Branch</th>
-                            <th>Department</th>
-                            <th>Created At</th>
-                            <th>Updated At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(items, index) in items" :key="items.id">
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ items.techno }}</td>
-                            <td>{{ items.company }}</td>
-                            <td>{{ items.branch }}</td>
-                            <td>{{ items.department }}</td>
-                            <td>{{ items.user }}</td>
-                            <td>{{ items.created_at }}</td>
-                            <td>{{ items.updated_at }}</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <router-link
-                                        :to="{
-                                            name: 'Modify recommendation',
-                                            params: { id: items.id },
-                                        }"
-                                        class="btn btn-primary"
-                                    >
-                                        <i
-                                            v-html="
-                                                $feather.icons['edit'].toSvg({
-                                                    width: 24,
-                                                    height: 24,
-                                                })
-                                            "
-                                        ></i>
-                                    </router-link>
-                                    <router-link
-                                        :to="{
-                                            name: 'Modify recommendation',
-                                            params: { id: items.id },
-                                        }"
-                                        class="btn btn-success"
-                                    >
-                                        <i
-                                            v-html="
-                                                $feather.icons['eye'].toSvg({
-                                                    width: 24,
-                                                    height: 24,
-                                                })
-                                            "
-                                        ></i>
-                                    </router-link>
-                                    <button
-                                        class="btn btn-danger"
-                                        @click="deleteBook(items.id)"
-                                    >
-                                        <i
-                                            v-html="
-                                                $feather.icons['trash'].toSvg({
-                                                    width: 24,
-                                                    height: 24,
-                                                })
-                                            "
-                                        ></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+const toastr = useToastr();
+const users = ref({'data': []});
+const editing = ref(false);
+const formValues = ref();
+const form = ref(null);
 
-                <button
-                    type="button"
-                    class="btn btn-success"
-                    @click="onClickNewTechRecomm()"
-                >
-                    <i
-                        v-html="
-                            $feather.icons['file-plus'].toSvg({
-                                width: 24,
-                                height: 24,
-                            })
-                        "
-                    ></i>
-                    Recommendation
-                </button>
+const getUsers = (page = 1) => {
+    api.instance.get(`/tech/recomm?current_page=${page}`, {
+        params: {
+            query: searchQuery.value
+        }
+    })
+    .then((response) => {
+        users.value = response.data;
+        selectedUsers.value = [];
+        selectAll.value = false;
+    })
+}
 
-            </div>
-        </div> -->
+const createUserSchema = yup.object({
+    name: yup.string().required(),
+    email: yup.string().email().required(),
+    password: yup.string().required().min(8),
+});
 
-        <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">DataTable with default features</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 4.0
-                    </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 5.0
-                    </td>
-                    <td>Win 95+</td>
-                    <td>5</td>
-                    <td>C</td>
-                  </tr>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 5.5
-                    </td>
-                    <td>Win 95+</td>
-                    <td>5.5</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 6
-                    </td>
-                    <td>Win 98+</td>
-                    <td>6</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet Explorer 7</td>
-                    <td>Win XP SP2+</td>
-                    <td>7</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Trident</td>
-                    <td>AOL browser (AOL desktop)</td>
-                    <td>Win XP</td>
-                    <td>6</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Firefox 1.0</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.7</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Firefox 1.5</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Firefox 2.0</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Firefox 3.0</td>
-                    <td>Win 2k+ / OSX.3+</td>
-                    <td>1.9</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Camino 1.0</td>
-                    <td>OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Camino 1.5</td>
-                    <td>OSX.3+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Netscape 7.2</td>
-                    <td>Win 95+ / Mac OS 8.6-9.2</td>
-                    <td>1.7</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Netscape Browser 8</td>
-                    <td>Win 98SE+</td>
-                    <td>1.7</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Netscape Navigator 9</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.0</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.1</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.1</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.2</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.2</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.3</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.3</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.4</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.4</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.5</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.5</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.6</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.6</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.7</td>
-                    <td>Win 98+ / OSX.1+</td>
-                    <td>1.7</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.8</td>
-                    <td>Win 98+ / OSX.1+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Seamonkey 1.1</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Gecko</td>
-                    <td>Epiphany 2.20</td>
-                    <td>Gnome</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Webkit</td>
-                    <td>Safari 1.2</td>
-                    <td>OSX.3</td>
-                    <td>125.5</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Webkit</td>
-                    <td>Safari 1.3</td>
-                    <td>OSX.3</td>
-                    <td>312.8</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Webkit</td>
-                    <td>Safari 2.0</td>
-                    <td>OSX.4+</td>
-                    <td>419.3</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Webkit</td>
-                    <td>Safari 3.0</td>
-                    <td>OSX.4+</td>
-                    <td>522.1</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Webkit</td>
-                    <td>OmniWeb 5.5</td>
-                    <td>OSX.4+</td>
-                    <td>420</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Webkit</td>
-                    <td>iPod Touch / iPhone</td>
-                    <td>iPod</td>
-                    <td>420.1</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Webkit</td>
-                    <td>S60</td>
-                    <td>S60</td>
-                    <td>413</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Opera 7.0</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Opera 7.5</td>
-                    <td>Win 95+ / OSX.2+</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Opera 8.0</td>
-                    <td>Win 95+ / OSX.2+</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Opera 8.5</td>
-                    <td>Win 95+ / OSX.2+</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Opera 9.0</td>
-                    <td>Win 95+ / OSX.3+</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Opera 9.2</td>
-                    <td>Win 88+ / OSX.3+</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Opera 9.5</td>
-                    <td>Win 88+ / OSX.3+</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Opera for Wii</td>
-                    <td>Wii</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Nokia N800</td>
-                    <td>N800</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Presto</td>
-                    <td>Nintendo DS browser</td>
-                    <td>Nintendo DS</td>
-                    <td>8.5</td>
-                    <td>C/A<sup>1</sup></td>
-                  </tr>
-                  <tr>
-                    <td>KHTML</td>
-                    <td>Konqureror 3.1</td>
-                    <td>KDE 3.1</td>
-                    <td>3.1</td>
-                    <td>C</td>
-                  </tr>
-                  <tr>
-                    <td>KHTML</td>
-                    <td>Konqureror 3.3</td>
-                    <td>KDE 3.3</td>
-                    <td>3.3</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>KHTML</td>
-                    <td>Konqureror 3.5</td>
-                    <td>KDE 3.5</td>
-                    <td>3.5</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Tasman</td>
-                    <td>Internet Explorer 4.5</td>
-                    <td>Mac OS 8-9</td>
-                    <td>-</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Tasman</td>
-                    <td>Internet Explorer 5.1</td>
-                    <td>Mac OS 7.6-9</td>
-                    <td>1</td>
-                    <td>C</td>
-                  </tr>
-                  <tr>
-                    <td>Tasman</td>
-                    <td>Internet Explorer 5.2</td>
-                    <td>Mac OS 8-X</td>
-                    <td>1</td>
-                    <td>C</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>NetFront 3.1</td>
-                    <td>Embedded devices</td>
-                    <td>-</td>
-                    <td>C</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>NetFront 3.4</td>
-                    <td>Embedded devices</td>
-                    <td>-</td>
-                    <td>A</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>Dillo 0.8</td>
-                    <td>Embedded devices</td>
-                    <td>-</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>Links</td>
-                    <td>Text only</td>
-                    <td>-</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>Lynx</td>
-                    <td>Text only</td>
-                    <td>-</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>IE Mobile</td>
-                    <td>Windows Mobile 6</td>
-                    <td>-</td>
-                    <td>C</td>
-                  </tr>
-                  <tr>
-                    <td>Misc</td>
-                    <td>PSP browser</td>
-                    <td>PSP</td>
-                    <td>-</td>
-                    <td>C</td>
-                  </tr>
-                  <tr>
-                    <td>Other browsers</td>
-                    <td>All others</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>U</td>
-                  </tr>
-                  </tbody>
-                  <tfoot>
-                  <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-    </section>
-</template>
+const editUserSchema = yup.object({
+    name: yup.string().required(),
+    email: yup.string().email().required(),
+    password: yup.string().when((password, schema) => {
+        return password ? schema.required().min(8) : schema;
+    }),
+});
 
-<script>
-
-import api from "../../services/api";
-export default {
-    components: {},
-    data() {
-        return {
-            items: [],
-            options: {
-                // DataTable options
-                paging: true,
-                searching: true,
-                // Add more options as needed
-            },
-        };
-    },
-
-    created() {
-        api.instance
-            .get("/tech/recomm")
-            .then((response) => {
-                this.items = response.data;
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
-    },
-    methods: {
-        deleteBook(id) {
-            api.instance
-                .delete(`tech/recomm/${id}`)
-                .then((response) => {
-                    let i = this.items.map((item) => item.id).indexOf(id); // find index of your object
-                    this.items.splice(i, 1);
-                })
-                .catch(function (error) {
-                    console.error(error);
-                });
-        },
-        onClickNewTechRecomm: function () {
-            this.$router.push("/recommendation/add");
-        },
-
-    },
+const createUser = (values, { resetForm, setErrors }) => {
+    api.instance.post('/tech/recomm', values)
+        .then((response) => {
+            users.value.data.unshift(response.data);
+            $('#userFormModal').modal('hide');
+            resetForm();
+            toastr.success('User created successfully!');
+        })
+        .catch((error) => {
+            if (error.response.data.errors) {
+                setErrors(error.response.data.errors);
+            }
+        })
 };
+
+const addUser = () => {
+    editing.value = false;
+    $('#userFormModal').modal('show');
+};
+
+const editUser = (user) => {
+    editing.value = true;
+    form.value.resetForm();
+    $('#userFormModal').modal('show');
+    formValues.value = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+    };
+};
+
+const updateUser = (values, { setErrors }) => {
+    api.instance.put('/users/' + formValues.value.id, values)
+        .then((response) => {
+            const index = users.value.data.findIndex(user => user.id === response.data.id);
+            users.value.data[index] = response.data;
+            $('#userFormModal').modal('hide');
+            toastr.success('User updated successfully!');
+        }).catch((error) => {
+            setErrors(error.response.data.errors);
+            console.log(error);
+        });
+}
+
+const handleSubmit = (values, actions) => {
+    // console.log(actions);
+    if (editing.value) {
+        updateUser(values, actions);
+    } else {
+        createUser(values, actions);
+    }
+}
+
+const searchQuery = ref(null);
+
+const selectedUsers = ref([]);
+const toggleSelection = (user) => {
+    const index = selectedUsers.value.indexOf(user.id);
+    if (index === -1) {
+        selectedUsers.value.push(user.id);
+    } else {
+        selectedUsers.value.splice(index, 1);
+    }
+    console.log(selectedUsers.value);
+};
+
+const userIdBeingDeleted = ref(null);
+const confirmUserDeletion = (id) => {
+    userIdBeingDeleted.value = id;
+    $('#deleteUserModal').modal('show');
+};
+
+const deleteUser = () => {
+    api.instance.delete(`/users/${userIdBeingDeleted.value}`)
+    .then(() => {
+        $('#deleteUserModal').modal('hide');
+        toastr.success('User deleted successfully!');
+        users.value.data = users.value.data.filter(user => user.id !== userIdBeingDeleted.value);
+    });
+};
+
+const bulkDelete = () => {
+    api.instance.delete('/users', {
+        data: {
+            ids: selectedUsers.value
+        }
+    })
+    .then(response => {
+        users.value.data = users.value.data.filter(user => !selectedUsers.value.includes(user.id));
+        selectedUsers.value = [];
+        selectAll.value = false;
+        toastr.success(response.data.message);
+    });
+};
+
+const selectAll = ref(false);
+const selectAllUsers = () => {
+    if (selectAll.value) {
+        selectedUsers.value = users.value.data.map(user => user.id);
+    } else {
+        selectedUsers.value = [];
+    }
+    console.log(selectedUsers.value);
+}
+
+watch(searchQuery, debounce(() => {
+    getUsers();
+}, 300));
+
+onMounted(() => {
+    getUsers();
+});
 </script>
+
+<template>
+
+
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <button @click="addUser" type="button" class="mb-2 btn btn-primary">
+                        <i class="fa fa-plus-circle mr-1"></i>
+                        Add New Tech Recommendation
+                    </button>
+                    <div v-if="selectedUsers.length > 0">
+                        <button @click="bulkDelete" type="button" class="ml-2 mb-2 btn btn-danger">
+                            <i class="fa fa-trash mr-1"></i>
+                            Delete Selected
+                        </button>
+                        <span class="ml-2">Selected {{ selectedUsers.length }} users</span>
+                    </div>
+                </div>
+                <div>
+                    <input type="text" v-model="searchQuery" class="form-control" placeholder="Search..." />
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" v-model="selectAll" @change="selectAllUsers" /></th>
+                                <th style="width: 10px">#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Registered Date</th>
+                                <th>Role</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="users.data.length > 0">
+                            <UserListItem v-for="(user, index) in users.data"
+                                :key="user.id"
+                                :user=user :index=index
+                                @edit-user="editUser"
+                                @confirm-user-deletion="confirmUserDeletion"
+                                @toggle-selection="toggleSelection"
+                                :select-all="selectAll" />
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="6" class="text-center">No results found...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <Bootstrap4Pagination :data="users" @pagination-change-page="getUsers" />
+        </div>
+    </div>
+
+    <div class="modal fade" id="userFormModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        <span v-if="editing">Edit User</span>
+                        <span v-else>Add New User</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <Form ref="form" @submit="handleSubmit" :validation-schema="editing ? editUserSchema : createUserSchema"
+                    v-slot="{ errors }" :initial-values="formValues">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <Field name="name" type="text" class="form-control" :class="{ 'is-invalid': errors.name }"
+                                id="name" aria-describedby="nameHelp" placeholder="Enter full name" />
+                            <span class="invalid-feedback">{{ errors.name }}</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <Field name="email" type="email" class="form-control "
+                                :class="{ 'is-invalid': errors.email }" id="email" aria-describedby="nameHelp"
+                                placeholder="Enter full name" />
+                            <span class="invalid-feedback">{{ errors.email }}</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Password</label>
+                            <Field name="password" type="password" class="form-control "
+                                :class="{ 'is-invalid': errors.password }" id="password" aria-describedby="nameHelp"
+                                placeholder="Enter password" />
+                            <span class="invalid-feedback">{{ errors.password }}</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </Form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteUserModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        <span>Delete User</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5>Are you sure you want to delete this user ?</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button @click.prevent="deleteUser" type="button" class="btn btn-primary">Delete User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

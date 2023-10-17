@@ -9,7 +9,7 @@ import Dashboard from "../pages/Dashboard.vue";
 import AuthLayout from "../layouts/AuthLayout.vue";
 import SignOut from "../pages/Signout.vue";
 import RecommList from "../pages/recommendation/RecommList.vue";
-import RecommSetup from "../pages/recommendation/RecommSetup.vue";
+import RecommListItem from "../pages/recommendation/RecommListItem.vue";
 import Profile from "../pages/Profile/index.vue";
 import AddProfile from "../pages/Profile/add.vue";
 import EditProfile from "../pages/Profile/edit.vue";
@@ -71,29 +71,29 @@ const routes = [
 
     //recommedation
     {
-        name: "recommendation",
+        name: "Tech Recommendation",
         path: "/recommendation",
         component: RecommList,
         meta: {
             requiresAuth: true,
         },
     },
-    {
-        name: "Create Recommendation",
-        path: "/recommendation/add",
-        component: RecommSetup,
-        meta: {
-            requiresAuth: true,
-        },
-    },
-    {
-        name: "Modify recommendation",
-        path: "/recommendation/edit/:id",
-        component: RecommSetup,
-        meta: {
-            requiresAuth: true,
-        },
-    },
+    // {
+    //     name: "Create Recommendation",
+    //     path: "/recommendation/add",
+    //     component: RecommListItem,
+    //     meta: {
+    //         requiresAuth: true,
+    //     },
+    // },
+    // {
+    //     name: "Modify recommendation",
+    //     path: "/recommendation/edit/:id",
+    //     component: RecommSetup,
+    //     meta: {
+    //         requiresAuth: true,
+    //     },
+    // },
     //Profile
     {
         name: "profile",

@@ -1,5 +1,5 @@
 <script setup>
-import axios from 'axios';
+import api from "../../services/api.js";
 import { ref, onMounted, reactive, watch } from 'vue';
 import { Form, Field, useResetForm } from 'vue-validate';
 import * as yup from 'yup';
@@ -15,7 +15,7 @@ const formValues = ref();
 const form = ref(null);
 
 const getUsers = (page = 1) => {
-    axios.get(`/api/users?page=${page}`, {
+    api.instance.get(`/users?page=${page}`, {
         params: {
             query: searchQuery.value
         }
@@ -42,7 +42,7 @@ const editUserSchema = yup.object({
 });
 
 const createUser = (values, { resetForm, setErrors }) => {
-    axios.post('/api/users', values)
+    api.instance.post('/users', values)
         .then((response) => {
             users.value.data.unshift(response.data);
             $('#userFormModal').modal('hide');
@@ -73,7 +73,7 @@ const editUser = (user) => {
 };
 
 const updateUser = (values, { setErrors }) => {
-    axios.put('/api/users/' + formValues.value.id, values)
+    api.instance.put('/users/' + formValues.value.id, values)
         .then((response) => {
             const index = users.value.data.findIndex(user => user.id === response.data.id);
             users.value.data[index] = response.data;
@@ -114,7 +114,7 @@ const confirmUserDeletion = (id) => {
 };
 
 const deleteUser = () => {
-    axios.delete(`/api/users/${userIdBeingDeleted.value}`)
+    api.instance.delete(`/users/${userIdBeingDeleted.value}`)
     .then(() => {
         $('#deleteUserModal').modal('hide');
         toastr.success('User deleted successfully!');
@@ -123,7 +123,7 @@ const deleteUser = () => {
 };
 
 const bulkDelete = () => {
-    axios.delete('/api/users', {
+    api.instance.delete('/users', {
         data: {
             ids: selectedUsers.value
         }
@@ -156,7 +156,7 @@ onMounted(() => {
 </script>
 
 <template>
- 
+
 
 
     <div class="content">
