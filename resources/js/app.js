@@ -1,32 +1,45 @@
-//import './bootstrap';
+import './bootstrap';
 
 import 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import 'admin-lte/dist/js/adminlte.min.js';
-
-import { createApp } from 'vue';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import { createPinia } from 'pinia';
-
-import store from "./store/AuthUserStore"
-import App from "./app/App.vue";
-import axios from "axios";
-import router from "./app/router";
-import feather from "feather-icons";
-import Notifications from '@kyvg/vue3-notification'
-import VueToast from 'vue-toast-notification';
-import 'vue-toast-notification/dist/theme-sugar.css';
+import { createRouter, createWebHistory } from 'vue-router';
+import Routes from './routes.js';
+import Login from './pages/auth/Login.vue';
+import App from './App.vue';
+import { useAuthUserStore } from './stores/AuthUserStore';
+import { useSettingStore } from './stores/SettingStore';
 
 const pinia = createPinia();
-
 const app = createApp(App);
-app.config.globalProperties.$axios = axios;
-// Register feather-icons as a global property
-app.config.globalProperties.$feather = feather;
+
+const router = createRouter({
+    routes: Routes,
+    history: createWebHistory(),
+});
+
+router.beforeEach(async (to, from) => {
+    const authUserStore = useAuthUserStore();
+    if (authUserStore.user.name === '' && to.name !== 'admin.login') {
+        const settingStore = useSettingStore();
+        await Promise.all([
+            authUserStore.getAuthUser(),
+            settingStore.getSetting(),
+        ]);
+    }
+});
+
+app.use(pinia);
 app.use(router);
 
-  app.use(store); // Use the Vuex store
-  app.use(Notifications)
-  app.use(VueToast); // Add this line to use VueToast
 
+// if (window.location.pathname === '/login') {
+//     const currentApp = createApp({});
+//     currentApp.component('Login', Login);
+//     currentApp.mount('#login');
+// } else {
+//     app.mount('#app');
+// }
 
-
-app.mount("#app");
+app.mount('#app');
