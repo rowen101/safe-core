@@ -6,7 +6,7 @@ import UpdateSetting from './pages/settings/UpdateSetting.vue';
 import UpdateProfile from './pages/profile/UpdateProfile.vue';
 import Login from './pages/auth/Login.vue';
 import ClientList from './pages/client/ClientList.vue';
-
+import TechList from './pages/techrecomm/TechList.vue';
 
 export default [
     {
@@ -61,6 +61,12 @@ export default [
         path: '/admin/client',
         name: 'admin.client',
         component: ClientList,
+    },
+
+    {
+        path: '/admin/tech-recommendation',
+        name: 'admin.tech',
+        component: TechList,
     },
 
 ]

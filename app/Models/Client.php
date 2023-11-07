@@ -10,19 +10,29 @@ class Client extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     protected $table = 'clients';
+
     protected $fillable = [
         'first_name',
         'last_name',
         'email',
     ];
 
-    protected $appends = [
-        'formatted_created_at',
-    ];
-
-    public function getFormattedCreatedAtAttribute()
+    public function formattedcreatedby(): Attribute
     {
-        return $this->created_at->format(setting('date_format'));
+        return Attribute::make(
+            get: fn () => $this->created_by->format('Y-m-d'),
+        );
     }
+
+    // protected $appends = [
+    //     'formatted_created_at',
+    // ];
+
+    // public function getFormattedCreatedAtAttribute()
+    // {
+    //     return $this->created_at->format(setting('date_format'));
+    // }
 }

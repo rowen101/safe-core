@@ -5,6 +5,7 @@ import axios from 'axios';
 
 const selectedStatus = ref();
 const appointmentStatus = ref([]);
+
 const getAppointmentStatus = () => {
     axios.get('/api/appointment-status')
         .then((response) => {
@@ -12,6 +13,7 @@ const getAppointmentStatus = () => {
         })
 };
 const appointments = ref([]);
+
 const getAppointments = (status) => {
     selectedStatus.value = status;
     const params = {};
@@ -23,6 +25,7 @@ const getAppointments = (status) => {
     })
         .then((response) => {
             appointments.value = response.data;
+            console.log(response);
         })
 };
 

@@ -10,6 +10,8 @@ const errors = ref([]);
 const updateProfile = () => {
     axios.put('/api/profile', {
         name: authUserStore.user.name,
+        first_name: authUserStore.user.first_name,
+        last_name: authUserStore.user.last_name,
         email: authUserStore.user.email,
         role: authUserStore.user.role,
     })
@@ -120,6 +122,20 @@ const handleFileChange = (event) => {
                                             <div class="col-sm-10">
                                                 <input v-model="authUserStore.user.name" type="text" class="form-control" id="inputName" placeholder="Name">
                                                 <span class="text-danger text-sm" v-if="errors && errors.name">{{ errors.name[0] }}</span>
+                                            </div>
+                                        </div>
+                                         <div class="form-group row">
+                                            <label for="inputName" class="col-sm-2 col-form-label">First Name</label>
+                                            <div class="col-sm-10">
+                                                <input v-model="authUserStore.user.first_name" type="text" class="form-control" id="inputName" placeholder="First Name">
+                                                <span class="text-danger text-sm" v-if="errors && errors.first_name">{{ errors.first_name[0] }}</span>
+                                            </div>
+                                        </div>
+                                         <div class="form-group row">
+                                            <label for="inputName" class="col-sm-2 col-form-label">Last Name</label>
+                                            <div class="col-sm-10">
+                                                <input v-model="authUserStore.user.last_name" type="text" class="form-control" id="inputName" placeholder="Last Name">
+                                                <span class="text-danger text-sm" v-if="errors && errors.last_name">{{ errors.last_name[0] }}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">

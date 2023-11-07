@@ -50,7 +50,7 @@ const editAppointment = (values, actions) => {
 
 const clients = ref();
 const getClients = () => {
-    axios.get('/api/clients')
+    axios.get('/api/view-clients')
     .then((response) => {
         clients.value = response.data;
     })

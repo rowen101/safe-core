@@ -76,6 +76,15 @@ const logout = () => {
                     </li>
 
                     <li class="nav-item">
+                        <router-link to="/admin/tech-recommendation" active-class="active" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>
+                                Tech Recommendation
+                            </p>
+                        </router-link>
+                    </li>
+
+                    <li class="nav-item">
                         <router-link to="/admin/settings" active-class="active" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>

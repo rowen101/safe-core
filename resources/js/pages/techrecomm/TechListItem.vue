@@ -22,10 +22,12 @@ const toggleSelection = () => {
     <tr>
         <td><input type="checkbox" :checked="selectAll" @change="toggleSelection" /></td>
         <td>{{ index + 1 }}</td>
-        <td>{{ item.first_name }} {{ item.last_name }} </td>
-        <td>{{ item.email }}</td>
-         <td>{{ item.created_at }}</td>
-
+        <td>{{ item.branch }}</td>
+        <td>{{ item.department }}</td>
+        <td>{{ item.warehouse }}</td>
+        <td>{{ item.warehouse }}</td>
+        <td>{{ item.user }}</td>
+        <td>{{ item.created_at }}</td>
         <!-- <td>{{ item.formatted_created_at }}</td> -->
 
         <td>

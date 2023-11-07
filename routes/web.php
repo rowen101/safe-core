@@ -40,22 +40,25 @@ Route::middleware('auth')->group(function () {
     Route::delete('/api/users/{user}', [UserController::class, 'destory']);
     Route::delete('/api/users', [UserController::class, 'bulkDelete']);
 
+    //client
+    Route::get('/api/view-clients', [ClientController::class,'viewclient']);
     Route::get('/api/clients', [ClientController::class, 'index']);
     Route::post('/api/clients', [ClientController::class, 'store']);
     Route::put('/api/clients/{client}', [ClientController::class, 'update']);
     Route::delete('/api/clients/{client}', [ClientController::class, 'destory']);
     Route::delete('/api/clients', [ClientController::class, 'bulkDelete']);
 
+    //appointments
     Route::get('/api/appointment-status', [AppointmentStatusController::class, 'getStatusWithCount']);
     Route::get('/api/appointments', [AppointmentController::class, 'index']);
     Route::post('/api/appointments/create', [AppointmentController::class, 'store']);
     Route::get('/api/appointments/{appointment}/edit', [AppointmentController::class, 'edit']);
     Route::put('/api/appointments/{appointment}/edit', [AppointmentController::class, 'update']);
     Route::delete('/api/appointments/{appointment}', [AppointmentController::class, 'destroy']);
-
+    //setting
     Route::get('/api/settings', [SettingController::class, 'index']);
     Route::post('/api/settings', [SettingController::class, 'update']);
-
+    
     Route::get('/api/profile', [ProfileController::class, 'index']);
     Route::put('/api/profile', [ProfileController::class, 'update']);
     Route::post('/api/upload-profile-image', [ProfileController::class, 'uploadImage']);

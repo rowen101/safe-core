@@ -12,6 +12,8 @@ class Appointment extends Model
 {
     use HasFactory;
 
+    protected $table = 'appointments';
+
     protected $guarded = [];
 
     protected $appends = ['formatted_start_time', 'formatted_end_time'];
@@ -40,4 +42,8 @@ class Appointment extends Model
             get: fn () => $this->end_time->format('Y-m-d h:i A'),
         );
     }
+    // public function getFormattedCreatedAtAttribute()
+    // {
+    //     return $this->created_at->format(setting('date_format'));
+    // }
 }

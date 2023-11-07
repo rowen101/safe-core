@@ -7,6 +7,12 @@ use App\Models\Client;
 
 class ClientController extends Controller
 {
+
+    public function viewclient()
+    {
+      return Client::latest()->get();
+    }
+
     public function index()
     {
         $client = Client::query()
@@ -17,7 +23,7 @@ class ClientController extends Controller
         ->paginate(setting('pagination_limit'));
 
          return $client;
-        //return Client::latest()->get();
+
     }
 
     public function store()
