@@ -22,7 +22,6 @@ class TechRecomm extends Model
         'problem',
         'udetails',
         'assconducted',
-        'recommendation',
         'crated_by',
         'updated_by',
         'is_active',

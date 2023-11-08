@@ -14,15 +14,14 @@ return new class extends Migration
         Schema::create('techrecomms', function (Blueprint $table) {
             $table->increments('id');
             $table->string('recommnum',20);
-            $table->string('company',20);
+            $table->string('company',150);
             $table->string('branch',20);
             $table->string('department',20);
-            $table->string('warehouse');
+            $table->string('warehouse')->nullable();
             $table->string('user',20);
-            $table->text('promblem');
+            $table->text('prpblem');
             $table->text('udetails')->nullable();
             $table->text('assconducted');
-            $table->text('recommendation');
             $table->integer('created_by')->default(0);
             $table->integer('updated_by')->nullable(0);
             $table->timestamps();

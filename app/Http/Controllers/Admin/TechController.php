@@ -44,19 +44,42 @@ class TechController extends Controller
     public function store()
     {
         request()->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|unique:users,email'
-
+            'branch' => 'required',
+            'department' => 'required',
+            'user' => 'required',
+            'problem' => 'required',
+            'assconducted' => 'required',
         ]);
+
+        // Find the latest TECH recommendation
+        $latestRecommendation = TechRecomm::latest('id')->first();
+
+        // Extract the last recommendation number if available
+        $lastRecommNum = optional($latestRecommendation)->recommnum;
+
+        // Increment the recommendation number
+        $recommnum = 'TECH' . str_pad(
+            (intval(substr($lastRecommNum, 4)) + 1),
+            strlen($lastRecommNum) - 4,
+            '0',
+            STR_PAD_LEFT
+        );
 
         return TechRecomm::create([
-            'first_name' => request('first_name'),
-            'last_name' => request('last_name'),
-            'email' => request('email')
-
+            'recommnum' => $recommnum,
+            'company' => 'Safexpress Logistics Corp.',
+            'branch' => request('branch'),
+            'department' => request('department'),
+            'warehouse' => request('warehouse'),
+            'user' => request('user'),
+            'problem' => request('problem'),
+            'udetails' => request('udetails'),
+            'assconducted' => request('assconducted'),
+            'created_by' => request('created_by'),
+            'updated_by' => 0,
         ]);
     }
+
 
     /**
      * Display the specified resource.
