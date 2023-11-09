@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\TechRecomStatus;
 use App\Http\Controllers\Controller;
 use App\Models\TechRecomm;
 use Illuminate\Http\Request;
@@ -18,9 +19,30 @@ class TechController extends Controller
         $data = TechRecomm::query()
         ->when(request('query'), function ($query, $searchQuery) {
             $query->where('user', 'like', "%{$searchQuery}%");
+            $query->where('status', TechRecomStatus::from(request('status')));
         })
         ->latest()
-        ->paginate(setting('pagination_limit'));
+        ->paginate(setting('pagination_limit'))
+        ->through(fn ($techRecomStatus)=>[
+            'id' => $techRecomStatus->id,
+            'recommnum'=> $techRecomStatus->recommnum,
+            'user' => $techRecomStatus->user,
+            'model' => $techRecomStatus->model,
+            'assettag' => $techRecomStatus->assettag,
+            'serialnum'=> $techRecomStatus->serialnum,
+            'problem' => $techRecomStatus->problem,
+            'assconducted' => $techRecomStatus->assconducted,
+            'recommendation' => $techRecomStatus->recommendation,
+            'branch' => $techRecomStatus->branch,
+            'department' => $techRecomStatus->department,
+            'created_by' => $techRecomStatus->created_by,
+             'created_at' => $techRecomStatus->created_at->format('Y-m-d h:i A'),
+            'status' => [
+                'name' => $techRecomStatus->status->name,
+                'color' => $techRecomStatus->status->color(),
+            ],
+
+        ]);
 
          return $data;
     }
@@ -73,10 +95,15 @@ class TechController extends Controller
             'warehouse' => request('warehouse'),
             'user' => request('user'),
             'problem' => request('problem'),
-            'udetails' => request('udetails'),
+            'model' => request('model'),
+            'assettag' => request('assettag'),
+            'serialnum' => request('serialnum'),
             'assconducted' => request('assconducted'),
+            'recommendation' => request('recommendation'),
+            'status' => 1,
             'created_by' => request('created_by'),
             'updated_by' => 0,
+
         ]);
     }
 
@@ -113,16 +140,28 @@ class TechController extends Controller
     public function update(TechRecomm $tech)
     {
         request()->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|unique:users,email,'.$tech->id,
+            'department' => 'required',
+            'user' => 'required',
+            'problem' => 'required',
+            'assconducted' => 'required',
 
         ]);
 
         $tech->update([
-            'first_name' => request('first_name'),
-            'last_name' => request('last_name'),
-            'email' => request('email'),
+            'company' => 'Safexpress Logistics Corp.',
+            'branch' => request('branch'),
+            'department' => request('department'),
+            'warehouse' => request('warehouse'),
+            'user' => request('user'),
+            'problem' => request('problem'),
+            'model' => request('model'),
+            'assettag' => request('assettag'),
+            'serialnum' => request('serialnum'),
+            'assconducted' => request('assconducted'),
+            'recommendation' => request('recommendation'),
+            'status' => 1,
+            'created_by' => request('created_by'),
+            'updated_by' => 0,
 
         ]);
 
@@ -135,11 +174,11 @@ class TechController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TechRecomm $tech)
+    public function destroy(string $id)
     {
-        $tech->delete();
-
-        return response()->noContent();
+        $data = TechRecomm::find($id);
+        $data->delete();
+        return response()->json(['success' => 200]);
     }
 
     public function bulkDelete()

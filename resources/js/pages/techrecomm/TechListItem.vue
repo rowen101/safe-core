@@ -1,8 +1,8 @@
 <script setup>
-import { formatDate } from '../../helper.js';
-import { ref } from 'vue';
-import { useToastr } from '../../toastr.js';
-import axios from 'axios';
+import { formatDate } from "../../helper.js";
+import { ref } from "vue";
+import { useToastr } from "../../toastr.js";
+import axios from "axios";
 
 const toastr = useToastr();
 
@@ -12,28 +12,40 @@ const props = defineProps({
     selectAll: Boolean,
 });
 
-const emit = defineEmits(['userDeleted', 'editUser', 'confirmUserDeletion']);
+const emit = defineEmits(["userDeleted", "editUser", "confirmUserDeletion"]);
 
 const toggleSelection = () => {
-    emit('toggleSelection', props.item);
-}
+    emit("toggleSelection", props.item);
+};
 </script>
 <template>
     <tr>
         <!-- <td><input type="checkbox" :checked="selectAll" @change="toggleSelection" /></td> -->
         <td>{{ index + 1 }}</td>
         <td>{{ item.recommnum }}</td>
-        <td>{{ item.user}}</td>
+        <td>{{ item.user }}</td>
         <td>{{ item.branch }}</td>
         <td>{{ item.department }}</td>
         <td>{{ item.created_by }}</td>
-        <td>{{ item.formatted_created_at }}</td>
-        <!-- <td>{{ item.formatted_created_at }}</td> -->
+        <td>
+            <span class="badge" :class="`badge-${item.status.color}`">{{
+                item.status.name
+            }}</span>
+        </td>
+
+        <td>{{ item.created_at }}</td>
+
 
         <td>
-            <a href="#" @click.prevent="$emit('editUser', item)"><i class="fa fa-edit"></i></a>
-             <a href="#" @click.prevent="$emit('editUser', item)"><i class="fa fa-eye"></i></a>
-            <a href="#" @click.prevent="$emit('confirmUserDeletion', item.id)"><i class="fa fa-trash text-danger ml-2"></i></a>
+            <a href="#" @click.prevent="$emit('editUser', item)"
+                ><i class="fa fa-edit"></i
+            ></a>
+            <a href="#" @click.prevent="$emit('editUser', item)"
+                ><i class="fa fa-eye"></i
+            ></a>
+            <a href="#" @click.prevent="$emit('confirmUserDeletion', item.id)"
+                ><i class="fa fa-trash text-danger ml-2"></i
+            ></a>
         </td>
     </tr>
 </template>

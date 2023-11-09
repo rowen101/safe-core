@@ -7,13 +7,14 @@ import { useToastr } from "../../toastr.js";
 import UserListItem from "./TechListItem.vue";
 import { debounce } from "lodash";
 import { Bootstrap4Pagination } from "laravel-vue-pagination";
+import { useAuthUserStore } from "../../stores/AuthUserStore";
 
 const toastr = useToastr();
 const lists = ref({ data: [] });
 const editing = ref(false);
 const formValues = ref();
 const form = ref(null);
-
+const authUserStore = useAuthUserStore();
 const getItems = (page = 1) => {
     axios
         .get(`/api/tech-recommendations?page=${page}`, {
@@ -78,8 +79,12 @@ const editUser = (item) => {
         warehouse: item.warehouse,
         user: item.user,
         problem: item.problem,
-        udetails: item.udetails,
+        model: item.model,
+        assettag: item.assettag,
+        serialnum: item.serialnum,
         assconducted: item.assconducted,
+        recommendation: item.recommendation,
+        ceated_by: item.created_by,
     };
 };
 
@@ -252,8 +257,8 @@ onMounted(() => {
                                 <th>Branch</th>
                                 <th>Department</th>
                                 <th>Created</th>
+                                <th>Status</th>
                                 <th>Created Date</th>
-                              
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -324,6 +329,12 @@ onMounted(() => {
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-6">
+                                    <Field
+                                        type="hidden"
+                                        name="created_by"
+                                        id="created_by"
+                                        v-model="authUserStore.user.id"
+                                    />
                                     <div class="form-group">
                                         <label for="user">Branch</label>
                                         <Field
@@ -399,12 +410,67 @@ onMounted(() => {
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
+                                        <label for="model">Model</label>
+                                        <Field
+                                            name="model"
+                                            type="text"
+                                            class="form-control"
+                                            :class="{
+                                                'is-invalid': errors.model,
+                                            }"
+                                            id="model"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Model"
+                                        />
+                                        <span class="invalid-feedback">{{
+                                            errors.model
+                                        }}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="assettag">Asset tag</label>
+                                        <Field
+                                            name="assettag"
+                                            type="text"
+                                            class="form-control"
+                                            :class="{
+                                                'is-invalid': errors.assettag,
+                                            }"
+                                            id="assettag"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Asset Tag"
+                                        />
+                                        <span class="invalid-feedback">{{
+                                            errors.assettag
+                                        }}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="serialnum"
+                                            >Serial number</label
+                                        >
+                                        <Field
+                                            name="serialnum"
+                                            type="text"
+                                            class="form-control"
+                                            :class="{
+                                                'is-invalid': errors.serialnum,
+                                            }"
+                                            id="serialnum"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Serial Number"
+                                        />
+                                        <span class="invalid-feedback">{{
+                                            errors.serialnum
+                                        }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
                                         <label for="problem"
                                             >Report Problem</label
                                         >
                                         <Field
                                             name="problem"
-                                            type="text"
+                                            as="textarea"
                                             class="form-control"
                                             :class="{
                                                 'is-invalid': errors.problem,
@@ -417,44 +483,44 @@ onMounted(() => {
                                             errors.problem
                                         }}</span>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="udetails"
-                                            >Unit details</label
-                                        >
-                                        <Field
-                                            name="udetails"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.udetails,
-                                            }"
-                                            id="email"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Unit Details"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.udetails
-                                        }}</span>
-                                    </div>
                                     <div class="form-group">
                                         <label for="assconducted"
                                             >Assessment conducted</label
                                         >
                                         <Field
                                             name="assconducted"
-                                            type="text"
+                                            as="textarea"
                                             class="form-control"
                                             :class="{
                                                 'is-invalid':
                                                     errors.assconducted,
                                             }"
-                                            id="email"
+                                            id="assconducted"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Assessment conducted"
                                         />
                                         <span class="invalid-feedback">{{
                                             errors.assconducted
+                                        }}</span>
+                                    </div>
+                                     <div class="form-group">
+                                        <label for="recommendation"
+                                            >Recommendation</label
+                                        >
+                                        <Field
+                                            name="recommendation"
+                                            as="textarea"
+                                            class="form-control"
+                                            :class="{
+                                                'is-invalid':
+                                                    errors.recommendation,
+                                            }"
+                                            id="recommendation"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Recommendation"
+                                        />
+                                        <span class="invalid-feedback">{{
+                                            errors.recommendation
                                         }}</span>
                                     </div>
                                 </div>
@@ -491,7 +557,7 @@ onMounted(() => {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
-                        <span>Delete User</span>
+                        <span>Delete Record</span>
                     </h5>
                     <button
                         type="button"
@@ -503,7 +569,7 @@ onMounted(() => {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h5>Are you sure you want to delete this user ?</h5>
+                    <h5>Are you sure you want to delete this record ?</h5>
                 </div>
                 <div class="modal-footer">
                     <button

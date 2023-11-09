@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\TechRecomStatus;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TechRecomm extends Model
 {
@@ -19,17 +21,35 @@ class TechRecomm extends Model
         'department',
         'warehouse',
         'user',
+        'model',
+        'assettag',
+        'serialnum',
         'problem',
-        'udetails',
         'assconducted',
-        'crated_by',
+        'recommendation',
+        'status',
+        'created_by',
         'updated_by',
         'is_active',
     ];
 
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'status' => TechRecomStatus::class,
+    ];
+
+    public function formattedCreatedAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->created_at->format('Y-m-d h:i A'),
+        );
+    }
     protected $appends = [
         'formatted_created_at',
     ];
+
+
 
     public function getFormattedCreatedAtAttribute()
     {

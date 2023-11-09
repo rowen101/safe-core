@@ -19,10 +19,14 @@ return new class extends Migration
             $table->string('department',20);
             $table->string('warehouse')->nullable();
             $table->string('user',20);
-            $table->text('prpblem');
-            $table->text('udetails')->nullable();
+            $table->string('model',50)->nullable();
+            $table->string('assettag',50)->nullable();
+            $table->string('serialnum',50)->nullable();
+            $table->text('problem');
             $table->text('assconducted');
-            $table->integer('created_by')->default(0);
+            $table->text('recommendation');
+            $table->tinyInteger('status');
+            $table->integer('created_by')->nullable(0);
             $table->integer('updated_by')->nullable(0);
             $table->timestamps();
         });
