@@ -47,7 +47,7 @@ const logout = () => {
                         </router-link>
                     </li>
 
-<li class="nav-item">
+<!-- <li class="nav-item">
                         <router-link to="/admin/client"
                             :class="$route.path.startsWith('/admin/client') ? 'active' : ''" class="nav-link">
                             <i class="nav-icon fas fa-calendar-alt"></i>
@@ -64,9 +64,9 @@ const logout = () => {
                                 Appointments
                             </p>
                         </router-link>
-                    </li>
+                    </li> -->
 
-                    <li class="nav-item">
+                    <li class="nav-item"  v-if="authUserStore.user.role === 'ADMIN'">
                         <router-link to="/admin/users" active-class="active" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
@@ -84,7 +84,7 @@ const logout = () => {
                         </router-link>
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="authUserStore.user.role === 'ADMIN'">
                         <router-link to="/admin/settings" active-class="active" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>

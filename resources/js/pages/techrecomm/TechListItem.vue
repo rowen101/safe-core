@@ -3,9 +3,9 @@ import { formatDate } from "../../helper.js";
 import { ref } from "vue";
 import { useToastr } from "../../toastr.js";
 import axios from "axios";
-
+import { useAuthUserStore } from "../../stores/AuthUserStore";
 const toastr = useToastr();
-
+const authUserStore = useAuthUserStore();
 const props = defineProps({
     item: Object,
     index: Number,
@@ -36,7 +36,8 @@ const toggleSelection = () => {
         <td>{{ item.created_at }}</td>
 
 
-        <td>
+        <td v-if="authUserStore.user.role === 'ADMIN'">
+
             <a href="#" @click.prevent="$emit('editUser', item)"
                 ><i class="fa fa-edit"></i
             ></a>
@@ -46,6 +47,14 @@ const toggleSelection = () => {
             <a href="#" @click.prevent="$emit('confirmUserDeletion', item.id)"
                 ><i class="fa fa-trash text-danger ml-2"></i
             ></a>
+        </td>
+        <td v-if="authUserStore.user.role === 'USER'">
+
+
+            <a href="#" @click.prevent="$emit('editUser', item)"
+                ><i class="fa fa-eye"></i
+            ></a>
+
         </td>
     </tr>
 </template>
