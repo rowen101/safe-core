@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { useToastr } from "../../toastr.js";
 import axios from "axios";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
+import DOMPurify from 'dompurify';
 const toastr = useToastr();
 const authUserStore = useAuthUserStore();
 const props = defineProps({
@@ -12,11 +13,21 @@ const props = defineProps({
     selectAll: Boolean,
 });
 
-const emit = defineEmits(["userDeleted", "editUser", "confirmUserDeletion"]);
+const emit = defineEmits(["userDeleted", "editUser", "confirmUserDeletion","showItem"]);
 
 const toggleSelection = () => {
     emit("toggleSelection", props.item);
 };
+
+const getStatusHtml = (status) => {
+    if (status.name === 'APPROVED') {
+        // Sanitize and return the HTML
+        return DOMPurify.sanitize('<a   href=""><i class="fas fa-download" ></i></a>');
+      } else {
+        // Otherwise, return the status name
+        return status.name;
+      }
+}
 </script>
 <template>
     <tr>
@@ -28,9 +39,12 @@ const toggleSelection = () => {
         <td>{{ item.department }}</td>
         <td>{{ item.created_by }}</td>
         <td>
-            <span class="badge" :class="`badge-${item.status.color}`">{{
+            <span class="badge" :class="`badge-${item.status.color}`" >{{
                 item.status.name
-            }}</span>
+            }} </span>
+
+            &nbsp;<span v-if="item.status.name === 'APPROVED'" class="badge" :class="`badge-${item.status.color}`" v-html="getStatusHtml(item.status)"></span>
+
         </td>
 
         <td>{{ item.created_at }}</td>
@@ -41,7 +55,7 @@ const toggleSelection = () => {
             <a href="#" @click.prevent="$emit('editUser', item)"
                 ><i class="fa fa-edit"></i
             ></a>
-            <a href="#" @click.prevent="$emit('editUser', item)"
+            <a href="#" @click.prevent="$emit('showItem', item)"
                 ><i class="fa fa-eye"></i
             ></a>
             <a href="#" @click.prevent="$emit('confirmUserDeletion', item.id)"
@@ -58,3 +72,10 @@ const toggleSelection = () => {
         </td>
     </tr>
 </template>
+
+<style scoped>
+.custom-link {
+  color: black; /* or any other color you prefer */
+  text-decoration: none; /* Optional: Remove underline */
+}
+</style>

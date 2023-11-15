@@ -11,10 +11,26 @@ import { useAuthUserStore } from "../../stores/AuthUserStore";
 
 const toastr = useToastr();
 const lists = ref({ data: [] });
+const tecstatus = ref([
+    {
+        name: 'PENDING',
+        value: 1
+    },
+    {
+        name: 'APPROVED',
+        value: 2,
+    },
+    {
+         name: 'CANCELLED',
+        value: 3,
+    }
+]);
+
 const editing = ref(false);
 const formValues = ref();
 const form = ref(null);
 const authUserStore = useAuthUserStore();
+const selectedStatus = ref(null);
 const getItems = (page = 1) => {
     axios
         .get(`/api/tech-recommendations?page=${page}`, {
@@ -88,6 +104,29 @@ const editUser = (item) => {
     };
 };
 
+const viewItem = (item) => {
+    // editing.value = true;
+    // form.value.resetForm();
+    $("#FormModalView").modal("show");
+    formValues.value = {
+        id: item.id,
+        recommnum: item.recommnum,
+        company: item.company,
+        branch: item.branch,
+        department: item.department,
+        warehouse: item.warehouse,
+        user: item.user,
+        status: item.status.name,
+        problem: item.problem,
+        model: item.model,
+        assettag: item.assettag,
+        serialnum: item.serialnum,
+        assconducted: item.assconducted,
+        recommendation: item.recommendation,
+        ceated_by: item.created_by,
+    };
+};
+
 const updateData = (values, { setErrors }) => {
     axios
         .put("/api/tech-recommendations/" + formValues.value.id, values)
@@ -128,6 +167,7 @@ const toggleSelection = (user) => {
 };
 
 const userIdBeingDeleted = ref(null);
+
 const confirmItemDeletion = (id) => {
     userIdBeingDeleted.value = id;
     $("#deleteClientModal").modal("show");
@@ -170,6 +210,10 @@ const selectAllUsers = () => {
         selectedItems.value = [];
     }
     console.log(selectedItems.value);
+};
+
+const updateStatus = (status) => {
+    selectedStatus.value = status;
 };
 
 watch(
@@ -269,6 +313,7 @@ onMounted(() => {
                                 :item="item"
                                 :index="index"
                                 @edit-user="editUser"
+                                @show-item="viewItem"
                                 @confirm-user-deletion="confirmItemDeletion"
                                 @toggle-selection="toggleSelection"
                                 :select-all="selectAll"
@@ -288,6 +333,210 @@ onMounted(() => {
                 :data="lists"
                 @pagination-change-page="getItems"
             />
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="FormModalView"
+        data-backdrop="static"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-l" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        <span>View Tech Recommendation</span>
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <Form
+                    ref="form"
+                    @submit="handleSubmit"
+                    :initial-values="formValues"
+                >
+                    <div class="modal-body">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-6">
+                                    <Field
+                                        type="hidden"
+                                        name="created_by"
+                                        id="created_by"
+                                        v-model="authUserStore.user.id"
+                                    />
+                                    <div class="form-group">
+                                        <label for="user">Branch</label>
+                                        <Field
+                                            name="branch"
+                                            type="text"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="branch"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter branch"
+                                        />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="department"
+                                            >Department</label
+                                        >
+                                        <Field
+                                            name="department"
+                                            type="text"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="department"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Department"
+                                        />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="warehouse">warehouse</label>
+                                        <Field
+                                            name="warehouse"
+                                            type="text"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="email"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Warehouse"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user">User</label>
+                                        <Field
+                                            name="user"
+                                            type="text"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="user"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter User"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="model">Model</label>
+                                        <Field
+                                            name="model"
+                                            type="text"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="model"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Model"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="assettag">Asset tag</label>
+                                        <Field
+                                            name="assettag"
+                                            type="text"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="assettag"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Asset Tag"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="serialnum"
+                                            >Serial number</label
+                                        >
+                                        <Field
+                                            name="serialnum"
+                                            type="text"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="serialnum"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Serial Number"
+                                        />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
+                                        <Field class="form-control"  id="status" name="status" as="select">
+                                            <option v-for="item in tecstatus" :key="item" :value="item.value">{{ item.name }}</option>
+                                        </Field>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="problem"
+                                            >Report Problem</label
+                                        >
+                                        <Field
+                                            name="problem"
+                                            as="textarea"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="problem"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Report problem"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="assconducted"
+                                            >Assessment conducted</label
+                                        >
+                                        <Field
+                                            name="assconducted"
+                                            as="textarea"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="assconducted"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Assessment conducted"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recommendation"
+                                            >Recommendation</label
+                                        >
+                                        <Field
+                                            name="recommendation"
+                                            as="textarea"
+                                            class="form-control bg-white"
+                                            readonly
+                                            id="recommendation"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Recommendation"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                        </button>
+                    </div>
+                </Form>
+            </div>
         </div>
     </div>
 
@@ -503,7 +752,7 @@ onMounted(() => {
                                             errors.assconducted
                                         }}</span>
                                     </div>
-                                     <div class="form-group">
+                                    <div class="form-group">
                                         <label for="recommendation"
                                             >Recommendation</label
                                         >
