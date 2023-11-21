@@ -237,13 +237,13 @@ onMounted(() => {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Tech Recommendation</h1>
+                    <h1 class="m-0">Weekly Task Schedule</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
                         <li class="breadcrumb-item active">
-                            Tech Recommendation
+                            Weekly Task Schedule
                         </li>
                     </ol>
                 </div>
@@ -261,7 +261,7 @@ onMounted(() => {
                         class="mb-2 btn btn-primary"
                     >
                         <i class="fa fa-plus-circle mr-1"></i>
-                        Add New TechRecom
+                        New Task
                     </button>
                     <div v-if="selectedItems.length > 0">
                         <button

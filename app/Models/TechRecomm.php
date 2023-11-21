@@ -21,6 +21,7 @@ class TechRecomm extends Model
         'department',
         'warehouse',
         'user',
+        'brand',
         'model',
         'assettag',
         'serialnum',

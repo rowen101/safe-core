@@ -7,6 +7,7 @@ import UpdateProfile from './pages/profile/UpdateProfile.vue';
 import Login from './pages/auth/Login.vue';
 import ClientList from './pages/client/ClientList.vue';
 import TechList from './pages/techrecomm/TechList.vue';
+import WTSList from './pages/wts/TechList.vue';
 
 export default [
     {
@@ -68,5 +69,10 @@ export default [
         name: 'admin.tech',
         component: TechList,
     },
+    {
+        path: '/admin/weekly-task-schedule',
+        name: 'admin.weekly-task-schedule',
+        component: WTSList,
+    }
 
 ]

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('department',20);
             $table->string('warehouse')->nullable();
             $table->string('user',20);
+            $table->string('brand',20);
             $table->string('model',50)->nullable();
             $table->string('assettag',50)->nullable();
             $table->string('serialnum',50)->nullable();
