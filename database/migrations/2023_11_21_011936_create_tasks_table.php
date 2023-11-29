@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('task');
             $table->date('datestart');
             $table->date('dateend');
-            $table->date('plandate')->nullable();
+            $table->date('plandate')->nullable();   
             $table->date('acomplishdate')->nullable();
             $table->string('remarks')->nullable();
             $table->integer('user_id');

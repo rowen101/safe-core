@@ -8,22 +8,24 @@ import UserListItem from "./TechListItem.vue";
 import { debounce } from "lodash";
 import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
+import { useSettingStore } from "../../stores/SettingStore";
 
+const settingStore = useSettingStore();
 const toastr = useToastr();
 const lists = ref({ data: [] });
 const tecstatus = ref([
     {
-        name: 'PENDING',
-        value: 1
+        name: "PENDING",
+        value: 1,
     },
     {
-        name: 'APPROVED',
+        name: "APPROVED",
         value: 2,
     },
     {
-         name: 'CANCELLED',
+        name: "CANCELLED",
         value: 3,
-    }
+    },
 ]);
 
 const editing = ref(false);
@@ -31,6 +33,7 @@ const formValues = ref();
 const form = ref(null);
 const authUserStore = useAuthUserStore();
 const selectedStatus = ref(null);
+const showTaskList = false;
 const getItems = (page = 1) => {
     axios
         .get(`/api/tech-recommendations?page=${page}`, {
@@ -51,7 +54,7 @@ const createUserSchema = yup.object({
     user: yup.string().required(),
     problem: yup.string().required(),
     assconducted: yup.string().required(),
-    brand:yup.string().required(),
+    brand: yup.string().required(),
 });
 
 const editUserSchema = yup.object({
@@ -97,7 +100,7 @@ const editUser = (item) => {
         warehouse: item.warehouse,
         user: item.user,
         problem: item.problem,
-        brand:item.brand,
+        brand: item.brand,
         model: item.model,
         assettag: item.assettag,
         serialnum: item.serialnum,
@@ -206,6 +209,10 @@ const bulkDelete = () => {
         });
 };
 
+const toggleTaskList = () => {
+    this.showTaskList = !this.showTaskList;
+};
+
 const selectAll = ref(false);
 const selectAllUsers = () => {
     if (selectAll.value) {
@@ -236,15 +243,11 @@ onMounted(() => {
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Weekly Task Schedule</h1>
-                </div>
+                <div class="col-sm-6"></div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">
-                            Weekly Task Schedule
-                        </li>
+                        <li class="breadcrumb-item active">My Prio</li>
                     </ol>
                 </div>
             </div>
@@ -253,90 +256,1087 @@ onMounted(() => {
 
     <div class="content">
         <div class="container-fluid">
-            <div class="d-flex justify-content-between">
-                <div class="d-flex">
-                    <button
-                        @click="addUser"
-                        type="button"
-                        class="mb-2 btn btn-primary"
-                    >
-                        <i class="fa fa-plus-circle mr-1"></i>
-                        New Task
-                    </button>
-                    <div v-if="selectedItems.length > 0">
-                        <button
-                            @click="bulkDelete"
-                            type="button"
-                            class="ml-2 mb-2 btn btn-danger"
-                        >
-                            <i class="fa fa-trash mr-1"></i>
-                            Delete Selected
-                        </button>
-                        <span class="ml-2"
-                            >Selected
-                            {{ selectedItems.length }} techrecomm</span
-                        >
+            <div class="col-md-12">
+                <!-- <div class="card card-primary card-outline">
+                    <div class="card-header">
+
+                        <div class="col-md-6">
+                            <button
+                                type="button"
+                                class="btn btn-tool"
+                                data-card-widget="collapse"
+                            >
+                                <h3 class="card-title">Folders</h3>
+                            </button>
+
+                            <div class="col-md-2">
+
+                            </div>
+                        </div>
+
+                    </div>
+                       <div class="card-body">
+                        <div class="table-responsive mailbox-messages">
+                            <table class="table table-hover table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="icheck-primary">
+                                                <input
+                                                    type="checkbox"
+                                                    value=""
+                                                    id="check2"
+                                                />
+                                                <label for="check2"></label>
+                                            </div>
+                                        </td>
+                                        <td class="mailbox-star">
+                                            <a href="#"
+                                                ><i
+                                                    class="fas fa-star-o text-warning"
+                                                ></i
+                                            ></a>
+                                        </td>
+                                        <td class="mailbox-name">
+                                            <a href="read-mail.html"
+                                                >Alexander Pierce</a
+                                            >
+                                        </td>
+                                        <td class="mailbox-subject">
+                                            <b>AdminLTE 3.0 Issue</b> - Trying
+                                            to find a solution to this
+                                            problem...
+                                        </td>
+                                        <td class="mailbox-attachment">
+                                            <i class="fas fa-paperclip"></i>
+                                        </td>
+                                        <td class="mailbox-date">
+                                            28 mins ago
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <div class="card card-danger card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">Folders</h3>
+
+                        <div class="card-tools">
+                            <button
+                                type="button"
+                                class="btn btn-tool"
+                                data-card-widget="collapse"
+                            >
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">Folders</h3>
+
+                        <div class="card-tools">
+                            <button
+                                type="button"
+                                class="btn btn-tool"
+                                data-card-widget="collapse"
+                            >
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">Folders</h3>
+
+                        <div class="card-tools">
+                            <button
+                                type="button"
+                                class="btn btn-tool"
+                                data-card-widget="collapse"
+                            >
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            {{
+                                authUserStore.user.first_name +
+                                " " +
+                                authUserStore.user.last_name
+                            }}
+                            - My Prio
+                        </h3>
+                        <div class="card-tools">
+                            <i class="fa fa-sm fa-filter clickable"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex">
+                                <button
+                                    @click="addUser"
+                                    type="button"
+                                    class="mb-2 btn btn-primary"
+                                >
+                                    <i class="fa fa-plus-circle mr-1"></i>
+                                    New Task
+                                </button>
+                            </div>
+                            <div class="d-flex">
+                                <input
+                                    type="text"
+                                    v-model="searchQuery"
+                                    class="form-control"
+                                    placeholder="Search..."
+                                />
+                            </div>
+                        </div>
+                        <div class="card mb-1">
+                            <!----><!---->
+                            <header role="tab" class="card-header p-1">
+                                <button
+                                    type="button"
+                                    class="btn text-left taskName btn-default"
+                                    aria-controls="accordion-1649255"
+                                    aria-expanded="true"
+                                    style="width: 60%"
+                                    @click="toggleTaskList"
+                                >
+                                    <div class="row">
+                                        <div
+                                            xs="2"
+                                            cols-md="2"
+                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <b>11/24/2023</b>
+                                        </div>
+                                        <div
+                                            xs="2"
+                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <h6 class="source VSC">VSC</h6>
+                                        </div>
+                                        <div
+                                            xs="6"
+                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
+                                        >
+                                            <b>MARFA CEBU - TECH SUPPORT</b>
+                                        </div>
+                                    </div></button
+                                ><button
+                                    type="button"
+                                    class="btn btn btn-danger float-right btn-secondary"
+                                    style="margin-left: 10px"
+                                >
+                                    End
+                                </button>
+                                <p class="float-right"></p>
+                                <!---->
+                                <p class="float-right">11/24/2023 7:27 am</p>
+                            </header>
+                            <div
+                                id="accordion-1649255"
+                                role="tabpanel"
+                                class="collapse show"
+                                v-show="showTaskList"
+                            >
+                                <div class="taskList" style="margin: 1%">
+                                    <h5>
+                                        <b>Project:</b>
+                                        N/A
+                                    </h5>
+                                    <h5>
+                                        <b>Planned Date:</b>
+                                        11/24/2023 8:00 AM
+                                    </h5>
+                                    <h5>
+                                        <b>Start Date:</b>
+                                        11/24/2023 7:27 am
+                                    </h5>
+                                    <h5>
+                                        <b>Planned End Date:</b>
+                                        11/24/2023 5:00 PM
+                                    </h5>
+                                    <h5 class="ongoing">
+                                        <b style="color: black">Status:</b>
+                                        ON-GOING
+                                    </h5>
+                                    <h5>
+                                        <b style="color: black">Attachment:</b>
+                                        0
+                                    </h5>
+                                </div>
+                                <div class="taskList" style="margin: 1%">
+                                    <h5><b>Accomplished Date:</b></h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">Type:</b>
+                                        VSC
+                                    </h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">PWS:</b>
+                                        VSC
+                                    </h5>
+                                </div>
+                                <div style="margin: 1%">
+                                    <div class="row my-1">
+                                        <div class="col-sm-3">
+                                            <h5><b>Remarks:</b></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin: 0.5%">
+                                    <button
+                                        type="button"
+                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
+                                        style="
+                                            margin-left: 10px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Drop</button
+                                    ><button
+                                        type="button"
+                                        disabled="disabled"
+                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary disabled"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Edit</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Attachment</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
+                                    >
+                                        &nbsp;&nbsp;Remarks
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-1">
+                            <!----><!---->
+                            <header role="tab" class="card-header p-1">
+                                <button
+                                    type="button"
+                                    class="btn text-left taskName btn-default collapsed"
+                                    aria-controls="accordion-1649256"
+                                    aria-expanded="false"
+                                    style="width: 60%"
+                                >
+                                    <div class="row">
+                                        <div
+                                            xs="2"
+                                            cols-md="2"
+                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <b>11/25/2023</b>
+                                        </div>
+                                        <div
+                                            xs="2"
+                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <h6 class="source VSC">VSC</h6>
+                                        </div>
+                                        <div
+                                            xs="6"
+                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
+                                        >
+                                            <b>MARFA CEBU - TECH SUPPORT</b>
+                                        </div>
+                                    </div></button
+                                ><button
+                                    type="button"
+                                    disabled="disabled"
+                                    class="btn btn btn-danger float-right btn-secondary disabled"
+                                    style="margin-left: 10px"
+                                >
+                                    End
+                                </button>
+                                <p class="float-right"></p>
+                                <button
+                                    type="button"
+                                    class="btn btn btn-success float-right btn-secondary"
+                                >
+                                    Start
+                                </button>
+                                <p class="float-right"></p>
+                            </header>
+                            <div
+                                id="accordion-1649256"
+                                class="collapse"
+                                role="tabpanel"
+                                style="display: none"
+                            >
+                                <div class="taskList" style="margin: 1%">
+                                    <h5>
+                                        <b>Project:</b>
+                                        N/A
+                                    </h5>
+                                    <h5>
+                                        <b>Planned Date:</b>
+                                        11/25/2023 8:00 AM
+                                    </h5>
+                                    <h5><b>Start Date:</b></h5>
+                                    <h5>
+                                        <b>Planned End Date:</b>
+                                        11/25/2023 5:00 PM
+                                    </h5>
+                                    <h5 class="open">
+                                        <b style="color: black">Status:</b>
+                                        OPEN
+                                    </h5>
+                                    <h5>
+                                        <b style="color: black">Attachment:</b>
+                                        0
+                                    </h5>
+                                </div>
+                                <div class="taskList" style="margin: 1%">
+                                    <h5><b>Accomplished Date:</b></h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">Type:</b>
+                                        VSC
+                                    </h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">PWS:</b>
+                                        VSC
+                                    </h5>
+                                </div>
+                                <div style="margin: 1%">
+                                    <div class="row my-1">
+                                        <div class="col-sm-3">
+                                            <h5><b>Remarks:</b></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin: 0.5%">
+                                    <button
+                                        type="button"
+                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
+                                        style="
+                                            margin-left: 10px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Drop</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Edit</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Attachment</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
+                                    >
+                                        &nbsp;&nbsp;Remarks
+                                    </button>
+                                </div>
+                                <!----><!----><!----><!---->
+                            </div>
+                            <!----><!---->
+                        </div>
+                        <div class="card mb-1">
+                            <!----><!---->
+                            <header role="tab" class="card-header p-1">
+                                <button
+                                    type="button"
+                                    class="btn text-left taskName btn-default collapsed"
+                                    aria-controls="accordion-1660190"
+                                    aria-expanded="false"
+                                    style="width: 60%"
+                                >
+                                    <div class="row">
+                                        <div
+                                            xs="2"
+                                            cols-md="2"
+                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <b>11/28/2023</b>
+                                        </div>
+                                        <div
+                                            xs="2"
+                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <h6 class="source VSC">VSC</h6>
+                                        </div>
+                                        <div
+                                            xs="6"
+                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
+                                        >
+                                            <b>MARFA CEBU - TECH SUPPORT</b>
+                                        </div>
+                                    </div></button
+                                ><button
+                                    type="button"
+                                    disabled="disabled"
+                                    class="btn btn btn-danger float-right btn-secondary disabled"
+                                    style="margin-left: 10px"
+                                >
+                                    End
+                                </button>
+                                <p class="float-right"></p>
+                                <button
+                                    type="button"
+                                    class="btn btn btn-success float-right btn-secondary"
+                                >
+                                    Start
+                                </button>
+                                <p class="float-right"></p>
+                            </header>
+                            <div
+                                id="accordion-1660190"
+                                class="collapse"
+                                role="tabpanel"
+                                style="display: none"
+                            >
+                                <div class="taskList" style="margin: 1%">
+                                    <h5>
+                                        <b>Project:</b>
+                                        N/A
+                                    </h5>
+                                    <h5>
+                                        <b>Planned Date:</b>
+                                        11/28/2023 8:00 AM
+                                    </h5>
+                                    <h5><b>Start Date:</b></h5>
+                                    <h5>
+                                        <b>Planned End Date:</b>
+                                        11/28/2023 5:00 PM
+                                    </h5>
+                                    <h5 class="open">
+                                        <b style="color: black">Status:</b>
+                                        OPEN
+                                    </h5>
+                                    <h5>
+                                        <b style="color: black">Attachment:</b>
+                                        0
+                                    </h5>
+                                </div>
+                                <div class="taskList" style="margin: 1%">
+                                    <h5><b>Accomplished Date:</b></h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">Type:</b>
+                                        VSC
+                                    </h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">PWS:</b>
+                                        VSC
+                                    </h5>
+                                </div>
+                                <div style="margin: 1%">
+                                    <div class="row my-1">
+                                        <div class="col-sm-3">
+                                            <h5><b>Remarks:</b></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin: 0.5%">
+                                    <button
+                                        type="button"
+                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
+                                        style="
+                                            margin-left: 10px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Drop</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Edit</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Attachment</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
+                                    >
+                                        &nbsp;&nbsp;Remarks
+                                    </button>
+                                </div>
+                                <!----><!----><!----><!---->
+                            </div>
+                            <!----><!---->
+                        </div>
+                        <div class="card mb-1">
+                            <!----><!---->
+                            <header role="tab" class="card-header p-1">
+                                <button
+                                    type="button"
+                                    class="btn text-left taskName btn-default collapsed"
+                                    aria-controls="accordion-1660191"
+                                    aria-expanded="false"
+                                    style="width: 60%"
+                                >
+                                    <div class="row">
+                                        <div
+                                            xs="2"
+                                            cols-md="2"
+                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <b>11/29/2023</b>
+                                        </div>
+                                        <div
+                                            xs="2"
+                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <h6 class="source VSC">VSC</h6>
+                                        </div>
+                                        <div
+                                            xs="6"
+                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
+                                        >
+                                            <b>MARFA CEBU - TECH SUPPORT</b>
+                                        </div>
+                                    </div></button
+                                ><button
+                                    type="button"
+                                    disabled="disabled"
+                                    class="btn btn btn-danger float-right btn-secondary disabled"
+                                    style="margin-left: 10px"
+                                >
+                                    End
+                                </button>
+                                <p class="float-right"></p>
+                                <button
+                                    type="button"
+                                    class="btn btn btn-success float-right btn-secondary"
+                                >
+                                    Start
+                                </button>
+                                <p class="float-right"></p>
+                            </header>
+                            <div
+                                id="accordion-1660191"
+                                class="collapse"
+                                role="tabpanel"
+                                style="display: none"
+                            >
+                                <div class="taskList" style="margin: 1%">
+                                    <h5>
+                                        <b>Project:</b>
+                                        N/A
+                                    </h5>
+                                    <h5>
+                                        <b>Planned Date:</b>
+                                        11/29/2023 8:00 AM
+                                    </h5>
+                                    <h5><b>Start Date:</b></h5>
+                                    <h5>
+                                        <b>Planned End Date:</b>
+                                        11/29/2023 5:00 PM
+                                    </h5>
+                                    <h5 class="open">
+                                        <b style="color: black">Status:</b>
+                                        OPEN
+                                    </h5>
+                                    <h5>
+                                        <b style="color: black">Attachment:</b>
+                                        0
+                                    </h5>
+                                </div>
+                                <div class="taskList" style="margin: 1%">
+                                    <h5><b>Accomplished Date:</b></h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">Type:</b>
+                                        VSC
+                                    </h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">PWS:</b>
+                                        VSC
+                                    </h5>
+                                </div>
+                                <div style="margin: 1%">
+                                    <div class="row my-1">
+                                        <div class="col-sm-3">
+                                            <h5><b>Remarks:</b></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin: 0.5%">
+                                    <button
+                                        type="button"
+                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
+                                        style="
+                                            margin-left: 10px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Drop</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Edit</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Attachment</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
+                                    >
+                                        &nbsp;&nbsp;Remarks
+                                    </button>
+                                </div>
+                                <!----><!----><!----><!---->
+                            </div>
+                            <!----><!---->
+                        </div>
+                        <div class="card mb-1">
+                            <!----><!---->
+                            <header role="tab" class="card-header p-1">
+                                <button
+                                    type="button"
+                                    class="btn text-left taskName btn-default collapsed"
+                                    aria-controls="accordion-1660192"
+                                    aria-expanded="false"
+                                    style="width: 60%"
+                                >
+                                    <div class="row">
+                                        <div
+                                            xs="2"
+                                            cols-md="2"
+                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <b>11/30/2023</b>
+                                        </div>
+                                        <div
+                                            xs="2"
+                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <h6 class="source VSC">VSC</h6>
+                                        </div>
+                                        <div
+                                            xs="6"
+                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
+                                        >
+                                            <b>MARFA CEBU - TECH SUPPORT</b>
+                                        </div>
+                                    </div></button
+                                ><button
+                                    type="button"
+                                    disabled="disabled"
+                                    class="btn btn btn-danger float-right btn-secondary disabled"
+                                    style="margin-left: 10px"
+                                >
+                                    End
+                                </button>
+                                <p class="float-right"></p>
+                                <button
+                                    type="button"
+                                    class="btn btn btn-success float-right btn-secondary"
+                                >
+                                    Start
+                                </button>
+                                <p class="float-right"></p>
+                            </header>
+                            <div
+                                id="accordion-1660192"
+                                class="collapse"
+                                role="tabpanel"
+                                style="display: none"
+                            >
+                                <div class="taskList" style="margin: 1%">
+                                    <h5>
+                                        <b>Project:</b>
+                                        N/A
+                                    </h5>
+                                    <h5>
+                                        <b>Planned Date:</b>
+                                        11/30/2023 8:00 AM
+                                    </h5>
+                                    <h5><b>Start Date:</b></h5>
+                                    <h5>
+                                        <b>Planned End Date:</b>
+                                        11/30/2023 5:00 PM
+                                    </h5>
+                                    <h5 class="open">
+                                        <b style="color: black">Status:</b>
+                                        OPEN
+                                    </h5>
+                                    <h5>
+                                        <b style="color: black">Attachment:</b>
+                                        0
+                                    </h5>
+                                </div>
+                                <div class="taskList" style="margin: 1%">
+                                    <h5><b>Accomplished Date:</b></h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">Type:</b>
+                                        VSC
+                                    </h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">PWS:</b>
+                                        VSC
+                                    </h5>
+                                </div>
+                                <div style="margin: 1%">
+                                    <div class="row my-1">
+                                        <div class="col-sm-3">
+                                            <h5><b>Remarks:</b></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin: 0.5%">
+                                    <button
+                                        type="button"
+                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
+                                        style="
+                                            margin-left: 10px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Drop</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Edit</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Attachment</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
+                                    >
+                                        &nbsp;&nbsp;Remarks
+                                    </button>
+                                </div>
+                                <!----><!----><!----><!---->
+                            </div>
+                            <!----><!---->
+                        </div>
+                        <div class="card mb-1">
+                            <!----><!---->
+                            <header role="tab" class="card-header p-1">
+                                <button
+                                    type="button"
+                                    class="btn text-left taskName btn-default collapsed"
+                                    aria-controls="accordion-1660193"
+                                    aria-expanded="false"
+                                    style="width: 60%"
+                                >
+                                    <div class="row">
+                                        <div
+                                            xs="2"
+                                            cols-md="2"
+                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <b>12/01/2023</b>
+                                        </div>
+                                        <div
+                                            xs="2"
+                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <h6 class="source VSC">VSC</h6>
+                                        </div>
+                                        <div
+                                            xs="6"
+                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
+                                        >
+                                            <b>MARFA CEBU - TECH SUPPORT</b>
+                                        </div>
+                                    </div></button
+                                ><button
+                                    type="button"
+                                    disabled="disabled"
+                                    class="btn btn btn-danger float-right btn-secondary disabled"
+                                    style="margin-left: 10px"
+                                >
+                                    End
+                                </button>
+                                <p class="float-right"></p>
+                                <button
+                                    type="button"
+                                    class="btn btn btn-success float-right btn-secondary"
+                                >
+                                    Start
+                                </button>
+                                <p class="float-right"></p>
+                            </header>
+                            <div
+                                id="accordion-1660193"
+                                class="collapse"
+                                role="tabpanel"
+                                style="display: none"
+                            >
+                                <div class="taskList" style="margin: 1%">
+                                    <h5>
+                                        <b>Project:</b>
+                                        N/A
+                                    </h5>
+                                    <h5>
+                                        <b>Planned Date:</b>
+                                        12/01/2023 8:00 AM
+                                    </h5>
+                                    <h5><b>Start Date:</b></h5>
+                                    <h5>
+                                        <b>Planned End Date:</b>
+                                        12/01/2023 5:00 PM
+                                    </h5>
+                                    <h5 class="open">
+                                        <b style="color: black">Status:</b>
+                                        OPEN
+                                    </h5>
+                                    <h5>
+                                        <b style="color: black">Attachment:</b>
+                                        0
+                                    </h5>
+                                </div>
+                                <div class="taskList" style="margin: 1%">
+                                    <h5><b>Accomplished Date:</b></h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">Type:</b>
+                                        VSC
+                                    </h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">PWS:</b>
+                                        VSC
+                                    </h5>
+                                </div>
+                                <div style="margin: 1%">
+                                    <div class="row my-1">
+                                        <div class="col-sm-3">
+                                            <h5><b>Remarks:</b></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin: 0.5%">
+                                    <button
+                                        type="button"
+                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
+                                        style="
+                                            margin-left: 10px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Drop</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Edit</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Attachment</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
+                                    >
+                                        &nbsp;&nbsp;Remarks
+                                    </button>
+                                </div>
+                                <!----><!----><!----><!---->
+                            </div>
+                            <!----><!---->
+                        </div>
+                        <div class="card mb-1">
+                            <!----><!---->
+                            <header role="tab" class="card-header p-1">
+                                <button
+                                    type="button"
+                                    class="btn text-left taskName btn-default collapsed"
+                                    aria-controls="accordion-1660194"
+                                    aria-expanded="false"
+                                    style="width: 60%"
+                                >
+                                    <div class="row">
+                                        <div
+                                            xs="2"
+                                            cols-md="2"
+                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <b>12/02/2023</b>
+                                        </div>
+                                        <div
+                                            xs="2"
+                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
+                                        >
+                                            <h6 class="source VSC">VSC</h6>
+                                        </div>
+                                        <div
+                                            xs="6"
+                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
+                                        >
+                                            <b>MARFA CEBU - TECH SUPPORT</b>
+                                        </div>
+                                    </div></button
+                                ><button
+                                    type="button"
+                                    disabled="disabled"
+                                    class="btn btn btn-danger float-right btn-secondary disabled"
+                                    style="margin-left: 10px"
+                                >
+                                    End
+                                </button>
+                                <p class="float-right"></p>
+                                <button
+                                    type="button"
+                                    class="btn btn btn-success float-right btn-secondary"
+                                >
+                                    Start
+                                </button>
+                                <p class="float-right"></p>
+                            </header>
+                            <div
+                                id="accordion-1660194"
+                                class="collapse"
+                                role="tabpanel"
+                                style="display: none"
+                            >
+                                <div class="taskList" style="margin: 1%">
+                                    <h5>
+                                        <b>Project:</b>
+                                        N/A
+                                    </h5>
+                                    <h5>
+                                        <b>Planned Date:</b>
+                                        12/02/2023 8:00 AM
+                                    </h5>
+                                    <h5><b>Start Date:</b></h5>
+                                    <h5>
+                                        <b>Planned End Date:</b>
+                                        12/02/2023 5:00 PM
+                                    </h5>
+                                    <h5 class="open">
+                                        <b style="color: black">Status:</b>
+                                        OPEN
+                                    </h5>
+                                    <h5>
+                                        <b style="color: black">Attachment:</b>
+                                        0
+                                    </h5>
+                                </div>
+                                <div class="taskList" style="margin: 1%">
+                                    <h5><b>Accomplished Date:</b></h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">Type:</b>
+                                        VSC
+                                    </h5>
+                                    <h5 class="closestatus">
+                                        <b style="color: black">PWS:</b>
+                                        VSC
+                                    </h5>
+                                </div>
+                                <div style="margin: 1%">
+                                    <div class="row my-1">
+                                        <div class="col-sm-3">
+                                            <h5><b>Remarks:</b></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin: 0.5%">
+                                    <button
+                                        type="button"
+                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
+                                        style="
+                                            margin-left: 10px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Drop</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Edit</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
+                                        style="
+                                            margin-right: 5px;
+                                            margin-bottom: 5px;
+                                        "
+                                    >
+                                        &nbsp;&nbsp;Attachment</button
+                                    ><button
+                                        type="button"
+                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
+                                    >
+                                        &nbsp;&nbsp;Remarks
+                                    </button>
+                                </div>
+                                <!----><!----><!----><!---->
+                            </div>
+                            <!----><!---->
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <input
-                        type="text"
-                        v-model="searchQuery"
-                        class="form-control"
-                        placeholder="Search..."
-                    />
-                </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-bordered table-sm">
-                        <thead>
-                            <tr>
-                                <!-- <th>
-                                    <input
-                                        type="checkbox"
-                                        v-model="selectAll"
-                                        @change="selectAllUsers"
-                                    />
-                                </th> -->
-                                <th style="width: 10px">#</th>
-                                <th>Technom</th>
-                                <th>User</th>
-                                <th>Branch</th>
-                                <th>Department</th>
-                                <th>Created</th>
-                                <th>Status</th>
-                                <th>Created Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="lists.data.length > 0">
-                            <UserListItem
-                                v-for="(item, index) in lists.data"
-                                :key="item.id"
-                                :item="item"
-                                :index="index"
-                                @edit-user="editUser"
-                                @show-item="viewItem"
-                                @confirm-user-deletion="confirmItemDeletion"
-                                @toggle-selection="toggleSelection"
-                                :select-all="selectAll"
-                            />
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td colspan="9" class="text-center">
-                                    No results found...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <Bootstrap4Pagination
-                :data="lists"
-                @pagination-change-page="getItems"
-            />
         </div>
     </div>
 
@@ -487,8 +1487,19 @@ onMounted(() => {
 
                                     <div class="form-group">
                                         <label for="status">Status</label>
-                                        <Field class="form-control"  id="status" name="status" as="select">
-                                            <option v-for="item in tecstatus" :key="item" :value="item.value">{{ item.name }}</option>
+                                        <Field
+                                            class="form-control"
+                                            id="status"
+                                            name="status"
+                                            as="select"
+                                        >
+                                            <option
+                                                v-for="item in tecstatus"
+                                                :key="item"
+                                                :value="item.value"
+                                            >
+                                                {{ item.name }}
+                                            </option>
                                         </Field>
                                     </div>
                                 </div>
