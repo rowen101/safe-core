@@ -9,6 +9,9 @@ import { debounce } from "lodash";
 import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import { useSettingStore } from "../../stores/SettingStore";
+import flatpickr from "flatpickr";
+import 'flatpickr/dist/themes/light.css';
+
 
 const settingStore = useSettingStore();
 const toastr = useToastr();
@@ -30,10 +33,19 @@ const tecstatus = ref([
 
 const editing = ref(false);
 const formValues = ref();
-const form = ref(null);
+
 const authUserStore = useAuthUserStore();
 const selectedStatus = ref(null);
-const showTaskList = false;
+const showTaskList = ref(false);
+
+const form = reactive({
+    title: '',
+    client_id: '',
+    start_time: '',
+    end_time: '',
+    description: '',
+});
+
 const getItems = (page = 1) => {
     axios
         .get(`/api/tech-recommendations?page=${page}`, {
@@ -210,10 +222,11 @@ const bulkDelete = () => {
 };
 
 const toggleTaskList = () => {
-    this.showTaskList = !this.showTaskList;
+    showTaskList.value = !showTaskList.value;
 };
 
 const selectAll = ref(false);
+
 const selectAllUsers = () => {
     if (selectAll.value) {
         selectedItems.value = lists.value.data.map((user) => user.id);
@@ -235,6 +248,12 @@ watch(
 );
 
 onMounted(() => {
+
+     flatpickr(".flatpickr", {
+        enableTime: true,
+        dateFormat: "Y-m-d h:i K",
+        defaultHour: 10,
+    });
     getItems();
 });
 </script>
@@ -243,7 +262,16 @@ onMounted(() => {
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6"></div>
+                <div class="col-sm-6">
+                    <h5>
+                        {{
+                            authUserStore.user.first_name +
+                            " " +
+                            authUserStore.user.last_name
+                        }}
+                        - My Prio
+                    </h5>
+                </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -257,198 +285,66 @@ onMounted(() => {
     <div class="content">
         <div class="container-fluid">
             <div class="col-md-12">
-                <!-- <div class="card card-primary card-outline">
-                    <div class="card-header">
-
-                        <div class="col-md-6">
-                            <button
-                                type="button"
-                                class="btn btn-tool"
-                                data-card-widget="collapse"
-                            >
-                                <h3 class="card-title">Folders</h3>
-                            </button>
-
-                            <div class="col-md-2">
-
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex">
+                        <button
+                            @click="addUser"
+                            type="button"
+                            class="mb-2 btn btn-primary"
+                        >
+                            <i class="fa fa-plus-circle mr-1"></i>
+                            New Task
+                        </button>
+                    </div>
+                    <div class="d-flex">
+                        <input
+                            type="text"
+                            v-model="searchQuery"
+                            class="form-control"
+                            placeholder="Search..."
+                        />
+                    </div>
+                </div>
+                <div class="col-12" id="accordion">
+                    <div class="card card-primary">
+                        <a
+                            class="d-block w-100"
+                            data-toggle="collapse"
+                            href="#collapseOne"
+                        >
+                            <div class="card-header">
+                                <h4 class="card-title">
+                                    <i class="fas fa-calendar-alt"></i>&nbsp;<b
+                                        >11/24/2023</b
+                                    >
+                                </h4>
+                                <div class="card-tools">
+                                    <button
+                                        type="button"
+                                        class="btn btn btn-danger float-right btn-secondary"
+                                        style="margin-left: 10px"
+                                    >
+                                        End
+                                    </button>
+                                    <p class="float-right"></p>
+                                    <!---->
+                                    <p class="float-right">
+                                        11/24/2023 7:27 am
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-
-                    </div>
-                       <div class="card-body">
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover table-striped">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="icheck-primary">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    id="check2"
-                                                />
-                                                <label for="check2"></label>
-                                            </div>
-                                        </td>
-                                        <td class="mailbox-star">
-                                            <a href="#"
-                                                ><i
-                                                    class="fas fa-star-o text-warning"
-                                                ></i
-                                            ></a>
-                                        </td>
-                                        <td class="mailbox-name">
-                                            <a href="read-mail.html"
-                                                >Alexander Pierce</a
-                                            >
-                                        </td>
-                                        <td class="mailbox-subject">
-                                            <b>AdminLTE 3.0 Issue</b> - Trying
-                                            to find a solution to this
-                                            problem...
-                                        </td>
-                                        <td class="mailbox-attachment">
-                                            <i class="fas fa-paperclip"></i>
-                                        </td>
-                                        <td class="mailbox-date">
-                                            28 mins ago
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- <div class="card card-danger card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">Folders</h3>
-
-                        <div class="card-tools">
-                            <button
-                                type="button"
-                                class="btn btn-tool"
-                                data-card-widget="collapse"
-                            >
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- <div class="card card-success card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">Folders</h3>
-
-                        <div class="card-tools">
-                            <button
-                                type="button"
-                                class="btn btn-tool"
-                                data-card-widget="collapse"
-                            >
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">Folders</h3>
-
-                        <div class="card-tools">
-                            <button
-                                type="button"
-                                class="btn btn-tool"
-                                data-card-widget="collapse"
-                            >
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div> -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            {{
-                                authUserStore.user.first_name +
-                                " " +
-                                authUserStore.user.last_name
-                            }}
-                            - My Prio
-                        </h3>
-                        <div class="card-tools">
-                            <i class="fa fa-sm fa-filter clickable"></i>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex">
-                                <button
-                                    @click="addUser"
-                                    type="button"
-                                    class="mb-2 btn btn-primary"
-                                >
-                                    <i class="fa fa-plus-circle mr-1"></i>
-                                    New Task
-                                </button>
-                            </div>
-                            <div class="d-flex">
-                                <input
-                                    type="text"
-                                    v-model="searchQuery"
-                                    class="form-control"
-                                    placeholder="Search..."
-                                />
-                            </div>
-                        </div>
-                        <div class="card mb-1">
-                            <!----><!---->
-                            <header role="tab" class="card-header p-1">
-                                <button
-                                    type="button"
-                                    class="btn text-left taskName btn-default"
-                                    aria-controls="accordion-1649255"
-                                    aria-expanded="true"
-                                    style="width: 60%"
-                                    @click="toggleTaskList"
-                                >
-                                    <div class="row">
-                                        <div
-                                            xs="2"
-                                            cols-md="2"
-                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <b>11/24/2023</b>
-                                        </div>
-                                        <div
-                                            xs="2"
-                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <h6 class="source VSC">VSC</h6>
-                                        </div>
-                                        <div
-                                            xs="6"
-                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
-                                        >
-                                            <b>MARFA CEBU - TECH SUPPORT</b>
-                                        </div>
-                                    </div></button
-                                ><button
-                                    type="button"
-                                    class="btn btn btn-danger float-right btn-secondary"
-                                    style="margin-left: 10px"
-                                >
-                                    End
-                                </button>
-                                <p class="float-right"></p>
-                                <!---->
-                                <p class="float-right">11/24/2023 7:27 am</p>
-                            </header>
-                            <div
-                                id="accordion-1649255"
-                                role="tabpanel"
-                                class="collapse show"
-                                v-show="showTaskList"
-                            >
+                        </a>
+                        <div
+                            id="collapseOne"
+                            class="collapse"
+                            data-parent="#accordion"
+                        >
+                            <div class="card-body">
                                 <div class="taskList" style="margin: 1%">
+                                    <h5>
+                                        <b>Site:</b>
+                                        SYSU CEBU - TECH SUPPORT
+                                    </h5>
                                     <h5>
                                         <b>Project:</b>
                                         N/A
@@ -530,77 +426,68 @@ onMounted(() => {
                                 </div>
                             </div>
                         </div>
-                        <div class="card mb-1">
-                            <!----><!---->
-                            <header role="tab" class="card-header p-1">
-                                <button
-                                    type="button"
-                                    class="btn text-left taskName btn-default collapsed"
-                                    aria-controls="accordion-1649256"
-                                    aria-expanded="false"
-                                    style="width: 60%"
-                                >
-                                    <div class="row">
-                                        <div
-                                            xs="2"
-                                            cols-md="2"
-                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <b>11/25/2023</b>
-                                        </div>
-                                        <div
-                                            xs="2"
-                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <h6 class="source VSC">VSC</h6>
-                                        </div>
-                                        <div
-                                            xs="6"
-                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
-                                        >
-                                            <b>MARFA CEBU - TECH SUPPORT</b>
-                                        </div>
-                                    </div></button
-                                ><button
-                                    type="button"
-                                    disabled="disabled"
-                                    class="btn btn btn-danger float-right btn-secondary disabled"
-                                    style="margin-left: 10px"
-                                >
-                                    End
-                                </button>
-                                <p class="float-right"></p>
-                                <button
-                                    type="button"
-                                    class="btn btn btn-success float-right btn-secondary"
-                                >
-                                    Start
-                                </button>
-                                <p class="float-right"></p>
-                            </header>
-                            <div
-                                id="accordion-1649256"
-                                class="collapse"
-                                role="tabpanel"
-                                style="display: none"
-                            >
+                    </div>
+                    <div class="card card-primary">
+                        <a
+                            class="d-block w-100"
+                            data-toggle="collapse"
+                            href="#collapsetwo"
+                        >
+                            <div class="card-header">
+                                <h4 class="card-title">
+                                    <i class="fas fa-calendar-alt"></i>&nbsp;<b
+                                        >11/25/2023</b
+                                    >
+                                </h4>
+                                <div class="card-tools">
+                                    <button
+                                        type="button"
+                                        disabled="disabled"
+                                        class="btn btn btn-danger float-right btn-secondary disabled"
+                                        style="margin-left: 10px"
+                                    >
+                                        End
+                                    </button>
+                                    <p class="float-right"></p>
+                                    <button
+                                        type="button"
+                                        class="btn btn btn-success float-right btn-secondary"
+                                    >
+                                        Start
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+                        <div
+                            id="collapsetwo"
+                            class="collapse"
+                            data-parent="#accordion"
+                        >
+                            <div class="card-body">
                                 <div class="taskList" style="margin: 1%">
+                                    <h5>
+                                        <b>Site:</b>
+                                        SYSU CEBU - TECH SUPPORT
+                                    </h5>
                                     <h5>
                                         <b>Project:</b>
                                         N/A
                                     </h5>
                                     <h5>
                                         <b>Planned Date:</b>
-                                        11/25/2023 8:00 AM
+                                        11/24/2023 8:00 AM
                                     </h5>
-                                    <h5><b>Start Date:</b></h5>
+                                    <h5>
+                                        <b>Start Date:</b>
+                                        11/24/2023 7:27 am
+                                    </h5>
                                     <h5>
                                         <b>Planned End Date:</b>
-                                        11/25/2023 5:00 PM
+                                        11/24/2023 5:00 PM
                                     </h5>
-                                    <h5 class="open">
+                                    <h5 class="ongoing">
                                         <b style="color: black">Status:</b>
-                                        OPEN
+                                        ON-GOING
                                     </h5>
                                     <h5>
                                         <b style="color: black">Attachment:</b>
@@ -637,7 +524,8 @@ onMounted(() => {
                                         &nbsp;&nbsp;Drop</button
                                     ><button
                                         type="button"
-                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
+                                        disabled="disabled"
+                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary disabled"
                                         style="
                                             margin-right: 5px;
                                             margin-bottom: 5px;
@@ -660,679 +548,7 @@ onMounted(() => {
                                         &nbsp;&nbsp;Remarks
                                     </button>
                                 </div>
-                                <!----><!----><!----><!---->
                             </div>
-                            <!----><!---->
-                        </div>
-                        <div class="card mb-1">
-                            <!----><!---->
-                            <header role="tab" class="card-header p-1">
-                                <button
-                                    type="button"
-                                    class="btn text-left taskName btn-default collapsed"
-                                    aria-controls="accordion-1660190"
-                                    aria-expanded="false"
-                                    style="width: 60%"
-                                >
-                                    <div class="row">
-                                        <div
-                                            xs="2"
-                                            cols-md="2"
-                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <b>11/28/2023</b>
-                                        </div>
-                                        <div
-                                            xs="2"
-                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <h6 class="source VSC">VSC</h6>
-                                        </div>
-                                        <div
-                                            xs="6"
-                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
-                                        >
-                                            <b>MARFA CEBU - TECH SUPPORT</b>
-                                        </div>
-                                    </div></button
-                                ><button
-                                    type="button"
-                                    disabled="disabled"
-                                    class="btn btn btn-danger float-right btn-secondary disabled"
-                                    style="margin-left: 10px"
-                                >
-                                    End
-                                </button>
-                                <p class="float-right"></p>
-                                <button
-                                    type="button"
-                                    class="btn btn btn-success float-right btn-secondary"
-                                >
-                                    Start
-                                </button>
-                                <p class="float-right"></p>
-                            </header>
-                            <div
-                                id="accordion-1660190"
-                                class="collapse"
-                                role="tabpanel"
-                                style="display: none"
-                            >
-                                <div class="taskList" style="margin: 1%">
-                                    <h5>
-                                        <b>Project:</b>
-                                        N/A
-                                    </h5>
-                                    <h5>
-                                        <b>Planned Date:</b>
-                                        11/28/2023 8:00 AM
-                                    </h5>
-                                    <h5><b>Start Date:</b></h5>
-                                    <h5>
-                                        <b>Planned End Date:</b>
-                                        11/28/2023 5:00 PM
-                                    </h5>
-                                    <h5 class="open">
-                                        <b style="color: black">Status:</b>
-                                        OPEN
-                                    </h5>
-                                    <h5>
-                                        <b style="color: black">Attachment:</b>
-                                        0
-                                    </h5>
-                                </div>
-                                <div class="taskList" style="margin: 1%">
-                                    <h5><b>Accomplished Date:</b></h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">Type:</b>
-                                        VSC
-                                    </h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">PWS:</b>
-                                        VSC
-                                    </h5>
-                                </div>
-                                <div style="margin: 1%">
-                                    <div class="row my-1">
-                                        <div class="col-sm-3">
-                                            <h5><b>Remarks:</b></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="margin: 0.5%">
-                                    <button
-                                        type="button"
-                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
-                                        style="
-                                            margin-left: 10px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Drop</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Edit</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Attachment</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
-                                    >
-                                        &nbsp;&nbsp;Remarks
-                                    </button>
-                                </div>
-                                <!----><!----><!----><!---->
-                            </div>
-                            <!----><!---->
-                        </div>
-                        <div class="card mb-1">
-                            <!----><!---->
-                            <header role="tab" class="card-header p-1">
-                                <button
-                                    type="button"
-                                    class="btn text-left taskName btn-default collapsed"
-                                    aria-controls="accordion-1660191"
-                                    aria-expanded="false"
-                                    style="width: 60%"
-                                >
-                                    <div class="row">
-                                        <div
-                                            xs="2"
-                                            cols-md="2"
-                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <b>11/29/2023</b>
-                                        </div>
-                                        <div
-                                            xs="2"
-                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <h6 class="source VSC">VSC</h6>
-                                        </div>
-                                        <div
-                                            xs="6"
-                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
-                                        >
-                                            <b>MARFA CEBU - TECH SUPPORT</b>
-                                        </div>
-                                    </div></button
-                                ><button
-                                    type="button"
-                                    disabled="disabled"
-                                    class="btn btn btn-danger float-right btn-secondary disabled"
-                                    style="margin-left: 10px"
-                                >
-                                    End
-                                </button>
-                                <p class="float-right"></p>
-                                <button
-                                    type="button"
-                                    class="btn btn btn-success float-right btn-secondary"
-                                >
-                                    Start
-                                </button>
-                                <p class="float-right"></p>
-                            </header>
-                            <div
-                                id="accordion-1660191"
-                                class="collapse"
-                                role="tabpanel"
-                                style="display: none"
-                            >
-                                <div class="taskList" style="margin: 1%">
-                                    <h5>
-                                        <b>Project:</b>
-                                        N/A
-                                    </h5>
-                                    <h5>
-                                        <b>Planned Date:</b>
-                                        11/29/2023 8:00 AM
-                                    </h5>
-                                    <h5><b>Start Date:</b></h5>
-                                    <h5>
-                                        <b>Planned End Date:</b>
-                                        11/29/2023 5:00 PM
-                                    </h5>
-                                    <h5 class="open">
-                                        <b style="color: black">Status:</b>
-                                        OPEN
-                                    </h5>
-                                    <h5>
-                                        <b style="color: black">Attachment:</b>
-                                        0
-                                    </h5>
-                                </div>
-                                <div class="taskList" style="margin: 1%">
-                                    <h5><b>Accomplished Date:</b></h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">Type:</b>
-                                        VSC
-                                    </h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">PWS:</b>
-                                        VSC
-                                    </h5>
-                                </div>
-                                <div style="margin: 1%">
-                                    <div class="row my-1">
-                                        <div class="col-sm-3">
-                                            <h5><b>Remarks:</b></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="margin: 0.5%">
-                                    <button
-                                        type="button"
-                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
-                                        style="
-                                            margin-left: 10px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Drop</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Edit</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Attachment</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
-                                    >
-                                        &nbsp;&nbsp;Remarks
-                                    </button>
-                                </div>
-                                <!----><!----><!----><!---->
-                            </div>
-                            <!----><!---->
-                        </div>
-                        <div class="card mb-1">
-                            <!----><!---->
-                            <header role="tab" class="card-header p-1">
-                                <button
-                                    type="button"
-                                    class="btn text-left taskName btn-default collapsed"
-                                    aria-controls="accordion-1660192"
-                                    aria-expanded="false"
-                                    style="width: 60%"
-                                >
-                                    <div class="row">
-                                        <div
-                                            xs="2"
-                                            cols-md="2"
-                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <b>11/30/2023</b>
-                                        </div>
-                                        <div
-                                            xs="2"
-                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <h6 class="source VSC">VSC</h6>
-                                        </div>
-                                        <div
-                                            xs="6"
-                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
-                                        >
-                                            <b>MARFA CEBU - TECH SUPPORT</b>
-                                        </div>
-                                    </div></button
-                                ><button
-                                    type="button"
-                                    disabled="disabled"
-                                    class="btn btn btn-danger float-right btn-secondary disabled"
-                                    style="margin-left: 10px"
-                                >
-                                    End
-                                </button>
-                                <p class="float-right"></p>
-                                <button
-                                    type="button"
-                                    class="btn btn btn-success float-right btn-secondary"
-                                >
-                                    Start
-                                </button>
-                                <p class="float-right"></p>
-                            </header>
-                            <div
-                                id="accordion-1660192"
-                                class="collapse"
-                                role="tabpanel"
-                                style="display: none"
-                            >
-                                <div class="taskList" style="margin: 1%">
-                                    <h5>
-                                        <b>Project:</b>
-                                        N/A
-                                    </h5>
-                                    <h5>
-                                        <b>Planned Date:</b>
-                                        11/30/2023 8:00 AM
-                                    </h5>
-                                    <h5><b>Start Date:</b></h5>
-                                    <h5>
-                                        <b>Planned End Date:</b>
-                                        11/30/2023 5:00 PM
-                                    </h5>
-                                    <h5 class="open">
-                                        <b style="color: black">Status:</b>
-                                        OPEN
-                                    </h5>
-                                    <h5>
-                                        <b style="color: black">Attachment:</b>
-                                        0
-                                    </h5>
-                                </div>
-                                <div class="taskList" style="margin: 1%">
-                                    <h5><b>Accomplished Date:</b></h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">Type:</b>
-                                        VSC
-                                    </h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">PWS:</b>
-                                        VSC
-                                    </h5>
-                                </div>
-                                <div style="margin: 1%">
-                                    <div class="row my-1">
-                                        <div class="col-sm-3">
-                                            <h5><b>Remarks:</b></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="margin: 0.5%">
-                                    <button
-                                        type="button"
-                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
-                                        style="
-                                            margin-left: 10px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Drop</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Edit</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Attachment</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
-                                    >
-                                        &nbsp;&nbsp;Remarks
-                                    </button>
-                                </div>
-                                <!----><!----><!----><!---->
-                            </div>
-                            <!----><!---->
-                        </div>
-                        <div class="card mb-1">
-                            <!----><!---->
-                            <header role="tab" class="card-header p-1">
-                                <button
-                                    type="button"
-                                    class="btn text-left taskName btn-default collapsed"
-                                    aria-controls="accordion-1660193"
-                                    aria-expanded="false"
-                                    style="width: 60%"
-                                >
-                                    <div class="row">
-                                        <div
-                                            xs="2"
-                                            cols-md="2"
-                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <b>12/01/2023</b>
-                                        </div>
-                                        <div
-                                            xs="2"
-                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <h6 class="source VSC">VSC</h6>
-                                        </div>
-                                        <div
-                                            xs="6"
-                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
-                                        >
-                                            <b>MARFA CEBU - TECH SUPPORT</b>
-                                        </div>
-                                    </div></button
-                                ><button
-                                    type="button"
-                                    disabled="disabled"
-                                    class="btn btn btn-danger float-right btn-secondary disabled"
-                                    style="margin-left: 10px"
-                                >
-                                    End
-                                </button>
-                                <p class="float-right"></p>
-                                <button
-                                    type="button"
-                                    class="btn btn btn-success float-right btn-secondary"
-                                >
-                                    Start
-                                </button>
-                                <p class="float-right"></p>
-                            </header>
-                            <div
-                                id="accordion-1660193"
-                                class="collapse"
-                                role="tabpanel"
-                                style="display: none"
-                            >
-                                <div class="taskList" style="margin: 1%">
-                                    <h5>
-                                        <b>Project:</b>
-                                        N/A
-                                    </h5>
-                                    <h5>
-                                        <b>Planned Date:</b>
-                                        12/01/2023 8:00 AM
-                                    </h5>
-                                    <h5><b>Start Date:</b></h5>
-                                    <h5>
-                                        <b>Planned End Date:</b>
-                                        12/01/2023 5:00 PM
-                                    </h5>
-                                    <h5 class="open">
-                                        <b style="color: black">Status:</b>
-                                        OPEN
-                                    </h5>
-                                    <h5>
-                                        <b style="color: black">Attachment:</b>
-                                        0
-                                    </h5>
-                                </div>
-                                <div class="taskList" style="margin: 1%">
-                                    <h5><b>Accomplished Date:</b></h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">Type:</b>
-                                        VSC
-                                    </h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">PWS:</b>
-                                        VSC
-                                    </h5>
-                                </div>
-                                <div style="margin: 1%">
-                                    <div class="row my-1">
-                                        <div class="col-sm-3">
-                                            <h5><b>Remarks:</b></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="margin: 0.5%">
-                                    <button
-                                        type="button"
-                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
-                                        style="
-                                            margin-left: 10px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Drop</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Edit</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Attachment</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
-                                    >
-                                        &nbsp;&nbsp;Remarks
-                                    </button>
-                                </div>
-                                <!----><!----><!----><!---->
-                            </div>
-                            <!----><!---->
-                        </div>
-                        <div class="card mb-1">
-                            <!----><!---->
-                            <header role="tab" class="card-header p-1">
-                                <button
-                                    type="button"
-                                    class="btn text-left taskName btn-default collapsed"
-                                    aria-controls="accordion-1660194"
-                                    aria-expanded="false"
-                                    style="width: 60%"
-                                >
-                                    <div class="row">
-                                        <div
-                                            xs="2"
-                                            cols-md="2"
-                                            class="col-sm-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <b>12/02/2023</b>
-                                        </div>
-                                        <div
-                                            xs="2"
-                                            class="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-2"
-                                        >
-                                            <h6 class="source VSC">VSC</h6>
-                                        </div>
-                                        <div
-                                            xs="6"
-                                            class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-1"
-                                        >
-                                            <b>MARFA CEBU - TECH SUPPORT</b>
-                                        </div>
-                                    </div></button
-                                ><button
-                                    type="button"
-                                    disabled="disabled"
-                                    class="btn btn btn-danger float-right btn-secondary disabled"
-                                    style="margin-left: 10px"
-                                >
-                                    End
-                                </button>
-                                <p class="float-right"></p>
-                                <button
-                                    type="button"
-                                    class="btn btn btn-success float-right btn-secondary"
-                                >
-                                    Start
-                                </button>
-                                <p class="float-right"></p>
-                            </header>
-                            <div
-                                id="accordion-1660194"
-                                class="collapse"
-                                role="tabpanel"
-                                style="display: none"
-                            >
-                                <div class="taskList" style="margin: 1%">
-                                    <h5>
-                                        <b>Project:</b>
-                                        N/A
-                                    </h5>
-                                    <h5>
-                                        <b>Planned Date:</b>
-                                        12/02/2023 8:00 AM
-                                    </h5>
-                                    <h5><b>Start Date:</b></h5>
-                                    <h5>
-                                        <b>Planned End Date:</b>
-                                        12/02/2023 5:00 PM
-                                    </h5>
-                                    <h5 class="open">
-                                        <b style="color: black">Status:</b>
-                                        OPEN
-                                    </h5>
-                                    <h5>
-                                        <b style="color: black">Attachment:</b>
-                                        0
-                                    </h5>
-                                </div>
-                                <div class="taskList" style="margin: 1%">
-                                    <h5><b>Accomplished Date:</b></h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">Type:</b>
-                                        VSC
-                                    </h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">PWS:</b>
-                                        VSC
-                                    </h5>
-                                </div>
-                                <div style="margin: 1%">
-                                    <div class="row my-1">
-                                        <div class="col-sm-3">
-                                            <h5><b>Remarks:</b></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="margin: 0.5%">
-                                    <button
-                                        type="button"
-                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
-                                        style="
-                                            margin-left: 10px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Drop</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Edit</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Attachment</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
-                                    >
-                                        &nbsp;&nbsp;Remarks
-                                    </button>
-                                </div>
-                                <!----><!----><!----><!---->
-                            </div>
-                            <!----><!---->
                         </div>
                     </div>
                 </div>
@@ -1576,12 +792,12 @@ onMounted(() => {
         aria-labelledby="staticBackdropLabel"
         aria-hidden="true"
     >
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
-                        <span v-if="editing">Edit Tech Recom.</span>
-                        <span v-else>Add New Tech Recom.</span>
+                        <span v-if="editing">Edit Task</span>
+                        <span v-else>Add Task</span>
                     </h5>
                     <button
                         type="button"
@@ -1604,212 +820,43 @@ onMounted(() => {
                     <div class="modal-body">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-6">
-                                    <Field
-                                        type="hidden"
-                                        name="created_by"
-                                        id="created_by"
-                                        v-model="authUserStore.user.id"
-                                    />
-                                    <div class="form-group">
-                                        <label for="user">Branch</label>
-                                        <Field
-                                            name="branch"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.branch,
-                                            }"
-                                            id="branch"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter branch"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.branch
-                                        }}</span>
-                                    </div>
 
-                                    <div class="form-group">
-                                        <label for="department"
-                                            >Department</label
-                                        >
-                                        <Field
-                                            name="department"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.department,
-                                            }"
-                                            id="department"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Department"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.department
-                                        }}</span>
-                                    </div>
 
-                                    <div class="form-group">
-                                        <label for="warehouse">warehouse</label>
-                                        <Field
-                                            name="warehouse"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.warehouse,
-                                            }"
-                                            id="email"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Warehouse"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.warehouse
-                                        }}</span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="user">User</label>
-                                        <Field
-                                            name="user"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.user,
-                                            }"
-                                            id="user"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter User"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.user
-                                        }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="brand">Brand</label>
-                                        <Field
-                                            name="brand"
-                                            type="text"
-                                            class="form-control"
-                                            id="brand"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter brand"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="model">Model</label>
-                                        <Field
-                                            name="model"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.model,
-                                            }"
-                                            id="model"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Model"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.model
-                                        }}</span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="assettag">Asset tag</label>
-                                        <Field
-                                            name="assettag"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.assettag,
-                                            }"
-                                            id="assettag"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Asset Tag"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.assettag
-                                        }}</span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="serialnum"
-                                            >Serial number</label
-                                        >
-                                        <Field
-                                            name="serialnum"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.serialnum,
-                                            }"
-                                            id="serialnum"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Serial Number"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.serialnum
-                                        }}</span>
-                                    </div>
-                                </div>
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="problem"
-                                            >Report Problem</label
-                                        >
+                                        <label for="site">Site Name</label>
                                         <Field
-                                            name="problem"
-                                            as="textarea"
+                                            name="site"
+                                            type="text"
                                             class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.problem,
-                                            }"
-                                            id="problem"
+                                            id="site"
                                             aria-describedby="nameHelp"
-                                            placeholder="Enter Report problem"
+                                            placeholder="Enter Site Name"
                                         />
-                                        <span class="invalid-feedback">{{
-                                            errors.problem
-                                        }}</span>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="assconducted"
-                                            >Assessment conducted</label
-                                        >
+                                     <div class="form-group">
+                                        <label for="task">Task Name</label>
                                         <Field
-                                            name="assconducted"
-                                            as="textarea"
+                                            name="task"
+                                            type="text"
                                             class="form-control"
-                                            :class="{
-                                                'is-invalid':
-                                                    errors.assconducted,
-                                            }"
-                                            id="assconducted"
+                                            id="task"
                                             aria-describedby="nameHelp"
-                                            placeholder="Enter Assessment conducted"
+                                            placeholder="Enter Task Name"
                                         />
-                                        <span class="invalid-feedback">{{
-                                            errors.assconducted
-                                        }}</span>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="recommendation"
-                                            >Recommendation</label
-                                        >
-                                        <Field
-                                            name="recommendation"
-                                            as="textarea"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid':
-                                                    errors.recommendation,
-                                            }"
-                                            id="recommendation"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Recommendation"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.recommendation
-                                        }}</span>
-                                    </div>
+
+                                     <div class="form-group">
+                                            <label for="end-time">Start Date & Time</label>
+                                            <input v-model="form.start_time" type="text" class="form-control flatpickr" :class="{'is-invalid': errors.start_time}" id="start-time">
+                                            <span class="invalid-feedback">{{ errors.start_time }}</span>
+                                        </div>
+  <div class="form-group">
+                                            <label for="end-time">End Date & Time</label>
+                                            <input v-model="form.end_time" type="text" class="form-control flatpickr" :class="{'is-invalid': errors.end_time}" id="end-time">
+                                            <span class="invalid-feedback">{{ errors.end_time }}</span>
+                                        </div>
+
                                 </div>
                             </div>
                         </div>
@@ -1878,3 +925,9 @@ onMounted(() => {
         </div>
     </div>
 </template>
+<style scoped>
+a {
+    color: #2b2b2b;
+    text-decoration: none;
+}
+</style>
