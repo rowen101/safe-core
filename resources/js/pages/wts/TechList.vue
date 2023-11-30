@@ -10,8 +10,7 @@ import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import { useSettingStore } from "../../stores/SettingStore";
 import flatpickr from "flatpickr";
-import 'flatpickr/dist/themes/light.css';
-
+import "flatpickr/dist/themes/light.css";
 
 const settingStore = useSettingStore();
 const toastr = useToastr();
@@ -37,13 +36,36 @@ const formValues = ref();
 const authUserStore = useAuthUserStore();
 const selectedStatus = ref(null);
 const showTaskList = ref(false);
+const taskoptions = ref([
+    {
+        name: "LEAVE",
+        value: 1,
+    },
+    {
+        name: "ON BUSINESS TRAVEL",
+        value: 2,
+    },
+    {
+        name: "SITE VISIT",
+        value: 3,
+    },
+    {
+        name: "VSC",
+        value: 4,
+    },
+    {
+        name: "WORK FROM HOME",
+        value: 6,
+    },
+]);
 
 const form = reactive({
-    title: '',
-    client_id: '',
-    start_time: '',
-    end_time: '',
-    description: '',
+    site: "",
+    user_id: authUserStore.user.id,
+    tasktype: 0,
+    taskname: "",
+    plandate: "",
+    planenddate: "",
 });
 
 const getItems = (page = 1) => {
@@ -60,37 +82,33 @@ const getItems = (page = 1) => {
         });
 };
 
-const createUserSchema = yup.object({
-    branch: yup.string().required(),
-    department: yup.string().required(),
-    user: yup.string().required(),
-    problem: yup.string().required(),
-    assconducted: yup.string().required(),
-    brand: yup.string().required(),
+const createDataSchema = yup.object({
+    site: yup.string().required(),
+    tasktype: yup.string().required(),
+    taskname: yup.string().required(),
+    plandate: yup.string().required(),
+    planenddate: yup.string().required(),
 });
 
-const editUserSchema = yup.object({
-    branch: yup.string().required(),
-    department: yup.string().required(),
-    user: yup.string().required(),
-    problem: yup.string().required(),
-    assconducted: yup.string().required(),
-    brand: yup.string().required(),
+const editDataSchema = yup.object({
+    site: yup.string().required(),
+    tasktype: yup.string().required(),
+    taskname: yup.string().required(),
+    plandate: yup.string().required(),
+    planenddate: yup.string().required(),
 });
 
-const createData = (values, { resetForm, setErrors }) => {
+const createData = (values, actions) => {
     axios
-        .post("/api/tech-recommendations", values)
+        .post("/api/dailytask", form)
         .then((response) => {
             lists.value.data.unshift(response.data);
             $("#FormModal").modal("hide");
-            resetForm();
-            toastr.success("User created successfully!");
+
+            toastr.success("data created successfully!");
         })
         .catch((error) => {
-            if (error.response.data.errors) {
-                setErrors(error.response.data.errors);
-            }
+            actions.setErrors(error.response.data.errors);
         });
 };
 
@@ -162,10 +180,9 @@ const updateData = (values, { setErrors }) => {
             console.log(error);
         });
 };
-
+const editMode = ref(false);
 const handleSubmit = (values, actions) => {
-    // console.log(actions);
-    if (editing.value) {
+    if (editMode.value) {
         updateData(values, actions);
     } else {
         createData(values, actions);
@@ -248,8 +265,7 @@ watch(
 );
 
 onMounted(() => {
-
-     flatpickr(".flatpickr", {
+    flatpickr(".flatpickr", {
         enableTime: true,
         dateFormat: "Y-m-d h:i K",
         defaultHour: 10,
@@ -340,54 +356,64 @@ onMounted(() => {
                             data-parent="#accordion"
                         >
                             <div class="card-body">
-                                <div class="taskList" style="margin: 1%">
-                                    <h5>
-                                        <b>Site:</b>
-                                        SYSU CEBU - TECH SUPPORT
-                                    </h5>
-                                    <h5>
-                                        <b>Project:</b>
-                                        N/A
-                                    </h5>
-                                    <h5>
-                                        <b>Planned Date:</b>
-                                        11/24/2023 8:00 AM
-                                    </h5>
-                                    <h5>
-                                        <b>Start Date:</b>
-                                        11/24/2023 7:27 am
-                                    </h5>
-                                    <h5>
-                                        <b>Planned End Date:</b>
-                                        11/24/2023 5:00 PM
-                                    </h5>
-                                    <h5 class="ongoing">
-                                        <b style="color: black">Status:</b>
-                                        ON-GOING
-                                    </h5>
-                                    <h5>
-                                        <b style="color: black">Attachment:</b>
-                                        0
-                                    </h5>
-                                </div>
-                                <div class="taskList" style="margin: 1%">
-                                    <h5><b>Accomplished Date:</b></h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">Type:</b>
-                                        VSC
-                                    </h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">PWS:</b>
-                                        VSC
-                                    </h5>
-                                </div>
-                                <div style="margin: 1%">
-                                    <div class="row my-1">
-                                        <div class="col-sm-3">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h5>
+                                                <b>Site:</b>
+                                                SYSU CEBU - TECH SUPPORT
+                                            </h5>
+                                            <h5>
+                                                <b>Project:</b>
+                                                N/A
+                                            </h5>
+                                            <h5>
+                                                <b>Planned Date:</b>
+                                                11/24/2023 8:00 AM
+                                            </h5>
+                                            <h5>
+                                                <b>Planned End Date:</b>
+                                                11/24/2023 5:00 PM
+                                            </h5>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <h5>
+                                                <b>Start Date:</b>
+                                                11/24/2023 7:27 am
+                                            </h5>
+                                            <h5><b>Accomplished Date:</b></h5>
+
+                                            <h5 class="closestatus">
+                                                <b style="color: black"
+                                                    >Type:</b
+                                                >
+                                                VSC
+                                            </h5>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="ongoing">
+                                                <b style="color: black"
+                                                    >Status:</b
+                                                >
+                                                ON-GOING
+                                            </h5>
+                                            <h5>
+                                                <b style="color: black"
+                                                    >Attachment:</b
+                                                >
+                                                0
+                                            </h5>
+                                            <h5 class="closestatus">
+                                                <b style="color: black">PWS:</b>
+                                                VSC
+                                            </h5>
+
                                             <h5><b>Remarks:</b></h5>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div style="margin: 0.5%">
                                     <button
                                         type="button"
@@ -558,233 +584,6 @@ onMounted(() => {
 
     <div
         class="modal fade"
-        id="FormModalView"
-        data-backdrop="static"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-    >
-        <div class="modal-dialog modal-l" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">
-                        <span>View Tech Recommendation</span>
-                    </h5>
-
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <Form
-                    ref="form"
-                    @submit="handleSubmit"
-                    :initial-values="formValues"
-                >
-                    <div class="modal-body">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-6">
-                                    <Field
-                                        type="hidden"
-                                        name="created_by"
-                                        id="created_by"
-                                        v-model="authUserStore.user.id"
-                                    />
-                                    <div class="form-group">
-                                        <label for="user">Branch</label>
-                                        <Field
-                                            name="branch"
-                                            type="text"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="branch"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter branch"
-                                        />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="department"
-                                            >Department</label
-                                        >
-                                        <Field
-                                            name="department"
-                                            type="text"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="department"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Department"
-                                        />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="warehouse">warehouse</label>
-                                        <Field
-                                            name="warehouse"
-                                            type="text"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="email"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Warehouse"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="user">User</label>
-                                        <Field
-                                            name="user"
-                                            type="text"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="user"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter User"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="brand">Brand</label>
-                                        <Field
-                                            name="brand"
-                                            type="text"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="brand"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Brand"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="model">Model</label>
-                                        <Field
-                                            name="model"
-                                            type="text"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="model"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Model"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="assettag">Asset tag</label>
-                                        <Field
-                                            name="assettag"
-                                            type="text"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="assettag"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Asset Tag"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="serialnum"
-                                            >Serial number</label
-                                        >
-                                        <Field
-                                            name="serialnum"
-                                            type="text"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="serialnum"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Serial Number"
-                                        />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="status">Status</label>
-                                        <Field
-                                            class="form-control"
-                                            id="status"
-                                            name="status"
-                                            as="select"
-                                        >
-                                            <option
-                                                v-for="item in tecstatus"
-                                                :key="item"
-                                                :value="item.value"
-                                            >
-                                                {{ item.name }}
-                                            </option>
-                                        </Field>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label for="problem"
-                                            >Report Problem</label
-                                        >
-                                        <Field
-                                            name="problem"
-                                            as="textarea"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="problem"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Report problem"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="assconducted"
-                                            >Assessment conducted</label
-                                        >
-                                        <Field
-                                            name="assconducted"
-                                            as="textarea"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="assconducted"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Assessment conducted"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="recommendation"
-                                            >Recommendation</label
-                                        >
-                                        <Field
-                                            name="recommendation"
-                                            as="textarea"
-                                            class="form-control bg-white"
-                                            readonly
-                                            id="recommendation"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Recommendation"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-dismiss="modal"
-                        >
-                            Cancel
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            Save
-                        </button>
-                    </div>
-                </Form>
-            </div>
-        </div>
-    </div>
-
-    <div
-        class="modal fade"
         id="FormModal"
         data-backdrop="static"
         tabindex="-1"
@@ -808,55 +607,98 @@ onMounted(() => {
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <Form
-                    ref="form"
-                    @submit="handleSubmit"
-                    :validation-schema="
-                        editing ? editUserSchema : createUserSchema
-                    "
-                    v-slot="{ errors }"
-                    :initial-values="formValues"
-                >
+
+                <Form @submit="handleSubmit" v-slot:default="{ errors }">
                     <div class="modal-body">
                         <div class="col-md-12">
                             <div class="row">
-
-
                                 <div class="col-12">
+                                    <Field
+                                        v-model="form.user_id"
+                                        type="hidden"
+                                        name="user_id"
+                                        id="user_id"
+                                    />
                                     <div class="form-group">
                                         <label for="site">Site Name</label>
                                         <Field
+                                            v-model="form.site"
                                             name="site"
                                             type="text"
                                             class="form-control"
+                                            :class="{
+                                                'is-invalid': errors.site,
+                                            }"
                                             id="site"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Site Name"
                                         />
+                                        <span class="invalid-feedback">{{
+                                            errors.site
+                                        }}</span>
                                     </div>
-                                     <div class="form-group">
-                                        <label for="task">Task Name</label>
+                                    <div class="form-group">
+                                        <label for="site">Task Type</label>
+                                        <Field name="tasktype" >
+                                            <select
+    v-model="form.tasktype"
+                                                class="form-control"
+:required="true"
+                                            >
+                                                <option value="" disabled>
+                                                    Select an option
+                                                </option>
+                                                <option
+                                                    v-for="option in taskoptions"
+                                                    :key="option.value"
+                                                    v-bind:value="option.value"
+                                                >
+                                                    {{ option.name }}
+                                                </option>
+                                            </select>
+                                        </Field>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="task">Task</label>
                                         <Field
-                                            name="task"
+                                            v-model="form.taskname"
+                                            name="taskname"
                                             type="text"
                                             class="form-control"
-                                            id="task"
+                                            :class="{
+                                                'is-invalid': errors.taskname,
+                                            }"
+                                            id="taskname"
                                             aria-describedby="nameHelp"
-                                            placeholder="Enter Task Name"
+                                            placeholder="Enter Task"
                                         />
+                                        <span class="invalid-feedback">{{
+                                            errors.taskname
+                                        }}</span>
                                     </div>
 
-                                     <div class="form-group">
-                                            <label for="end-time">Start Date & Time</label>
-                                            <input v-model="form.start_time" type="text" class="form-control flatpickr" :class="{'is-invalid': errors.start_time}" id="start-time">
-                                            <span class="invalid-feedback">{{ errors.start_time }}</span>
-                                        </div>
-  <div class="form-group">
-                                            <label for="end-time">End Date & Time</label>
-                                            <input v-model="form.end_time" type="text" class="form-control flatpickr" :class="{'is-invalid': errors.end_time}" id="end-time">
-                                            <span class="invalid-feedback">{{ errors.end_time }}</span>
-                                        </div>
-
+                                    <div class="form-group">
+                                        <label for="end-time"
+                                            >Start Date & Time</label
+                                        >
+                                        <input
+                                            v-model="form.plandate"
+                                            type="text"
+                                            class="form-control flatpickr"
+                                            id="plandate"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="end-time"
+                                            >End Date & Time</label
+                                        >
+                                        <input
+                                            v-model="form.planenddate"
+                                            type="text"
+                                            class="form-control flatpickr"
+                                            id="planenddate"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

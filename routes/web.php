@@ -6,9 +6,11 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\DashboardStatController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\TechController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ApplicationController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,6 +69,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/api/tech-recommendations', TechController::class);
     Route::delete('/api/tech-recommendations', [TechController::class, 'bulkDelete']);
+
+    //tasks controller
+    Route::resource('/api/dailytask', TaskController::class);
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');

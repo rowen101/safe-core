@@ -13,17 +13,23 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('wts', function (Blueprint $table) {
+        Schema::create('tbl_dailytask', function (Blueprint $table) {
             $table->id();
-            $table->string('site');
-            $table->string('task_type');
-            $table->string('task');
-            $table->date('datestart');
-            $table->date('dateend');
-            $table->date('plandate')->nullable();   
-            $table->date('acomplishdate')->nullable();
-            $table->string('remarks')->nullable();
             $table->integer('user_id');
+            $table->integer('immediate_hid');
+            $table->string('site');
+            $table->integer('tasktype');
+            $table->string('taskname');
+            $table->timestamp('plandate');
+            $table->timestamp('planenddate');
+            $table->string('project')->nullable();
+            $table->timestamp('startdate')->nullable();
+            $table->timestamp('enddate')->nullable();
+            $table->string('status')->nullable();
+            $table->integer('attachment')->default(0)->nullable();
+            $table->string('PWS')->nullable();
+            $table->string('remarks')->nullable();
+            $table->integer('status_task')->default(0)->nullable();
             $table->timestamps();
         });
     }
