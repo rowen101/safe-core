@@ -70,7 +70,7 @@ const form = reactive({
 
 const getItems = (page = 1) => {
     axios
-        .get(`/api/tech-recommendations?page=${page}`, {
+        .get(`/api/dailytask`, {
             params: {
                 query: searchQuery.value,
             },
@@ -189,6 +189,10 @@ const handleSubmit = (values, actions) => {
     }
 };
 
+
+const startTaskhandle = (values) => {
+    alert(values.id);
+}
 const searchQuery = ref(null);
 
 const selectedItems = ref([]);
@@ -322,36 +326,52 @@ onMounted(() => {
                     </div>
                 </div>
                 <div class="col-12" id="accordion">
-                    <div class="card card-primary">
-                        <a
-                            class="d-block w-100"
-                            data-toggle="collapse"
-                            href="#collapseOne"
-                        >
-                            <div class="card-header">
-                                <h4 class="card-title">
-                                    <i class="fas fa-calendar-alt"></i>&nbsp;<b
-                                        >11/24/2023</b
-                                    >
-                                </h4>
-                                <div class="card-tools">
-                                    <button
-                                        type="button"
-                                        class="btn btn btn-danger float-right btn-secondary"
-                                        style="margin-left: 10px"
-                                    >
-                                        End
-                                    </button>
-                                    <p class="float-right"></p>
-                                    <!---->
-                                    <p class="float-right">
-                                        11/24/2023 7:27 am
-                                    </p>
-                                </div>
+                    <div
+                        class="card card-primary"
+                        v-for="task in lists"
+                        :key="task.id"
+                    >
+                        <div class="card-header bg-white">
+                            <h4 class="card-title">
+                                <a
+                                style="color: #2b2b2b;
+    text-decoration: none;"
+                                    data-toggle="collapse"
+                                    :href="'#collapse' + task.id"
+                                >
+                                    <i class="fas fa-calendar-alt"></i
+                                    >&nbsp;<b>{{ task.taskdate }}</b>
+                                </a>
+                            </h4>
+                            <div class="card-tools">
+                                <button
+                                :disabled="task.startdate === null"
+                                    type="button"
+                                    class="btn btn btn-danger float-right btn-secondary"
+                                    style="margin-left: 10px"
+                                    @click="endTaskhandle(task)"
+                                >
+                                    End
+                                </button>
+                                <button
+                                    v-if="!task.startdate"
+                                    type="button"
+                                    class="btn btn btn-success float-right btn-secondary"
+                                    style="margin-left: 10px"
+                                    @click="startTaskhandle(task)"
+                                >
+                                    Start
+                                </button>
+                                <p class="float-right"></p>
+                                <!---->
+                                <p class="float-right" v-if="task.startdate">
+                                    {{ task.startdate }}
+                                </p>
                             </div>
-                        </a>
+                        </div>
+
                         <div
-                            id="collapseOne"
+                            :id="'collapse' + task.id"
                             class="collapse"
                             data-parent="#accordion"
                         >
@@ -361,34 +381,37 @@ onMounted(() => {
                                         <div class="col-4">
                                             <h5>
                                                 <b>Site:</b>
-                                                SYSU CEBU - TECH SUPPORT
+                                                {{ task.site }}
                                             </h5>
                                             <h5>
                                                 <b>Project:</b>
-                                                N/A
+                                                {{ task.project }}
                                             </h5>
                                             <h5>
                                                 <b>Planned Date:</b>
-                                                11/24/2023 8:00 AM
+                                                {{ task.plandate }}
                                             </h5>
                                             <h5>
                                                 <b>Planned End Date:</b>
-                                                11/24/2023 5:00 PM
+                                                {{ task.planenddate }}
                                             </h5>
                                         </div>
 
                                         <div class="col-4">
                                             <h5>
                                                 <b>Start Date:</b>
-                                                11/24/2023 7:27 am
+                                                {{ task.startdate }}
                                             </h5>
-                                            <h5><b>Accomplished Date:</b></h5>
+                                            <h5>
+                                                <b>Accomplished Date:</b>
+                                                {{ task.endate }}
+                                            </h5>
 
                                             <h5 class="closestatus">
                                                 <b style="color: black"
                                                     >Type:</b
                                                 >
-                                                VSC
+                                                {{ task.tasktype }}
                                             </h5>
                                         </div>
                                         <div class="col-4">
@@ -396,148 +419,27 @@ onMounted(() => {
                                                 <b style="color: black"
                                                     >Status:</b
                                                 >
-                                                ON-GOING
+                                                {{ task.status }}
                                             </h5>
                                             <h5>
                                                 <b style="color: black"
                                                     >Attachment:</b
                                                 >
-                                                0
+                                                {{ task.attachment }}
                                             </h5>
                                             <h5 class="closestatus">
                                                 <b style="color: black">PWS:</b>
-                                                VSC
+                                                {{ task.PWS }}
                                             </h5>
 
-                                            <h5><b>Remarks:</b></h5>
+                                            <h5>
+                                                <b>Remarks:</b>
+                                                {{ task.remarks }}
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div style="margin: 0.5%">
-                                    <button
-                                        type="button"
-                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
-                                        style="
-                                            margin-left: 10px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Drop</button
-                                    ><button
-                                        type="button"
-                                        disabled="disabled"
-                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary disabled"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Edit</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Attachment</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
-                                    >
-                                        &nbsp;&nbsp;Remarks
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card card-primary">
-                        <a
-                            class="d-block w-100"
-                            data-toggle="collapse"
-                            href="#collapsetwo"
-                        >
-                            <div class="card-header">
-                                <h4 class="card-title">
-                                    <i class="fas fa-calendar-alt"></i>&nbsp;<b
-                                        >11/25/2023</b
-                                    >
-                                </h4>
-                                <div class="card-tools">
-                                    <button
-                                        type="button"
-                                        disabled="disabled"
-                                        class="btn btn btn-danger float-right btn-secondary disabled"
-                                        style="margin-left: 10px"
-                                    >
-                                        End
-                                    </button>
-                                    <p class="float-right"></p>
-                                    <button
-                                        type="button"
-                                        class="btn btn btn-success float-right btn-secondary"
-                                    >
-                                        Start
-                                    </button>
-                                </div>
-                            </div>
-                        </a>
-                        <div
-                            id="collapsetwo"
-                            class="collapse"
-                            data-parent="#accordion"
-                        >
-                            <div class="card-body">
-                                <div class="taskList" style="margin: 1%">
-                                    <h5>
-                                        <b>Site:</b>
-                                        SYSU CEBU - TECH SUPPORT
-                                    </h5>
-                                    <h5>
-                                        <b>Project:</b>
-                                        N/A
-                                    </h5>
-                                    <h5>
-                                        <b>Planned Date:</b>
-                                        11/24/2023 8:00 AM
-                                    </h5>
-                                    <h5>
-                                        <b>Start Date:</b>
-                                        11/24/2023 7:27 am
-                                    </h5>
-                                    <h5>
-                                        <b>Planned End Date:</b>
-                                        11/24/2023 5:00 PM
-                                    </h5>
-                                    <h5 class="ongoing">
-                                        <b style="color: black">Status:</b>
-                                        ON-GOING
-                                    </h5>
-                                    <h5>
-                                        <b style="color: black">Attachment:</b>
-                                        0
-                                    </h5>
-                                </div>
-                                <div class="taskList" style="margin: 1%">
-                                    <h5><b>Accomplished Date:</b></h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">Type:</b>
-                                        VSC
-                                    </h5>
-                                    <h5 class="closestatus">
-                                        <b style="color: black">PWS:</b>
-                                        VSC
-                                    </h5>
-                                </div>
-                                <div style="margin: 1%">
-                                    <div class="row my-1">
-                                        <div class="col-sm-3">
-                                            <h5><b>Remarks:</b></h5>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div style="margin: 0.5%">
                                     <button
                                         type="button"
@@ -639,11 +541,11 @@ onMounted(() => {
                                     </div>
                                     <div class="form-group">
                                         <label for="site">Task Type</label>
-                                        <Field name="tasktype" >
+                                        <Field name="tasktype">
                                             <select
-    v-model="form.tasktype"
+                                                v-model="form.tasktype"
                                                 class="form-control"
-:required="true"
+                                                :required="true"
                                             >
                                                 <option value="" disabled>
                                                     Select an option

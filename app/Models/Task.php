@@ -14,6 +14,7 @@ class Task extends Model
         'id',
         'user_id',
         'site',
+        'taskdate',
         'project',
         'plandate',
         'planenddate',
@@ -27,21 +28,30 @@ class Task extends Model
         'remarks',
         'immediate_hid',
         'status_task',
+        'created_at'
 
     ];
 
 
     protected $casts = [
+        'taskdate' => 'datetime',
         'created_at' => 'datetime',
-        'planedate' => 'datetime',
+        'plandate' => 'datetime',
         'planenddate' => 'datetime',
         'tasktype' => TaskType::class,
     ];
 
+    public function formattedTaskDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->taskdate->format('m/d/Y'),
+        );
+    }
+
     public function formattedCreatedAt(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->created_at->format('Y-m-d h:i A'),
+            get: fn () => $this->created_at->format('m/d/Y h:i A'),
         );
     }
     protected $appends = [
@@ -51,20 +61,20 @@ class Task extends Model
     public function formattedStartTime(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->plandate->format('Y-m-d h:i A'),
+            get: fn () => $this->plandate->format('m/d/Y h:i A'),
         );
     }
 
     public function formattedEndTime(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->planenddate->format('Y-m-d h:i A'),
+            get: fn () => $this->planenddate->format('m/d/Y h:i A'),
         );
     }
 
 
-    public function getFormattedCreatedAtAttribute()
-    {
-        return $this->created_at->format(setting('date_format'));
-    }
+    // public function getFormattedCreatedAtAttribute()
+    // {
+    //     return $this->created_at->format(setting('date_format'));
+    // }
 }
