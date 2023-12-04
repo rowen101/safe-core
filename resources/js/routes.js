@@ -8,6 +8,7 @@ import Login from './pages/auth/Login.vue';
 import ClientList from './pages/client/ClientList.vue';
 import TechList from './pages/techrecomm/TechList.vue';
 import WTSList from './pages/wts/TechList.vue';
+import MyVsc from './pages/myvsc/MyVsc.vue';
 
 export default [
     {
@@ -70,9 +71,14 @@ export default [
         component: TechList,
     },
     {
-        path: '/admin/weekly-task-schedule',
-        name: 'admin.weekly-task-schedule',
+        path: '/admin/weekly-task-schedule/myprio',
+        name: 'My Prio',
         component: WTSList,
+    },
+    {
+        path: '/admin/weekly-task-schedule/myvsc',
+        name: 'My VSC',
+        component: MyVsc,
     }
 
 ]

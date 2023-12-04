@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\TechController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VirtualSCController;
 use App\Http\Controllers\ApplicationController;
 
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,9 @@ Route::middleware('auth')->group(function () {
 
     //tasks controller
     Route::resource('/api/dailytask', TaskController::class);
+
+    //myvsc controller
+    Route::resource('/api/myvsc', VirtualSCController::class);
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');

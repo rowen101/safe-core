@@ -20,7 +20,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4 fixed">
         <a href="#" class="brand-link">
             <img
                 :src="'/img/safe1.png'"
@@ -127,7 +127,7 @@ onMounted(() => {
                             <li class="nav-item">
 
                                 <router-link
-                            to="/admin/weekly-task-schedule"
+                            to="/admin/weekly-task-schedule/myprio"
                             active-class="active"
                             class="nav-link"
                         >
@@ -145,14 +145,17 @@ onMounted(() => {
                                     <p>My Closed Prio</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a
-                                    href="../mailbox/read-mail.html"
-                                    class="nav-link"
-                                >
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>My VSC</p>
-                                </a>
+                             <li class="nav-item">
+
+                                <router-link
+                            to="/admin/weekly-task-schedule/myvsc"
+                            active-class="active"
+                            class="nav-link"
+                        >
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>My VSS</p>
+
+                        </router-link>
                             </li>
                         </ul>
                     </li>

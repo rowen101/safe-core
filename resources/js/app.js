@@ -10,6 +10,7 @@ import Login from './pages/auth/Login.vue';
 import App from './App.vue';
 import { useAuthUserStore } from './stores/AuthUserStore';
 import { useSettingStore } from './stores/SettingStore';
+import { Html2CanvasPlugin } from 'vue3-html2canvas';
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -32,7 +33,7 @@ router.beforeEach(async (to, from) => {
 
 app.use(pinia);
 app.use(router);
-
+app.use(Html2CanvasPlugin);
 
 // if (window.location.pathname === '/login') {
 //     const currentApp = createApp({});
