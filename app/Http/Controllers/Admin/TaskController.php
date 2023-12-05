@@ -23,20 +23,20 @@ class TaskController extends Controller
                 'id' => $dailytask->id,
                 'site' => $dailytask->site,
                 'user_id' => $dailytask->user_id,
-                'taskdate' => $dailytask->taskdate->format('m/d/Y'),
+                'taskdate' => $dailytask->taskdate,
                 'project' => $dailytask->project,
-                'plandate' => $dailytask->plandate->format('m/d/Y h:i A'),
-                'planenddate' => $dailytask->planenddate->format('m/d/Y h:i A'),
+                'plandate' => $dailytask->plandate,
+                'planenddate' => $dailytask->planenddate,
                 'startdate' => $dailytask->startdate,
                 'enddate' => $dailytask->enddate,
                 'tasktype' => [
                     'listtask' => $dailytask->tasktype->listtask(),
                 ],
-                'status' => $dailytask->branch,
-                'attachment' => $dailytask->department,
-                'PWS' => $dailytask->created_by,
-                'remarks' => $dailytask->created_by,
-                'immediate_hid' => $dailytask->created_by,
+                'status' => $dailytask->status,
+                'attachment' => $dailytask->attachment,
+                'PWS' => $dailytask->PWS,
+                'remarks' => $dailytask->remarks,
+                'immediate_hid' => $dailytask->immediate_hid,
                 'created_at' => $dailytask->created_at->format('m/d/Y h:i A'),
             ]);
 
@@ -87,5 +87,51 @@ class TaskController extends Controller
 
 
         return response()->json(['message' => 'success']);
+    }
+
+    public function onhandler(Request $request, $id)
+    {
+
+        // Validate the incoming request data
+        $request->validate([
+            'startdate' => 'nullable|date',
+            'enddate' => 'nullable|date', // Validate enddate based on your requirements
+        ]);
+
+        // Find the task by ID
+        $task = Task::find($id);
+
+        // Check if the task is found
+        if (!$task) {
+            return response()->json(['message' => 'Task not found'], 404);
+        }
+
+        // Check if startdate is empty
+        if (empty($request->input('startdate'))) {
+            // Update startdate only if it's not empty
+            if (!empty($request->input('enddate'))) {
+                $task->startdate = $request->input('enddate');
+                $task->status = "On Going";
+                $task->save();
+
+                // Return a success message
+                return response()->json(['message' => 'Startdate updated successfully']);
+            }
+
+            // Return a message indicating that nothing was updated
+            return response()->json(['message' => 'Both startdate and enddate are empty, nothing updated']);
+        }
+
+        // Update enddate only if it's not empty
+        if (!empty($request->input('enddate'))) {
+            $task->enddate = $request->input('enddate');
+            $task->save();
+
+            // Return a success message
+            return response()->json(['message' => 'Enddate updated successfully']);
+        }
+
+        // Return a message indicating that startdate is not empty, nothing updated
+        return response()->json(['message' => 'Start']);
     }
 }

@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import moment from 'moment';
 import ListItem from "./ListItem.vue";
+import html2canvas from 'html2canvas';
 
 const authUserStore = useAuthUserStore();
 
@@ -19,8 +20,34 @@ const formattedDate = ref(getFormattedDate());
       return taskDate === currentDate;
     };
 
+//capture function
+const capturevsc = () =>{
+     const container = document.getElementById('captureVSCContainer');
 
+            html2canvas(container).then((canvas) => {
+                const dataURL = canvas.toDataURL();
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'My VSC.png';
+                link.click();
+            });
 
+}
+
+const capturehitrate = () =>{
+     const container = document.getElementById('captureHitRateContainer');
+
+            html2canvas(container).then((canvas) => {
+                const dataURL = canvas.toDataURL();
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'My HITRATE.png';
+                link.click();
+            });
+
+}
+
+const containercapture = ref(null);
 const selectedDateRange = ref("today");
 const lists = ref({ data: [] });
 
@@ -37,13 +64,15 @@ onMounted(() => {
 
     getItems();
 });
+
+
 </script>
 <template>
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2"></div>
             <div class="col-12">
-                <div class="card">
+                <div class="card" id="captureVSCContainer">
                     <div class="card-header">
                         <div class="card-title">
                             <h5>
@@ -66,9 +95,10 @@ onMounted(() => {
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
                                         <button
-                                            @click="addUser"
+                                            @click="capturevsc"
                                             type="button"
                                             class="mb-2 btn btn-sm btn-success"
+
                                         >
                                             <i class="fa fa-camera"></i>
                                         </button>
@@ -117,6 +147,7 @@ onMounted(() => {
                                                         </p>
                                                     </div>
                                                 </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -127,7 +158,7 @@ onMounted(() => {
                 </div>
 
                 <!-- Hit rate -->
-                <div ref="containerShowCanvas" class="card">
+                <div id="captureHitRateContainer" class="card">
                     <div class="card-header">
                         <div class="card-title">
                             <h5>
@@ -150,14 +181,9 @@ onMounted(() => {
                             <div class="container-fluid">
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
-                                        <!-- <a
-                                            :href="newData"
-                                            download="hitrate.jpg"
-                                            ><i class="fa fa-camera"></i
-                                        ></a> -->
 
                                         <button
-                                            @click="caputeHitRate"
+                                            @click="capturehitrate"
                                             type="button"
                                             class="mb-2 btn btn-sm btn-success"
                                         >
@@ -185,14 +211,8 @@ onMounted(() => {
                                             v-for="item in lists"
                                             :key="item.id"
                                             :item="item"
-                                            :index="index"
-                                            @show-item="viewItem"
-
                                         />
                                      </tbody>
-
-
-
                                 </table>
 
                             </div>

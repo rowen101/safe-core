@@ -11,6 +11,7 @@ import { useAuthUserStore } from "../../stores/AuthUserStore";
 import { useSettingStore } from "../../stores/SettingStore";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/themes/light.css";
+import moment from "moment";
 
 const settingStore = useSettingStore();
 const toastr = useToastr();
@@ -68,7 +69,7 @@ const form = reactive({
     planenddate: "",
 });
 
-const getItems = (page = 1) => {
+const getItems = () => {
     axios
         .get(`/api/dailytask`, {
             params: {
@@ -189,10 +190,39 @@ const handleSubmit = (values, actions) => {
     }
 };
 
+//start date
+const startTaskhandle = (task) => {
+    const start = moment().format("YYYY-MM-DD HH:mm:ss");
+    task.id = task.id;
+    task.startdate = start;
+    task.status = "On Going";
+    axios
+        .post(`/api/dailytask/onhandler/` + task.id, task)
+        .then((response) => {
+            toastr.success(response.data.message);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+};
+//end start
+const endTaskhandle = (task) => {
+    const endstart = moment().format("YYYY-MM-DD HH:mm:ss");
+    task.id = task.id;
+    task.startdate = endstart;
+    task.status = "Done";
+    task.status_task =1;
+    axios
+        .post(`/api/dailytask/onhandler/` + task.id, task)
+        .then((response) => {
+            toastr.success(response.data.message);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+};
 
-const startTaskhandle = (values) => {
-    alert(values.id);
-}
+
 const searchQuery = ref(null);
 
 const selectedItems = ref([]);
@@ -334,20 +364,26 @@ onMounted(() => {
                         <div class="card-header bg-white">
                             <h4 class="card-title">
                                 <a
-                                style="color: #2b2b2b;
-    text-decoration: none;"
+                                    style="
+                                        color: #2b2b2b;
+                                        text-decoration: none;
+                                    "
                                     data-toggle="collapse"
                                     :href="'#collapse' + task.id"
                                 >
                                     <i class="fas fa-calendar-alt"></i
-                                    >&nbsp;<b>{{ task.taskdate }}</b>
+                                    >&nbsp;<b>{{
+                                        moment(task.taskdate).format(
+                                            "MMMM D, YYYY"
+                                        )
+                                    }}</b>
                                 </a>
                             </h4>
                             <div class="card-tools">
                                 <button
-                                :disabled="task.startdate === null"
+                                    :disabled="task.startdate === null"
                                     type="button"
-                                    class="btn btn btn-danger float-right btn-secondary"
+                                    class="btn btn-sm btn-danger float-right"
                                     style="margin-left: 10px"
                                     @click="endTaskhandle(task)"
                                 >
@@ -356,17 +392,17 @@ onMounted(() => {
                                 <button
                                     v-if="!task.startdate"
                                     type="button"
-                                    class="btn btn btn-success float-right btn-secondary"
+                                    class="btn btn-sm btn-success float-right"
                                     style="margin-left: 10px"
                                     @click="startTaskhandle(task)"
                                 >
                                     Start
                                 </button>
                                 <p class="float-right"></p>
-                                <!---->
-                                <p class="float-right" v-if="task.startdate">
+
+                                <!-- <p class="float-right" v-if="task.startdate">
                                     {{ task.startdate }}
-                                </p>
+                                </p> -->
                             </div>
                         </div>
 
@@ -389,22 +425,43 @@ onMounted(() => {
                                             </h5>
                                             <h5>
                                                 <b>Planned Date:</b>
-                                                {{ task.plandate }}
+                                                {{
+                                                    moment(
+                                                        task.plandate
+                                                    ).format(
+                                                        "MMMM D, YYYY, h:mm A"
+                                                    )
+                                                }}
                                             </h5>
                                             <h5>
                                                 <b>Planned End Date:</b>
-                                                {{ task.planenddate }}
+                                                {{
+                                                    moment(
+                                                        task.planenddate
+                                                    ).format(
+                                                        "MMMM D, YYYY, h:mm A"
+                                                    )
+                                                }}
                                             </h5>
                                         </div>
 
                                         <div class="col-4">
                                             <h5>
                                                 <b>Start Date:</b>
-                                                {{ task.startdate }}
+                                                 {{task.startdate !== null ?                                                     moment(
+                                                        task.startdate
+                                                    ).format(
+                                                        "MMMM D, YYYY, h:mm A"
+                                                    ) : "" }}
+
                                             </h5>
                                             <h5>
                                                 <b>Accomplished Date:</b>
-                                                {{ task.endate }}
+                                                {{task.enddate !== null ?                                                     moment(
+                                                        task.enddate
+                                                    ).format(
+                                                        "MMMM D, YYYY, h:mm A"
+                                                    ) : "" }}
                                             </h5>
 
                                             <h5 class="closestatus">
@@ -443,17 +500,17 @@ onMounted(() => {
                                 <div style="margin: 0.5%">
                                     <button
                                         type="button"
-                                        class="btn btn btn-danger float-right fa fa-times btn-secondary"
+                                        class="btn btn btn-danger float-right fa fa-trash "
                                         style="
                                             margin-left: 10px;
                                             margin-bottom: 5px;
                                         "
                                     >
-                                        &nbsp;&nbsp;Drop</button
+                                        &nbsp;Drop</button
                                     ><button
                                         type="button"
-                                        disabled="disabled"
-                                        class="btn btn btn-warning fa fa-pencil-square-o float-left btn-secondary disabled"
+                                        :disabled="task.startdate !== null"
+                                        class="btn btn btn-danger far fa-edit float-left"
                                         style="
                                             margin-right: 5px;
                                             margin-bottom: 5px;
@@ -462,18 +519,13 @@ onMounted(() => {
                                         &nbsp;&nbsp;Edit</button
                                     ><button
                                         type="button"
-                                        class="btn btn btn-success float-left fa fa-file-image-o btn-secondary"
+                                        class="btn btn float-left fa fa-file btn-primary"
                                         style="
                                             margin-right: 5px;
                                             margin-bottom: 5px;
                                         "
                                     >
-                                        &nbsp;&nbsp;Attachment</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn btn-info float-left fa fa-commenting-o btn-secondary"
-                                    >
-                                        &nbsp;&nbsp;Remarks
+                                        &nbsp;&nbsp;Attachment
                                     </button>
                                 </div>
                             </div>

@@ -14,11 +14,11 @@ const props = defineProps({
     selectAll: Boolean,
 });
 
-const emit = defineEmits(["showItem"]);
+// const emit = defineEmits(["showItem"]);
 
-const toggleSelection = () => {
-    emit("toggleSelection", props.item);
-};
+// const toggleSelection = () => {
+//     emit("toggleSelection", props.item);
+// };
 
 
 </script>
