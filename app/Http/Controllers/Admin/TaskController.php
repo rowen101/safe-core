@@ -89,49 +89,14 @@ class TaskController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    public function onhandler(Request $request, $id)
+    public function onhandler(Request $request,$id)
     {
 
-        // Validate the incoming request data
-        $request->validate([
-            'startdate' => 'nullable|date',
-            'enddate' => 'nullable|date', // Validate enddate based on your requirements
-        ]);
-
-        // Find the task by ID
         $task = Task::find($id);
+        $task->startdate = $request->input('startdate');
+        $task->status = "On Going";
 
-        // Check if the task is found
-        if (!$task) {
-            return response()->json(['message' => 'Task not found'], 404);
-        }
-
-        // Check if startdate is empty
-        if (empty($request->input('startdate'))) {
-            // Update startdate only if it's not empty
-            if (!empty($request->input('enddate'))) {
-                $task->startdate = $request->input('enddate');
-                $task->status = "On Going";
-                $task->save();
-
-                // Return a success message
-                return response()->json(['message' => 'Startdate updated successfully']);
-            }
-
-            // Return a message indicating that nothing was updated
-            return response()->json(['message' => 'Both startdate and enddate are empty, nothing updated']);
-        }
-
-        // Update enddate only if it's not empty
-        if (!empty($request->input('enddate'))) {
-            $task->enddate = $request->input('enddate');
-            $task->save();
-
-            // Return a success message
-            return response()->json(['message' => 'Enddate updated successfully']);
-        }
-
-        // Return a message indicating that startdate is not empty, nothing updated
-        return response()->json(['message' => 'Start']);
+        $task->save();
+        return response()->json(['message' => 'Task start successfully!']);
     }
 }
