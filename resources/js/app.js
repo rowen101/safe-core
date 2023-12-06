@@ -10,7 +10,8 @@ import Login from './pages/auth/Login.vue';
 import App from './App.vue';
 import { useAuthUserStore } from './stores/AuthUserStore';
 import { useSettingStore } from './stores/SettingStore';
-import { Html2CanvasPlugin } from 'vue3-html2canvas';
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -33,7 +34,7 @@ router.beforeEach(async (to, from) => {
 
 app.use(pinia);
 app.use(router);
-app.use(Html2CanvasPlugin);
+app.use(VueSweetalert2);
 
 // if (window.location.pathname === '/login') {
 //     const currentApp = createApp({});

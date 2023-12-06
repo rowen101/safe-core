@@ -137,13 +137,15 @@ onMounted(() => {
                         </router-link>
                             </li>
                             <li class="nav-item">
-                                <a
-                                    href="../mailbox/compose.html"
-                                    class="nav-link"
-                                >
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>My Closed Prio</p>
-                                </a>
+                                   <router-link
+                            to="/admin/weekly-task-schedule/myclosedprio"
+                            active-class="active"
+                            class="nav-link"
+                        >
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>My Closed Prio</p>
+
+                        </router-link>
                             </li>
                              <li class="nav-item">
 
@@ -153,7 +155,7 @@ onMounted(() => {
                             class="nav-link"
                         >
                             <i class="far fa-circle nav-icon"></i>
-                            <p>My VSS</p>
+                            <p>My VSC</p>
 
                         </router-link>
                             </li>

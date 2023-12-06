@@ -17,6 +17,7 @@ class TaskController extends Controller
                 $query->where('site', 'like', "%{$searchQuery}%");
                 $query->where('type', TaskType::from(request('type')));
             })
+            ->where('status_task', null)
             ->latest()
             ->get() // Replace paginate with get to retrieve all records
             ->map(fn ($dailytask) => [
@@ -89,14 +90,30 @@ class TaskController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    public function onhandler(Request $request,$id)
+    public function onhandler(Request $request, $id)
     {
 
+        // $task = Task::find($id);
+        // $task->startdate = $request->input('startdate');
+        // $task->status = "On Going";
+
+        // $task->save();
+        // return response()->json(['message' => 'Task start successfully!']);
         $task = Task::find($id);
-        $task->startdate = $request->input('startdate');
-        $task->status = "On Going";
+
+        // Check if the start date is empty
+        if (empty($request->input('startdate'))) {
+            $task->startdate = now(); // Set the start date to the current date and time
+            $task->status = "On Going";
+        } else {
+            // Start date is not empty, update end date and status
+            $task->enddate = now(); // You may want to replace 'now()' with the appropriate logic to set the end date
+            $task->status = $request->status; // Set the status accordingly
+            $task->status_task = 1;
+        }
 
         $task->save();
-        return response()->json(['message' => 'Task start successfully!']);
+
+        return response()->json(['message' => 'Task updated successfully!']);
     }
 }

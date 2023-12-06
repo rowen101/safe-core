@@ -4,7 +4,7 @@ import { ref, onMounted, reactive, watch } from "vue";
 import { Form, Field, useResetForm } from "vee-validate";
 import * as yup from "yup";
 import { useToastr } from "../../toastr.js";
-import UserListItem from "./TechListItem.vue";
+import WtsListItem from "./WtsListItem.vue";
 import { debounce } from "lodash";
 import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
@@ -12,7 +12,9 @@ import { useSettingStore } from "../../stores/SettingStore";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/themes/light.css";
 import moment from "moment";
+import { inject } from 'vue'
 
+const swal = inject('$swal')
 const settingStore = useSettingStore();
 const toastr = useToastr();
 const lists = ref({ data: [] });
@@ -191,35 +193,70 @@ const handleSubmit = (values, actions) => {
 };
 
 //start date
-const startTaskhandle = (task) => {
-    const start = moment().format("YYYY-MM-DD HH:mm:ss");
-    task.id = task.id;
-    task.startdate = start;
-    task.status = "On Going";
-    axios
-        .post(`/api/dailytask/onhandler/` + task.id, task)
-        .then((response) => {
-            toastr.success(response.data.message);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+const startTaskhandle = async (task) => {
+  // Show the SweetAlert2 dialog
+  const result = await swal({
+    title: 'Are you sure?',
+    text: 'You wanna start your task now?',
+    icon: 'warning',
+    showCancelButton: true,
+  });
+
+  // Check if the user confirmed
+  if (result.isConfirmed) {
+    try {
+      // Make the axios PUT request
+      const response = await axios.put(`/api/dailytask/onhandler/` + task.id, task);
+
+      // Handle the response
+      toastr.success(response.data.message);
+
+      // Refresh your data or perform any other actions
+      getItems();
+    } catch (error) {
+      console.error(error);
+      // Handle the error if needed
+      toastr.error('An error occurred while updating the task.');
+    }
+  }
 };
+
 //end start
-const endTaskhandle = (task) => {
-    const endstart = moment().format("YYYY-MM-DD HH:mm:ss");
-    task.id = task.id;
-    task.startdate = endstart;
-    task.status = "Done";
-    task.status_task =1;
-    axios
-        .post(`/api/dailytask/onhandler/` + task.id, task)
-        .then((response) => {
-            toastr.success(response.data.message);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+const endTaskhandle = async(task) => {
+// Show the SweetAlert2 dialog
+  const result = await swal({
+    title: 'Are you sure?',
+    text: 'You wanna end your task now?',
+    icon: 'warning',
+    showCancelButton: true,
+  });
+
+  // Check if the user confirmed
+  if (result.isConfirmed) {
+    try {
+const endstart = moment(task.taskdate).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD");
+
+if (endstart) {
+  // If taskdate is the same as the current date and time, set status to "HIT"
+  task.status = "HIT";
+} else {
+  // If taskdate is different from the current date and time, set status to "MISS"
+  task.status = "MISS";
+}
+      // Make the axios PUT request
+      const response = await axios.put(`/api/dailytask/onhandler/` + task.id, task);
+
+      // Handle the response
+      toastr.success(response.data.message);
+
+      // Refresh your data or perform any other actions
+      getItems();
+    } catch (error) {
+      console.error(error);
+      // Handle the error if needed
+      toastr.error('An error occurred while updating the task.');
+    }
+  }
 };
 
 
@@ -425,13 +462,7 @@ onMounted(() => {
                                             </h5>
                                             <h5>
                                                 <b>Planned Date:</b>
-                                                {{
-                                                    moment(
-                                                        task.plandate
-                                                    ).format(
-                                                        "MMMM D, YYYY, h:mm A"
-                                                    )
-                                                }}
+                                                {{moment(task.plandate).format("MMMM D, YYYY h:mm A")}}
                                             </h5>
                                             <h5>
                                                 <b>Planned End Date:</b>
@@ -439,7 +470,7 @@ onMounted(() => {
                                                     moment(
                                                         task.planenddate
                                                     ).format(
-                                                        "MMMM D, YYYY, h:mm A"
+                                                        "MMMM D, YYYY h:mm A"
                                                     )
                                                 }}
                                             </h5>
@@ -499,6 +530,7 @@ onMounted(() => {
 
                                 <div style="margin: 0.5%">
                                     <button
+                                    :disabled="task.startdate !== null"
                                         type="button"
                                         class="btn btn btn-danger float-right fa fa-trash "
                                         style="

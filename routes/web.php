@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
 
     //tasks controller
     Route::resource('/api/dailytask', TaskController::class);
-    Route::post('/api/dailytask/onhandler/{id}', [TaskController::class, 'onhandler']);
+    Route::put('/api/dailytask/onhandler/{id}', [TaskController::class, 'onhandler']);
     //myvsc controller
     Route::resource('/api/myvsc', VirtualSCController::class);
 });

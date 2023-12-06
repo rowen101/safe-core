@@ -7,8 +7,9 @@ import UpdateProfile from './pages/profile/UpdateProfile.vue';
 import Login from './pages/auth/Login.vue';
 import ClientList from './pages/client/ClientList.vue';
 import TechList from './pages/techrecomm/TechList.vue';
-import WTSList from './pages/wts/TechList.vue';
+import WTSList from './pages/wts/WtsList.vue';
 import MyVsc from './pages/myvsc/MyVsc.vue';
+import MyClosedPrio from './pages/mycloseprio/MyClosePrioList.vue';
 
 export default [
     {
@@ -74,6 +75,12 @@ export default [
         path: '/admin/weekly-task-schedule/myprio',
         name: 'My Prio',
         component: WTSList,
+    },
+
+    {
+        path: '/admin/weekly-task-schedule/myclosedprio',
+        name: 'My Closed Prio',
+        component: MyClosedPrio,
     },
     {
         path: '/admin/weekly-task-schedule/myvsc',
