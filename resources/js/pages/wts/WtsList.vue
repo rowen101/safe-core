@@ -12,9 +12,11 @@ import { useSettingStore } from "../../stores/SettingStore";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/themes/light.css";
 import moment from "moment";
-import { inject } from 'vue'
+import { inject } from "vue";
+import { ContentLoader } from 'vue-content-loader'
 
-const swal = inject('$swal')
+const isloading = ref(false);
+const swal = inject("$swal");
 const settingStore = useSettingStore();
 const toastr = useToastr();
 const lists = ref({ data: [] });
@@ -72,6 +74,7 @@ const form = reactive({
 });
 
 const getItems = () => {
+    isloading.value = true;
     axios
         .get(`/api/dailytask`, {
             params: {
@@ -79,9 +82,11 @@ const getItems = () => {
             },
         })
         .then((response) => {
+            isloading.value = false;
             lists.value = response.data;
             selectedItems.value = [];
             selectAll.value = false;
+
         });
 };
 
@@ -194,71 +199,78 @@ const handleSubmit = (values, actions) => {
 
 //start date
 const startTaskhandle = async (task) => {
-  // Show the SweetAlert2 dialog
-  const result = await swal({
-    title: 'Are you sure?',
-    text: 'You wanna start your task now?',
-    icon: 'warning',
-    showCancelButton: true,
-  });
+    // Show the SweetAlert2 dialog
+    const result = await swal({
+        title: "Are you sure?",
+        text: "You wanna start your task now?",
+        icon: "warning",
+        showCancelButton: true,
+    });
 
-  // Check if the user confirmed
-  if (result.isConfirmed) {
-    try {
-      // Make the axios PUT request
-      const response = await axios.put(`/api/dailytask/onhandler/` + task.id, task);
+    // Check if the user confirmed
+    if (result.isConfirmed) {
+        try {
+            // Make the axios PUT request
+            const response = await axios.put(
+                `/api/dailytask/onhandler/` + task.id,
+                task
+            );
 
-      // Handle the response
-      toastr.success(response.data.message);
+            // Handle the response
+            toastr.success(response.data.message);
 
-      // Refresh your data or perform any other actions
-      getItems();
-    } catch (error) {
-      console.error(error);
-      // Handle the error if needed
-      toastr.error('An error occurred while updating the task.');
+            // Refresh your data or perform any other actions
+            getItems();
+        } catch (error) {
+            console.error(error);
+            // Handle the error if needed
+            toastr.error("An error occurred while updating the task.");
+        }
     }
-  }
 };
 
 //end start
-const endTaskhandle = async(task) => {
-// Show the SweetAlert2 dialog
-  const result = await swal({
-    title: 'Are you sure?',
-    text: 'You wanna end your task now?',
-    icon: 'warning',
-    showCancelButton: true,
-  });
+const endTaskhandle = async (task) => {
+    // Show the SweetAlert2 dialog
+    const result = await swal({
+        title: "Are you sure?",
+        text: "You wanna end your task now?",
+        icon: "warning",
+        showCancelButton: true,
+    });
 
-  // Check if the user confirmed
-  if (result.isConfirmed) {
-    try {
-const endstart = moment(task.taskdate).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD");
+    // Check if the user confirmed
+    if (result.isConfirmed) {
+        try {
+            const endstart =
+                moment(task.taskdate).format("YYYY-MM-DD") ===
+                moment().format("YYYY-MM-DD");
 
-if (endstart) {
-  // If taskdate is the same as the current date and time, set status to "HIT"
-  task.status = "HIT";
-} else {
-  // If taskdate is different from the current date and time, set status to "MISS"
-  task.status = "MISS";
-}
-      // Make the axios PUT request
-      const response = await axios.put(`/api/dailytask/onhandler/` + task.id, task);
+            if (endstart) {
+                // If taskdate is the same as the current date and time, set status to "HIT"
+                task.status = "HIT";
+            } else {
+                // If taskdate is different from the current date and time, set status to "MISS"
+                task.status = "MISS";
+            }
+            // Make the axios PUT request
+            const response = await axios.put(
+                `/api/dailytask/onhandler/` + task.id,
+                task
+            );
 
-      // Handle the response
-      toastr.success(response.data.message);
+            // Handle the response
+            toastr.success(response.data.message);
 
-      // Refresh your data or perform any other actions
-      getItems();
-    } catch (error) {
-      console.error(error);
-      // Handle the error if needed
-      toastr.error('An error occurred while updating the task.');
+            // Refresh your data or perform any other actions
+            getItems();
+        } catch (error) {
+            console.error(error);
+            // Handle the error if needed
+            toastr.error("An error occurred while updating the task.");
+        }
     }
-  }
 };
-
 
 const searchQuery = ref(null);
 
@@ -393,176 +405,211 @@ onMounted(() => {
                     </div>
                 </div>
                 <div class="col-12" id="accordion">
-                    <div
-                        class="card card-primary"
-                        v-for="task in lists"
-                        :key="task.id"
-                    >
-                        <div class="card-header bg-white">
-                            <h4 class="card-title">
-                                <a
-                                    style="
-                                        color: #2b2b2b;
-                                        text-decoration: none;
-                                    "
-                                    data-toggle="collapse"
-                                    :href="'#collapse' + task.id"
-                                >
-                                    <i class="fas fa-calendar-alt"></i
-                                    >&nbsp;<b>{{
-                                        moment(task.taskdate).format(
-                                            "MMMM D, YYYY"
-                                        )
-                                    }}</b>
-                                </a>
-                            </h4>
-                            <div class="card-tools">
-                                <button
-                                    :disabled="task.startdate === null"
-                                    type="button"
-                                    class="btn btn-sm btn-danger float-right"
-                                    style="margin-left: 10px"
-                                    @click="endTaskhandle(task)"
-                                >
-                                    End
-                                </button>
-                                <button
-                                    v-if="!task.startdate"
-                                    type="button"
-                                    class="btn btn-sm btn-success float-right"
-                                    style="margin-left: 10px"
-                                    @click="startTaskhandle(task)"
-                                >
-                                    Start
-                                </button>
-                                <p class="float-right"></p>
-
-                                <!-- <p class="float-right" v-if="task.startdate">
-                                    {{ task.startdate }}
-                                </p> -->
+                    <ContentLoader v-if="isloading" viewBox="0 0 250 110">
+                    <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
+                    <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
+                    <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
+                    <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
+                    </ContentLoader>
+                    <div v-else>
+                        <div v-if="lists.length === 0">
+                        <!-- Show this card when the list is empty -->
+                        <div class="card card-secondary">
+                            <div class="card-body">
+                                <h2 class="text-center">No Prio</h2>
                             </div>
                         </div>
-
+                    </div>
+                    <div v-else>
                         <div
-                            :id="'collapse' + task.id"
-                            class="collapse"
-                            data-parent="#accordion"
+                            class="card card-primary"
+                            v-for="task in lists"
+                            :key="task.id"
                         >
-                            <div class="card-body">
-                                <div class="col-md-12">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <h5>
-                                                <b>Site:</b>
-                                                {{ task.site }}
-                                            </h5>
-                                            <h5>
-                                                <b>Project:</b>
-                                                {{ task.project }}
-                                            </h5>
-                                            <h5>
-                                                <b>Planned Date:</b>
-                                                {{moment(task.plandate).format("MMMM D, YYYY h:mm A")}}
-                                            </h5>
-                                            <h5>
-                                                <b>Planned End Date:</b>
-                                                {{
-                                                    moment(
-                                                        task.planenddate
-                                                    ).format(
-                                                        "MMMM D, YYYY h:mm A"
-                                                    )
-                                                }}
-                                            </h5>
-                                        </div>
+                            <div class="card-header bg-white">
+                                <h4 class="card-title">
+                                    <a
+                                        style="
+                                            color: #2b2b2b;
+                                            text-decoration: none;
+                                        "
+                                        data-toggle="collapse"
+                                        :href="'#collapse' + task.id"
+                                    >
+                                        <i class="fas fa-calendar-alt"></i
+                                        >&nbsp;<b>{{
+                                            moment(task.taskdate).format(
+                                                "MMMM D, YYYY"
+                                            )
+                                        }}</b>
+                                    </a>
+                                </h4>
+                                <div class="card-tools">
+                                    <button
+                                        :disabled="task.startdate === null"
+                                        type="button"
+                                        class="btn btn-sm btn-danger float-right"
+                                        style="margin-left: 10px"
+                                        @click="endTaskhandle(task)"
+                                    >
+                                        End
+                                    </button>
+                                    <button
+                                        v-if="!task.startdate"
+                                        type="button"
+                                        class="btn btn-sm btn-success float-right"
+                                        style="margin-left: 10px"
+                                        @click="startTaskhandle(task)"
+                                    >
+                                        Start
+                                    </button>
+                                    <p class="float-right"></p>
 
-                                        <div class="col-4">
-                                            <h5>
-                                                <b>Start Date:</b>
-                                                 {{task.startdate !== null ?                                                     moment(
-                                                        task.startdate
-                                                    ).format(
-                                                        "MMMM D, YYYY, h:mm A"
-                                                    ) : "" }}
+                                    <!-- <p class="float-right" v-if="task.startdate">
+                                    {{ task.startdate }}
+                                </p> -->
+                                </div>
+                            </div>
 
-                                            </h5>
-                                            <h5>
-                                                <b>Accomplished Date:</b>
-                                                {{task.enddate !== null ?                                                     moment(
-                                                        task.enddate
-                                                    ).format(
-                                                        "MMMM D, YYYY, h:mm A"
-                                                    ) : "" }}
-                                            </h5>
+                            <div
+                                :id="'collapse' + task.id"
+                                class="collapse"
+                                data-parent="#accordion"
+                            >
+                                <div class="card-body">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h5>
+                                                    <b>Site:</b>
+                                                    {{ task.site }}
+                                                </h5>
+                                                <h5>
+                                                    <b>Project:</b>
+                                                    {{ task.project }}
+                                                </h5>
+                                                <h5>
+                                                    <b>Planned Date:</b>
+                                                    {{
+                                                        moment(
+                                                            task.plandate
+                                                        ).format(
+                                                            "MMMM D, YYYY h:mm A"
+                                                        )
+                                                    }}
+                                                </h5>
+                                                <h5>
+                                                    <b>Planned End Date:</b>
+                                                    {{
+                                                        moment(
+                                                            task.planenddate
+                                                        ).format(
+                                                            "MMMM D, YYYY h:mm A"
+                                                        )
+                                                    }}
+                                                </h5>
+                                            </div>
 
-                                            <h5 class="closestatus">
-                                                <b style="color: black"
-                                                    >Type:</b
-                                                >
-                                                {{ task.tasktype }}
-                                            </h5>
-                                        </div>
-                                        <div class="col-4">
-                                            <h5 class="ongoing">
-                                                <b style="color: black"
-                                                    >Status:</b
-                                                >
-                                                {{ task.status }}
-                                            </h5>
-                                            <h5>
-                                                <b style="color: black"
-                                                    >Attachment:</b
-                                                >
-                                                {{ task.attachment }}
-                                            </h5>
-                                            <h5 class="closestatus">
-                                                <b style="color: black">PWS:</b>
-                                                {{ task.PWS }}
-                                            </h5>
+                                            <div class="col-4">
+                                                <h5>
+                                                    <b>Start Date:</b>
+                                                    {{
+                                                        task.startdate !== null
+                                                            ? moment(
+                                                                  task.startdate
+                                                              ).format(
+                                                                  "MMMM D, YYYY, h:mm A"
+                                                              )
+                                                            : ""
+                                                    }}
+                                                </h5>
+                                                <h5>
+                                                    <b>Accomplished Date:</b>
+                                                    {{
+                                                        task.enddate !== null
+                                                            ? moment(
+                                                                  task.enddate
+                                                              ).format(
+                                                                  "MMMM D, YYYY, h:mm A"
+                                                              )
+                                                            : ""
+                                                    }}
+                                                </h5>
 
-                                            <h5>
-                                                <b>Remarks:</b>
-                                                {{ task.remarks }}
-                                            </h5>
+                                                <h5 class="closestatus">
+                                                    <b style="color: black"
+                                                        >Type:</b
+                                                    >
+                                                    {{ task.tasktype }}
+                                                </h5>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="ongoing">
+                                                    <b style="color: black"
+                                                        >Status:</b
+                                                    >
+                                                    {{ task.status }}
+                                                </h5>
+                                                <h5>
+                                                    <b style="color: black"
+                                                        >Attachment:</b
+                                                    >
+                                                    {{ task.attachment }}
+                                                </h5>
+                                                <h5 class="closestatus">
+                                                    <b style="color: black"
+                                                        >PWS:</b
+                                                    >
+                                                    {{ task.PWS }}
+                                                </h5>
+
+                                                <h5>
+                                                    <b>Remarks:</b>
+                                                    {{ task.remarks }}
+                                                </h5>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div style="margin: 0.5%">
-                                    <button
-                                    :disabled="task.startdate !== null"
-                                        type="button"
-                                        class="btn btn btn-danger float-right fa fa-trash "
-                                        style="
-                                            margin-left: 10px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;Drop</button
-                                    ><button
-                                        type="button"
-                                        :disabled="task.startdate !== null"
-                                        class="btn btn btn-danger far fa-edit float-left"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Edit</button
-                                    ><button
-                                        type="button"
-                                        class="btn btn float-left fa fa-file btn-primary"
-                                        style="
-                                            margin-right: 5px;
-                                            margin-bottom: 5px;
-                                        "
-                                    >
-                                        &nbsp;&nbsp;Attachment
-                                    </button>
+                                    <div style="margin: 0.5%">
+                                        <button
+                                            :disabled="task.startdate !== null"
+                                            type="button"
+                                            class="btn btn btn-danger float-right fa fa-trash"
+                                            style="
+                                                margin-left: 10px;
+                                                margin-bottom: 5px;
+                                            "
+                                        >
+                                            &nbsp;Drop</button
+                                        ><button
+                                            type="button"
+                                            :disabled="task.startdate !== null"
+                                            class="btn btn btn-danger far fa-edit float-left"
+                                            style="
+                                                margin-right: 5px;
+                                                margin-bottom: 5px;
+                                            "
+                                        >
+                                            &nbsp;&nbsp;Edit</button
+                                        ><button
+                                            type="button"
+                                            class="btn btn float-left fa fa-file btn-primary"
+                                            style="
+                                                margin-right: 5px;
+                                                margin-bottom: 5px;
+                                            "
+                                        >
+                                            &nbsp;&nbsp;Attachment
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>

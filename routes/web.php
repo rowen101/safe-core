@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\AppointmentStatusController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\DashboardStatController;
+use App\Http\Controllers\Admin\MyClosePrioController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TaskController;
@@ -76,6 +77,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/api/dailytask/onhandler/{id}', [TaskController::class, 'onhandler']);
     //myvsc controller
     Route::resource('/api/myvsc', VirtualSCController::class);
+
+    //my close prio
+    Route::resource('/api/mycloseprio', MyClosePrioController::class);
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');

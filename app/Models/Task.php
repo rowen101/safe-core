@@ -32,45 +32,23 @@ class Task extends Model
 
     ];
 
+    public function taskLists()
+    {
+        return $this->hasMany(ListTask::class, 'dailytask_id');
+    }
+
 
     protected $casts = [
         'taskdate' => 'datetime',
         'created_at' => 'datetime',
         'plandate' => 'datetime',
         'planenddate' => 'datetime',
+        'startdate' => 'datetime',
+        'enddate' => 'datetime',
         'tasktype' => TaskType::class,
     ];
 
-    public function formattedTaskDate(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->taskdate->format('m/d/Y'),
-        );
-    }
 
-    public function formattedCreatedAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->created_at->format('m/d/Y h:i A'),
-        );
-    }
-    protected $appends = [
-        'formatted_created_at',
-    ];
-
-    public function formattedStartTime(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->plandate->format('m/d/Y h:i A'),
-        );
-    }
-
-    public function formattedEndTime(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->planenddate->format('m/d/Y h:i A'),
-        );
-    }
 
 
     // public function getFormattedCreatedAtAttribute()

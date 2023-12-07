@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Carbon;
 
 class VirtualSCController extends Controller
 {
@@ -16,8 +16,20 @@ class VirtualSCController extends Controller
      */
     public function index()
     {
-        $data = Task::all();
-        return response()->json($data);
+        // $startOfWeek = Carbon::now()->startOfWeek();
+        // $endOfWeek = Carbon::now()->endOfWeek();
+
+        $userId = auth()->user()->id;
+
+        $dailyTasks = Task::with('taskLists')
+        // ->whereBetween('plandate', [$startOfWeek, $endOfWeek])
+        ->where('user_id', $userId)
+        ->get();
+
+        $TasksList = Task::withCount('taskLists')->get();
+
+
+        return response()->json(['dailyTasks' =>$dailyTasks,'TaskList' =>$TasksList]);
     }
     /**
      * Show the form for creating a new resource.

@@ -21,11 +21,13 @@ const props = defineProps({
 // };
 
 
+
+
 </script>
 <template>
     <tr>
         <td>{{moment(item.taskdate).format('MMMM D, YYYY')}}</td>
-        <td>{{ item.user }}</td>
+        <td>{{ item.taskname }}</td>
         <td>{{ item.branch }}</td>
         <td>{{ item.department }}</td>
         <td>{{ item.created_by }}</td>

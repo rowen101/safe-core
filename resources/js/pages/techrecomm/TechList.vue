@@ -8,6 +8,7 @@ import UserListItem from "./TechListItem.vue";
 import { debounce } from "lodash";
 import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
+import { ContentLoader } from 'vue-content-loader'
 
 const toastr = useToastr();
 const lists = ref({ data: [] });
@@ -26,12 +27,14 @@ const tecstatus = ref([
     }
 ]);
 
+const isloading = ref(false);
 const editing = ref(false);
 const formValues = ref();
 const form = ref(null);
 const authUserStore = useAuthUserStore();
 const selectedStatus = ref(null);
 const getItems = (page = 1) => {
+    isloading.value = true
     axios
         .get(`/api/tech-recommendations?page=${page}`, {
             params: {
@@ -39,9 +42,11 @@ const getItems = (page = 1) => {
             },
         })
         .then((response) => {
+            isloading.value = false
             lists.value = response.data;
             selectedItems.value = [];
             selectAll.value = false;
+
         });
 };
 
@@ -289,7 +294,14 @@ onMounted(() => {
             </div>
             <div class="card">
                 <div class="card-body">
-                    <table class="table table-bordered table-sm">
+
+                    <ContentLoader v-if="isloading" viewBox="0 0 250 110">
+                    <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
+                    <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
+                    <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
+                    <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
+                    </ContentLoader>
+                    <table class="table table-bordered table-sm" v-else>
                         <thead>
                             <tr>
                                 <!-- <th>

@@ -4,9 +4,11 @@ import { useAuthUserStore } from "../../stores/AuthUserStore";
 import moment from 'moment';
 import ListItem from "./ListItem.vue";
 import html2canvas from 'html2canvas';
-
+import { ContentLoader } from 'vue-content-loader'
 const authUserStore = useAuthUserStore();
 
+
+const isloading = ref(false);
 //format date
 const getFormattedDate = () => {
     const options = { month: "long", day: "numeric", year: "numeric" };
@@ -52,9 +54,11 @@ const selectedDateRange = ref("today");
 const lists = ref({ data: [] });
 
 const getItems = () => {
+    isloading.value = true;
     axios
         .get(`/api/myvsc`)
         .then((response) => {
+            isloading.value = false;
             lists.value = response.data;
 
         });
@@ -90,7 +94,8 @@ onMounted(() => {
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="content">
+
+                        <div class="content" >
                             <div class="container-fluid">
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
@@ -107,7 +112,13 @@ onMounted(() => {
                                         <i class="fa fa-filter mr-1"></i>
                                     </div>
                                 </div>
-                                <div class="row" >
+                                   <ContentLoader v-if="isloading" viewBox="0 0 250 110">
+                    <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
+                    <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
+                    <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
+                    <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
+                    </ContentLoader>
+                                <div v-else class="row" >
                                     <div class="col-lg-3 col-6" v-for="task in lists"
                                     :key="task.id"
                                     >
@@ -134,20 +145,18 @@ onMounted(() => {
                                                     class="d-flex justify-content-between"
                                                 >
                                                     <div class="d-flex mr-2">
-                                                        <span class="badge">VSC</span>
+                                                        <span class="badge">task</span>
+                                                       <div class="text-center ">
+ <ul>
+        <li  class="list-unstyled" v-for="taskList in task.task_lists" :key="taskList.id">
+          {{ taskList.task_name }}
+        </li>
+ </ul>
+                                                            </div>
                                                     </div>
-                                                    <div class="d-flex">
-                                                        <p
-                                                            style="
-                                                                font-size: 15px;
-                                                                text-align: left;
-                                                            "
-                                                        >
-                                                            {{task.site}}
-                                                        </p>
-                                                    </div>
+
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
