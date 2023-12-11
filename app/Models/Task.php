@@ -48,11 +48,4 @@ class Task extends Model
         'tasktype' => TaskType::class,
     ];
 
-
-
-
-    // public function getFormattedCreatedAtAttribute()
-    // {
-    //     return $this->created_at->format(setting('date_format'));
-    // }
 }

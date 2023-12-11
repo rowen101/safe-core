@@ -12,14 +12,14 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $startOfWeek = Carbon::now()->startOfWeek();
-        $endOfWeek = Carbon::now()->endOfWeek();
+        // $startOfWeek = Carbon::now()->startOfWeek();
+        // $endOfWeek = Carbon::now()->endOfWeek();
         $data = Task::query()
             ->when(request('query'), function ($query, $searchQuery) {
                 $query->where('site', 'like', "%{$searchQuery}%");
                 $query->where('type', TaskType::from(request('type')));
             })
-            ->whereBetween('plandate', [$startOfWeek, $endOfWeek])
+            // ->whereBetween('plandate', [$startOfWeek, $endOfWeek])
             ->where('status_task', null)
             ->where ('user_id', auth()->user()->id)
             ->latest()

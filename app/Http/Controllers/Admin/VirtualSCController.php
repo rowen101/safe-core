@@ -16,17 +16,40 @@ class VirtualSCController extends Controller
      */
     public function index()
     {
-        // $startOfWeek = Carbon::now()->startOfWeek();
-        // $endOfWeek = Carbon::now()->endOfWeek();
 
         $userId = auth()->user()->id;
 
         $dailyTasks = Task::with('taskLists')
-        // ->whereBetween('plandate', [$startOfWeek, $endOfWeek])
         ->where('user_id', $userId)
+        ->where('status_task', 1)
         ->get();
 
-        $TasksList = Task::withCount('taskLists')->get();
+
+    $TasksList = Task::withCount(['taskLists', 'taskLists as completed_task_count' => function ($query) {
+        $query->where('iscompleted', 1);
+    }])
+    ->get();
+
+    // $TasksList = Task::with([
+    //     'taskLists',
+    //     'taskLists as completed_task_count' => function ($query) {
+    //         $query->where('iscompleted', 1);
+    //     },
+    // ])
+    // ->get()
+    // ->map(function ($task) {
+    //     $totalTasks = $task->task_lists_count; // Total number of tasks
+    //     $completedTasks = $task->completed_task_count; // Number of completed tasks
+
+    //     // Calculate the percentage
+    //     $percentage = ($totalTasks > 0) ? ($completedTasks / $totalTasks) * 100 : 0;
+
+    //     // Add the percentage attribute to the task
+    //     $task->percentage_completed = $percentage;
+
+    //     return $task;
+    // });
+
 
 
         return response()->json(['dailyTasks' =>$dailyTasks,'TaskList' =>$TasksList]);

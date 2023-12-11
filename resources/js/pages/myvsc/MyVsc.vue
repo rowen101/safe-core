@@ -52,16 +52,17 @@ const capturehitrate = () =>{
 const containercapture = ref(null);
 const selectedDateRange = ref("today");
 const lists = ref({ data: [] });
-
+const listscount = ref({ data: [] });
 const getItems = () => {
     isloading.value = true;
-    axios
-        .get(`/api/myvsc`)
-        .then((response) => {
-            isloading.value = false;
-            lists.value = response.data;
+        axios
+            .get(`/api/myvsc`)
+            .then((response) => {
+                isloading.value = false;
+                lists.value = response.data.dailyTasks;
+                listscount.value =  response.data.TaskList;
 
-        });
+            });
 };
 
 onMounted(() => {
@@ -146,7 +147,7 @@ onMounted(() => {
                                                 >
                                                     <div class="d-flex mr-2">
                                                         <span class="badge">task</span>
-                                                       <div class="text-center ">
+                                                       <div class="text-left ">
  <ul>
         <li  class="list-unstyled" v-for="taskList in task.task_lists" :key="taskList.id">
           {{ taskList.task_name }}
@@ -217,7 +218,7 @@ onMounted(() => {
                                     <tbody>
 
                                         <ListItem
-                                            v-for="item in lists"
+                                            v-for="item in listscount"
                                             :key="item.id"
                                             :item="item"
                                         />
