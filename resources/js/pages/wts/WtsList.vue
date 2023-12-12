@@ -36,6 +36,7 @@ const tecstatus = ref([
 ]);
 
 const editing = ref(false);
+const editingtask = ref(false);
 const formValues = ref();
 
 const authUserStore = useAuthUserStore();
@@ -72,6 +73,11 @@ const form = reactive({
     plandate: "",
     planenddate: "",
 });
+//task
+const formtask = ref({
+    dailytask_id: '',
+    tasks: [{ task_name: '', errors: false }],
+});
 
 const getItems = () => {
     isloading.value = true;
@@ -89,6 +95,69 @@ const getItems = () => {
 
         });
 };
+
+
+const OpenModalTask = () => {
+
+    $("#FormModalTask").modal("show");
+
+}
+
+const showTasks = (value) => {
+    formtask.value.dailytask_id = value.id;
+    // Fetch tasks based on dailytask_id
+    axios.get(`/api/dailytask/${value.id}/tasks`)
+        .then(response => {
+            formtask.value.tasks = response.data.map(task => ({ task_name: task.task_name, errors: false }));
+            OpenModalTask();
+        })
+        .catch(error => {
+            console.error("Error fetching tasks:", error);
+            // Handle the error appropriately, e.g., show an error message
+        });
+};
+
+
+
+const AddNewTask = () => {
+    axios
+        .post("/api/dailytask/addnewTask", {
+            dailytask_id: formtask.value.dailytask_id,
+            tasks: formtask.value.tasks,
+        })
+        .then((response) => {
+            $("#FormModalTask").modal("hide");
+            toastr.success("Data created successfully!");
+
+            // Clear formtask after successful save
+            formtask.value.dailytask_id = "";
+            formtask.value.tasks = [{ task_name: '', errors: false }];
+
+        })
+        .catch((error) => {
+            console.error("Error adding new task:", error);
+            toastr.error("Error adding new task. Please try again.");
+        });
+};
+
+
+
+const addTask = (index) => {
+
+    if (formtask.value.tasks[index].task_name.trim() !== '') {
+        // Add a new task at the specified index
+        formtask.value.tasks.splice(index + 1, 0, { task_name: '', errors: false });
+    }
+};
+
+
+const removeTask = (index) => {
+    if (index > 0) {
+        formtask.value.tasks.splice(index, 1);
+    }
+};
+
+
 
 const createDataSchema = yup.object({
     site: yup.string().required(),
@@ -386,227 +455,182 @@ onMounted(() => {
             <div class="col-md-12">
                 <div class="d-flex justify-content-between">
                     <div class="d-flex">
-                        <button
-                            @click="addUser"
-                            type="button"
-                            class="mb-2 btn btn-primary"
-                        >
+                        <button @click="addUser" type="button" class="mb-2 btn btn-primary">
                             <i class="fa fa-plus-circle mr-1"></i>
                             New Task
                         </button>
                     </div>
                     <div class="d-flex">
-                        <input
-                            type="text"
-                            v-model="searchQuery"
-                            class="form-control"
-                            placeholder="Search..."
-                        />
+                        <input type="text" v-model="searchQuery" class="form-control" placeholder="Search..." />
                     </div>
                 </div>
                 <div class="col-12" id="accordion">
                     <ContentLoader v-if="isloading" viewBox="0 0 250 110">
-                    <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
-                    <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
-                    <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
-                    <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
+                        <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
+                        <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
+                        <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
+                        <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
                     </ContentLoader>
                     <div v-else>
                         <div v-if="lists.length === 0">
-                        <!-- Show this card when the list is empty -->
-                        <div class="card card-secondary">
-                            <div class="card-body">
-                                <h2 class="text-center">No Prio</h2>
+                            <!-- Show this card when the list is empty -->
+                            <div class="card card-secondary">
+                                <div class="card-body">
+                                    <h2 class="text-center">No Prio</h2>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div v-else>
-                        <div
-                            class="card card-primary"
-                            v-for="task in lists"
-                            :key="task.id"
-                        >
-                            <div class="card-header bg-white">
-                                <h4 class="card-title">
-                                    <a
-                                        style="
+                        <div v-else>
+                            <div class="card card-primary" v-for="task in lists" :key="task.id">
+                                <div class="card-header bg-white">
+                                    <h4 class="card-title">
+                                        <a style="
                                             color: #2b2b2b;
                                             text-decoration: none;
-                                        "
-                                        data-toggle="collapse"
-                                        :href="'#collapse' + task.id"
-                                    >
-                                        <i class="fas fa-calendar-alt"></i
-                                        >&nbsp;<b>{{
-                                            moment(task.taskdate).format(
-                                                "MMMM D, YYYY"
-                                            )
-                                        }}</b>
-                                    </a>
-                                </h4>
-                                <div class="card-tools">
-                                    <button
-                                        :disabled="task.startdate === null"
-                                        type="button"
-                                        class="btn btn-sm btn-danger float-right"
-                                        style="margin-left: 10px"
-                                        @click="endTaskhandle(task)"
-                                    >
-                                        End
-                                    </button>
-                                    <button
-                                        v-if="!task.startdate"
-                                        type="button"
-                                        class="btn btn-sm btn-success float-right"
-                                        style="margin-left: 10px"
-                                        @click="startTaskhandle(task)"
-                                    >
-                                        Start
-                                    </button>
-                                    <p class="float-right"></p>
+                                        " data-toggle="collapse" :href="'#collapse' + task.id">
+                                            <i class="fas fa-calendar-alt"></i>&nbsp;<b>{{
+                                                moment(task.taskdate).format(
+                                                    "MMMM D, YYYY"
+                                                )
+                                            }}</b>
+                                        </a>
+                                    </h4>
+                                    <div class="card-tools">
+                                        <button v-if="!task.startdate" type="button"
+                                            class="btn btn-sm btn-primary float-right" style="margin-left: 10px"
+                                            @click="showTasks(task)">
+                                            <i class="fas fa-tasks"></i>
+                                        </button>
+                                        <button :disabled="task.startdate === null" type="button"
+                                            class="btn btn-sm btn-danger float-right" style="margin-left: 10px"
+                                            @click="endTaskhandle(task)">
+                                            End
+                                        </button>
 
-                                    <!-- <p class="float-right" v-if="task.startdate">
+                                        <button v-if="!task.startdate" type="button"
+                                            class="btn btn-sm btn-success float-right" style="margin-left: 10px"
+                                            @click="startTaskhandle(task)">
+                                            Start
+                                        </button>
+                                        <p class="float-right"></p>
+
+                                        <!-- <p class="float-right" v-if="task.startdate">
                                     {{ task.startdate }}
                                 </p> -->
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div
-                                :id="'collapse' + task.id"
-                                class="collapse"
-                                data-parent="#accordion"
-                            >
-                                <div class="card-body">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <h5>
-                                                    <b>Site:</b>
-                                                    {{ task.site }}
-                                                </h5>
-                                                <h5>
-                                                    <b>Project:</b>
-                                                    {{ task.project }}
-                                                </h5>
-                                                <h5>
-                                                    <b>Planned Date:</b>
-                                                    {{
-                                                        moment(
-                                                            task.plandate
-                                                        ).format(
-                                                            "MMMM D, YYYY h:mm A"
-                                                        )
-                                                    }}
-                                                </h5>
-                                                <h5>
-                                                    <b>Planned End Date:</b>
-                                                    {{
-                                                        moment(
-                                                            task.planenddate
-                                                        ).format(
-                                                            "MMMM D, YYYY h:mm A"
-                                                        )
-                                                    }}
-                                                </h5>
-                                            </div>
+                                <div :id="'collapse' + task.id" class="collapse" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <h5>
+                                                        <b>Site:</b>
+                                                        {{ task.site }}
+                                                    </h5>
+                                                    <h5>
+                                                        <b>Project:</b>
+                                                        {{ task.project }}
+                                                    </h5>
+                                                    <h5>
+                                                        <b>Planned Date:</b>
+                                                        {{
+                                                            moment(
+                                                                task.plandate
+                                                            ).format(
+                                                                "MMMM D, YYYY h:mm A"
+                                                            )
+                                                        }}
+                                                    </h5>
+                                                    <h5>
+                                                        <b>Planned End Date:</b>
+                                                        {{
+                                                            moment(
+                                                                task.planenddate
+                                                            ).format(
+                                                                "MMMM D, YYYY h:mm A"
+                                                            )
+                                                        }}
+                                                    </h5>
+                                                </div>
 
-                                            <div class="col-4">
-                                                <h5>
-                                                    <b>Start Date:</b>
-                                                    {{
-                                                        task.startdate !== null
+                                                <div class="col-4">
+                                                    <h5>
+                                                        <b>Start Date:</b>
+                                                        {{
+                                                            task.startdate !== null
                                                             ? moment(
-                                                                  task.startdate
-                                                              ).format(
-                                                                  "MMMM D, YYYY, h:mm A"
-                                                              )
+                                                                task.startdate
+                                                            ).format(
+                                                                "MMMM D, YYYY, h:mm A"
+                                                            )
                                                             : ""
-                                                    }}
-                                                </h5>
-                                                <h5>
-                                                    <b>Accomplished Date:</b>
-                                                    {{
-                                                        task.enddate !== null
+                                                        }}
+                                                    </h5>
+                                                    <h5>
+                                                        <b>Accomplished Date:</b>
+                                                        {{
+                                                            task.enddate !== null
                                                             ? moment(
-                                                                  task.enddate
-                                                              ).format(
-                                                                  "MMMM D, YYYY, h:mm A"
-                                                              )
+                                                                task.enddate
+                                                            ).format(
+                                                                "MMMM D, YYYY, h:mm A"
+                                                            )
                                                             : ""
-                                                    }}
-                                                </h5>
+                                                        }}
+                                                    </h5>
 
-                                                <h5 class="closestatus">
-                                                    <b style="color: black"
-                                                        >Type:</b
-                                                    >
-                                                    {{ task.tasktype }}
-                                                </h5>
-                                            </div>
-                                            <div class="col-4">
-                                                <h5 class="ongoing">
-                                                    <b style="color: black"
-                                                        >Status:</b
-                                                    >
-                                                    {{ task.status }}
-                                                </h5>
-                                                <h5>
-                                                    <b style="color: black"
-                                                        >Attachment:</b
-                                                    >
-                                                    {{ task.attachment }}
-                                                </h5>
-                                                <h5 class="closestatus">
-                                                    <b style="color: black"
-                                                        >PWS:</b
-                                                    >
-                                                    {{ task.PWS }}
-                                                </h5>
+                                                    <h5 class="closestatus">
+                                                        <b style="color: black">Type:</b>
+                                                        {{ task.tasktype }}
+                                                    </h5>
+                                                </div>
+                                                <div class="col-4">
+                                                    <h5 class="ongoing">
+                                                        <b style="color: black">Status:</b>
+                                                        {{ task.status }}
+                                                    </h5>
+                                                    <h5>
+                                                        <b style="color: black">Attachment:</b>
+                                                        {{ task.attachment }}
+                                                    </h5>
+                                                    <h5 class="closestatus">
+                                                        <b style="color: black">PWS:</b>
+                                                        {{ task.PWS }}
+                                                    </h5>
 
-                                                <h5>
-                                                    <b>Remarks:</b>
-                                                    {{ task.remarks }}
-                                                </h5>
+                                                    <h5>
+                                                        <b>Remarks:</b>
+                                                        {{ task.remarks }}
+                                                    </h5>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div style="margin: 0.5%">
-                                        <button
-                                            :disabled="task.startdate !== null"
-                                            type="button"
-                                            class="btn btn btn-danger float-right fa fa-trash"
-                                            style="
+                                        <div style="margin: 0.5%">
+                                            <button :disabled="task.startdate !== null" type="button"
+                                                class="btn btn btn-danger float-right fa fa-trash" style="
                                                 margin-left: 10px;
                                                 margin-bottom: 5px;
-                                            "
-                                        >
-                                            &nbsp;Drop</button
-                                        ><button
-                                            type="button"
-                                            :disabled="task.startdate !== null"
-                                            class="btn btn btn-danger far fa-edit float-left"
-                                            style="
+                                            ">
+                                                &nbsp;Drop</button><button type="button" :disabled="task.startdate !== null"
+                                                class="btn btn btn-danger far fa-edit float-left" style="
                                                 margin-right: 5px;
                                                 margin-bottom: 5px;
-                                            "
-                                        >
-                                            &nbsp;&nbsp;Edit</button
-                                        ><button
-                                            type="button"
-                                            class="btn btn float-left fa fa-file btn-primary"
-                                            style="
+                                            ">
+                                                &nbsp;&nbsp;Edit</button><button type="button"
+                                                class="btn btn float-left fa fa-file btn-primary" style="
                                                 margin-right: 5px;
                                                 margin-bottom: 5px;
-                                            "
-                                        >
-                                            &nbsp;&nbsp;Attachment
-                                        </button>
+                                            ">
+                                                &nbsp;&nbsp;Attachment
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </div>
 
 
@@ -615,28 +639,16 @@ onMounted(() => {
         </div>
     </div>
 
-    <div
-        class="modal fade"
-        id="FormModal"
-        data-backdrop="static"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-    >
+    <div class="modal fade" id="FormModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
-                        <span v-if="editing">Edit Task</span>
-                        <span v-else>Add Task</span>
+                        <span v-if="editing">Edit My Scheduled</span>
+                        <span v-else>Add My Scheduled</span>
                     </h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -646,46 +658,25 @@ onMounted(() => {
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-12">
-                                    <Field
-                                        v-model="form.user_id"
-                                        type="hidden"
-                                        name="user_id"
-                                        id="user_id"
-                                    />
+                                    <Field v-model="form.user_id" type="hidden" name="user_id" id="user_id" />
                                     <div class="form-group">
                                         <label for="site">Site Name</label>
-                                        <Field
-                                            v-model="form.site"
-                                            name="site"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.site,
-                                            }"
-                                            id="site"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Site Name"
-                                        />
+                                        <Field v-model="form.site" name="site" type="text" class="form-control" :class="{
+                                            'is-invalid': errors.site,
+                                        }" id="site" aria-describedby="nameHelp" placeholder="Enter Site Name" />
                                         <span class="invalid-feedback">{{
                                             errors.site
                                         }}</span>
                                     </div>
                                     <div class="form-group">
-                                        <label for="site">Task Type</label>
+                                        <label for="site">Type</label>
                                         <Field name="tasktype">
-                                            <select
-                                                v-model="form.tasktype"
-                                                class="form-control"
-                                                :required="true"
-                                            >
+                                            <select v-model="form.tasktype" class="form-control" :required="true">
                                                 <option value="" disabled>
                                                     Select an option
                                                 </option>
-                                                <option
-                                                    v-for="option in taskoptions"
-                                                    :key="option.value"
-                                                    v-bind:value="option.value"
-                                                >
+                                                <option v-for="option in taskoptions" :key="option.value"
+                                                    v-bind:value="option.value">
                                                     {{ option.name }}
                                                 </option>
                                             </select>
@@ -693,55 +684,31 @@ onMounted(() => {
                                     </div>
                                     <div class="form-group">
                                         <label for="task">Task</label>
-                                        <Field
-                                            v-model="form.taskname"
-                                            name="taskname"
-                                            type="text"
-                                            class="form-control"
+                                        <Field v-model="form.taskname" name="taskname" type="text" class="form-control"
                                             :class="{
                                                 'is-invalid': errors.taskname,
-                                            }"
-                                            id="taskname"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Task"
-                                        />
+                                            }" id="taskname" aria-describedby="nameHelp" placeholder="Enter Task" />
                                         <span class="invalid-feedback">{{
                                             errors.taskname
                                         }}</span>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="end-time"
-                                            >Start Date & Time</label
-                                        >
-                                        <input
-                                            v-model="form.plandate"
-                                            type="text"
-                                            class="form-control flatpickr"
-                                            id="plandate"
-                                        />
+                                        <label for="end-time">Start Date & Time</label>
+                                        <input v-model="form.plandate" type="text" class="form-control flatpickr"
+                                            id="plandate" />
                                     </div>
                                     <div class="form-group">
-                                        <label for="end-time"
-                                            >End Date & Time</label
-                                        >
-                                        <input
-                                            v-model="form.planenddate"
-                                            type="text"
-                                            class="form-control flatpickr"
-                                            id="planenddate"
-                                        />
+                                        <label for="end-time">End Date & Time</label>
+                                        <input v-model="form.planenddate" type="text" class="form-control flatpickr"
+                                            id="planenddate" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-dismiss="modal"
-                        >
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Cancel
                         </button>
                         <button type="submit" class="btn btn-primary">
@@ -753,27 +720,72 @@ onMounted(() => {
         </div>
     </div>
 
-    <div
-        class="modal fade"
-        id="deleteClientModal"
-        data-backdrop="static"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-    >
+
+    <div class="modal fade" id="FormModalTask" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+
+                        <span>My Task {{ formtask.dailytask_id }}</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <Form @submit="AddNewTask" v-slot:default="{ errors }">
+                    <div class="modal-body">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <Field v-model="formtask.dailytask_id" type="hidden" name="dailytask_id"
+                                        id="dailytask_id" />
+                                    <div v-for="(task, index) in formtask.tasks" :key="index">
+                                        <div style="display: flex; align-items: center;">
+                                            <Field v-model="task.task_name" :name="'task_name' + index" type="text"
+                                                class="form-control" :class="{ 'is-invalid': task.errors, 'mb-2': true }"
+                                                :id="'task_name' + index" :aria-describedby="'nameHelp' + index"
+                                                :placeholder="'Enter Task ' + (index + 1)" style="margin-right: 5px;" />
+
+
+                                            <i class="fas fa-plus-circle" style="font-size: 24px; cursor: pointer;"
+                                                    @click="addTask(index)"></i>
+                                                <i class="fas fa-minus-circle" style="font-size: 24px; cursor: pointer;"
+                                                    @click="removeTask(index)"></i>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                        </button>
+                    </div>
+                </Form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteClientModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
                         <span>Delete Record</span>
                     </h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -781,18 +793,10 @@ onMounted(() => {
                     <h5>Are you sure you want to delete this record ?</h5>
                 </div>
                 <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-dismiss="modal"
-                    >
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Cancel
                     </button>
-                    <button
-                        @click.prevent="deleteUser"
-                        type="button"
-                        class="btn btn-primary"
-                    >
+                    <button @click.prevent="deleteUser" type="button" class="btn btn-primary">
                         Delete User
                     </button>
                 </div>

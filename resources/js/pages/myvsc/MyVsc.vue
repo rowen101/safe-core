@@ -148,9 +148,9 @@ onMounted(() => {
                                                     <div class="d-flex mr-2">
                                                         <span class="badge">task</span>
                                                        <div class="text-left ">
- <ul>
+ <ul >
         <li  class="list-unstyled" v-for="taskList in task.task_lists" :key="taskList.id">
-          {{ taskList.task_name }}
+            <i :class="taskList.iscompleted == 1 ? 'fa fa-check-circle' : 'fa fa-circle'" style="font-size:15px"></i>&nbsp;{{ taskList.task_name }}
         </li>
  </ul>
                                                             </div>

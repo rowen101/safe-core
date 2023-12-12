@@ -541,7 +541,7 @@ onMounted(() => {
                                         }}</span>
                                     </div>
                                     <div class="form-group">
-                                        <label for="site">Task Type</label>
+                                        <label for="site">Type</label>
                                         <Field name="tasktype">
                                             <select
                                                 v-model="form.tasktype"
@@ -574,7 +574,7 @@ onMounted(() => {
                                             id="taskname"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Task"
-                                        />
+                                        /><i class="fa fa-plus">d</i>
                                         <span class="invalid-feedback">{{
                                             errors.taskname
                                         }}</span>

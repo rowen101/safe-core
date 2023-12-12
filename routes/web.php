@@ -75,6 +75,8 @@ Route::middleware('auth')->group(function () {
     //tasks controller
     Route::resource('/api/dailytask', TaskController::class);
     Route::put('/api/dailytask/onhandler/{id}', [TaskController::class, 'onhandler']);
+    Route::post('/api/dailytask/addnewTask',[TaskController::class, 'addTask']);
+    Route::get('/api/dailytask/{id}/tasks',[TaskController::class, 'getTask']);
     //myvsc controller
     Route::resource('/api/myvsc', VirtualSCController::class);
 

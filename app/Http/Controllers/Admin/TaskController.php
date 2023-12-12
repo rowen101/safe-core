@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Task;
+use App\Models\ListTask;
 use App\Enums\TaskType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -119,5 +120,32 @@ class TaskController extends Controller
         $task->save();
 
         return response()->json(['message' => 'Task updated successfully!']);
+    }
+
+    public function getTask($id)
+    {
+        $task = ListTask::where('dailytask_id', $id)
+        ->get();
+
+        return response()->json($task);
+
+    }
+
+    public function addTask(Request $request){
+        dd($request->all());
+
+
+        $taskNames = $request->input('task_names', []);
+
+        foreach ($taskNames as $taskName) {
+            ListTask::create([
+                'dailytask_id' => $request->input('dailytask_id'),
+                'task_name' => $taskName,
+            ]);
+
+
+        }
+
+        return response()->json(['message' => 'success']);
     }
 }
