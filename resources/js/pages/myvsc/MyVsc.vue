@@ -1,12 +1,11 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
-import moment from 'moment';
+import moment from "moment";
 import ListItem from "./ListItem.vue";
-import html2canvas from 'html2canvas';
-import { ContentLoader } from 'vue-content-loader'
+import html2canvas from "html2canvas";
+import { ContentLoader } from "vue-content-loader";
 const authUserStore = useAuthUserStore();
-
 
 const isloading = ref(false);
 //format date
@@ -17,37 +16,35 @@ const getFormattedDate = () => {
 const formattedDate = ref(getFormattedDate());
 //end format date
 
-  const isCurrentDate = (taskDate) => {
-      const currentDate = new Date().toISOString().split('T')[0];
-      return taskDate === currentDate;
-    };
+const isCurrentDate = (taskDate) => {
+    const currentDate = new Date().toISOString().split("T")[0];
+    return taskDate === currentDate;
+};
 
 //capture function
-const capturevsc = () =>{
-     const container = document.getElementById('captureVSCContainer');
+const capturevsc = () => {
+    const container = document.getElementById("captureVSCContainer");
 
-            html2canvas(container).then((canvas) => {
-                const dataURL = canvas.toDataURL();
-                const link = document.createElement('a');
-                link.href = dataURL;
-                link.download = 'My VSC.png';
-                link.click();
-            });
+    html2canvas(container).then((canvas) => {
+        const dataURL = canvas.toDataURL();
+        const link = document.createElement("a");
+        link.href = dataURL;
+        link.download = "My VSC.png";
+        link.click();
+    });
+};
 
-}
+const capturehitrate = () => {
+    const container = document.getElementById("captureHitRateContainer");
 
-const capturehitrate = () =>{
-     const container = document.getElementById('captureHitRateContainer');
-
-            html2canvas(container).then((canvas) => {
-                const dataURL = canvas.toDataURL();
-                const link = document.createElement('a');
-                link.href = dataURL;
-                link.download = 'My HITRATE.png';
-                link.click();
-            });
-
-}
+    html2canvas(container).then((canvas) => {
+        const dataURL = canvas.toDataURL();
+        const link = document.createElement("a");
+        link.href = dataURL;
+        link.download = "My HITRATE.png";
+        link.click();
+    });
+};
 
 const containercapture = ref(null);
 const selectedDateRange = ref("today");
@@ -55,22 +52,16 @@ const lists = ref({ data: [] });
 const listscount = ref({ data: [] });
 const getItems = () => {
     isloading.value = true;
-        axios
-            .get(`/api/myvsc`)
-            .then((response) => {
-                isloading.value = false;
-                lists.value = response.data.dailyTasks;
-                listscount.value =  response.data.TaskList;
-
-            });
+    axios.get(`/api/myvsc`).then((response) => {
+        isloading.value = false;
+        lists.value = response.data.dailyTasks;
+        listscount.value = response.data.TaskList;
+    });
 };
 
 onMounted(() => {
-
     getItems();
 });
-
-
 </script>
 <template>
     <div class="content-header">
@@ -95,8 +86,7 @@ onMounted(() => {
                         </div>
                     </div>
                     <div class="card-body">
-
-                        <div class="content" >
+                        <div class="content">
                             <div class="container-fluid">
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
@@ -104,7 +94,6 @@ onMounted(() => {
                                             @click="capturevsc"
                                             type="button"
                                             class="mb-2 btn btn-sm btn-success"
-
                                         >
                                             <i class="fa fa-camera"></i>
                                         </button>
@@ -113,51 +102,133 @@ onMounted(() => {
                                         <i class="fa fa-filter mr-1"></i>
                                     </div>
                                 </div>
-                                   <ContentLoader v-if="isloading" viewBox="0 0 250 110">
-                    <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
-                    <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
-                    <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
-                    <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
-                    </ContentLoader>
-                                <div v-else class="row" >
-                                    <div class="col-lg-3 col-6" v-for="task in lists"
-                                    :key="task.id"
+                                <ContentLoader
+                                    v-if="isloading"
+                                    viewBox="0 0 250 110"
+                                >
+                                    <rect
+                                        x="0"
+                                        y="0"
+                                        rx="3"
+                                        ry="3"
+                                        width="250"
+                                        height="10"
+                                    />
+                                    <rect
+                                        x="0"
+                                        y="20"
+                                        rx="3"
+                                        ry="3"
+                                        width="250"
+                                        height="10"
+                                    />
+                                    <rect
+                                        x="0"
+                                        y="40"
+                                        rx="3"
+                                        ry="3"
+                                        width="250"
+                                        height="10"
+                                    />
+                                    <rect
+                                        x="0"
+                                        y="60"
+                                        rx="3"
+                                        ry="3"
+                                        width="250"
+                                        height="10"
+                                    />
+                                </ContentLoader>
+                                <div v-else class="row">
+                                    <div
+                                        class="col-lg-3 col-6"
+                                        v-for="task in lists"
+                                        :key="task.id"
                                     >
                                         <!-- <div class="small-box bg-info"> -->
-                                      <div :class="'small-box ' + (moment(task.taskdate).format('MMMM D, YYYY') === formattedDate ? 'bg-primary' : 'bg-info')">
-
-
+                                        <div
+                                            :class="
+                                                'small-box ' +
+                                                (moment(task.taskdate).format(
+                                                    'MMMM D, YYYY'
+                                                ) === formattedDate
+                                                    ? 'bg-primary'
+                                                    : 'bg-info')
+                                            "
+                                        >
                                             <div class="inner">
-                                                <div class="card text-center text-dark">
+                                                <div
+                                                    class="card text-center text-dark"
+                                                >
                                                     <h5 class="mt-1">
-                                                              {{moment(task.taskdate).format('dddd')}}
+                                                        {{
+                                                            moment(
+                                                                task.taskdate
+                                                            ).format("dddd")
+                                                        }}
                                                         <i
                                                             class="far fa-calendar-alt"
                                                         ></i>
                                                     </h5>
                                                 </div>
-                                                <div class="card text-center text-dark">
-
-                                                    {{moment(task.taskdate).format('MMMM D, YYYY')}}
+                                                <div
+                                                    class="card text-center text-dark"
+                                                >
+                                                    {{
+                                                        moment(
+                                                            task.taskdate
+                                                        ).format("MMMM D, YYYY")
+                                                    }}
                                                 </div>
 
                                                 <hr class="bg-white" />
                                                 <div
                                                     class="d-flex justify-content-between"
                                                 >
-                                                    <div class="d-flex mr-2">
-                                                        <span class="badge">task</span>
-                                                       <div class="text-left ">
- <ul >
-        <li  class="list-unstyled" v-for="taskList in task.task_lists" :key="taskList.id">
-            <i :class="taskList.iscompleted == 1 ? 'fa fa-check-circle' : 'fa fa-circle'" style="font-size:15px"></i>&nbsp;{{ taskList.task_name }}
-        </li>
- </ul>
-                                                            </div>
+                                                    <div
+                                                        v-if="
+                                                            task.task_lists &&
+                                                            task.task_lists
+                                                                .length > 0
+                                                        "
+                                                        class="d-flex mr-2"
+                                                    >
+                                                        <span class="badge"
+                                                            >task</span
+                                                        >
+                                                        <div class="text-left">
+                                                            <ul>
+                                                                <li
+                                                                    class="list-unstyled"
+                                                                    v-for="taskList in task.task_lists"
+                                                                    :key="
+                                                                        taskList.id
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        :class="
+                                                                            taskList.iscompleted ==
+                                                                            1
+                                                                                ? 'fa fa-check-circle'
+                                                                                : 'fa fa-circle'
+                                                                        "
+                                                                        style="
+                                                                            font-size: 15px;
+                                                                        "
+                                                                    ></i>
+                                                                    &nbsp;{{
+                                                                        taskList.task_name
+                                                                    }}
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
-
+                                                    <span
+                                                        v-else
+                                                        class="text-center"
+                                                        >No task</span
+                                                    >
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -191,7 +262,6 @@ onMounted(() => {
                             <div class="container-fluid">
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
-
                                         <button
                                             @click="capturehitrate"
                                             type="button"
@@ -216,15 +286,13 @@ onMounted(() => {
                                     </thead>
 
                                     <tbody>
-
                                         <ListItem
                                             v-for="item in listscount"
                                             :key="item.id"
                                             :item="item"
                                         />
-                                     </tbody>
+                                    </tbody>
                                 </table>
-
                             </div>
                         </div>
                     </div>
@@ -232,7 +300,4 @@ onMounted(() => {
             </div>
         </div>
     </div>
-
 </template>
-
-

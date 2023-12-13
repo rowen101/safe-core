@@ -22,7 +22,7 @@ class TaskController extends Controller
             })
             // ->whereBetween('plandate', [$startOfWeek, $endOfWeek])
             ->where('status_task', null)
-            ->where ('user_id', auth()->user()->id)
+            ->where('user_id', auth()->user()->id)
             ->latest()
             ->get() // Replace paginate with get to retrieve all records
             ->map(fn ($dailytask) => [
@@ -125,26 +125,23 @@ class TaskController extends Controller
     public function getTask($id)
     {
         $task = ListTask::where('dailytask_id', $id)
-        ->get();
+            ->get();
 
         return response()->json($task);
-
     }
 
-    public function addTask(Request $request){
-        dd($request->all());
-
-
-        $taskNames = $request->input('task_names', []);
-
-        foreach ($taskNames as $taskName) {
-            ListTask::create([
-                'dailytask_id' => $request->input('dailytask_id'),
-                'task_name' => $taskName,
-            ]);
-
-
-        }
+    public function addTask(Request $request)
+    {
+        ListTask::updateOrCreate(
+            [
+                'id' => $request->id
+            ],
+            [
+                'dailytask_id' => $request->dailytask_id,
+                'task_name' => $request->task_name,
+                'iscompleted' => $request->iscompleted
+            ]
+        );
 
         return response()->json(['message' => 'success']);
     }

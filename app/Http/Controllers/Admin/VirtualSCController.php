@@ -21,7 +21,7 @@ class VirtualSCController extends Controller
 
         $dailyTasks = Task::with('taskLists')
         ->where('user_id', $userId)
-        ->where('status_task', 1)
+
         ->get();
 
 
