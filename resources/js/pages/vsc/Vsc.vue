@@ -2,8 +2,6 @@
 import { onMounted, ref } from 'vue';
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 
-
-
 const selectedAppointmentStatus = ref('all');
 const totalAppointmentsCount = ref(0);
 const authUserStore = useAuthUserStore();

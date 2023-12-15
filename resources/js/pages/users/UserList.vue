@@ -28,13 +28,17 @@ const getUsers = (page = 1) => {
 }
 
 const createUserSchema = yup.object({
-    name: yup.string().required(),
+    username: yup.string().required(),
+    last_name: yup.string().required(),
+    first_name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().required().min(8),
 });
 
 const editUserSchema = yup.object({
-    name: yup.string().required(),
+    username: yup.string().required(),
+    last_name: yup.string().required(),
+    first_name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().when((password, schema) => {
         return password ? schema.required().min(8) : schema;
@@ -195,12 +199,12 @@ onMounted(() => {
             </div>
             <div class="card">
                 <div class="card-body">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-sm">
                         <thead>
                             <tr>
                                 <th><input type="checkbox" v-model="selectAll" @change="selectAllUsers" /></th>
                                 <th style="width: 10px">#</th>
-                                <th>Name</th>
+                                <th>User Name</th>
                                 <th>Email</th>
                                 <th>Registered Date</th>
                                 <th>Role</th>
@@ -245,9 +249,9 @@ onMounted(() => {
                     v-slot="{ errors }" :initial-values="formValues">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <Field name="name" type="text" class="form-control" :class="{ 'is-invalid': errors.name }"
-                                id="name" aria-describedby="nameHelp" placeholder="Enter full name" />
+                            <label for="username">Username</label>
+                            <Field name="username" type="text" class="form-control" :class="{ 'is-invalid': errors.name }"
+                                id="username" aria-describedby="nameHelp" placeholder="Enter full username" />
                             <span class="invalid-feedback">{{ errors.name }}</span>
                         </div>
 
@@ -258,6 +262,29 @@ onMounted(() => {
                                 placeholder="Enter full name" />
                             <span class="invalid-feedback">{{ errors.email }}</span>
                         </div>
+              <div class="d-flex justify-content-between">
+                <div class="d-flex">
+<div class="form-group">
+                            <label for="first_name">Fist Name</label>
+                            <Field name="first_name" type="text" class="form-control "
+                                :class="{ 'is-invalid': errors.first_name }" id="first_name" aria-describedby="nameHelp"
+                                placeholder="Enter first name" />
+                            <span class="invalid-feedback">{{ errors.first_name }}</span>
+                        </div>
+
+                </div>
+                <div class="d-flex">
+<div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <Field name="last_name" type="text" class="form-control "
+                                :class="{ 'is-invalid': errors.last_name }" id="last_name" aria-describedby="nameHelp"
+                                placeholder="Enter last name" />
+                            <span class="invalid-feedback">{{ errors.last_name }}</span>
+                        </div>
+                </div>
+              </div>
+
+
 
                         <div class="form-group">
                             <label for="email">Password</label>

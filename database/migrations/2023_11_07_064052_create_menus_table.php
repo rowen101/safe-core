@@ -14,10 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('menus', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('menu_code', 20)->default('NONE')->index();
+            $table->increments('menu_id');
             $table->string('menu_title', 100)->index();
-            $table->string('description', 255)->nullable();
             $table->integer('parent_id')->default(0);
             $table->string('menu_icon')->nullable();
             $table->string('menu_route', 50)->deafault('default')->index()->nullable(); // url

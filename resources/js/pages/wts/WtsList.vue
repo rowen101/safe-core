@@ -14,8 +14,11 @@ import "flatpickr/dist/themes/light.css";
 import moment from "moment";
 import { inject } from "vue";
 import { ContentLoader } from "vue-content-loader";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const isloading = ref(false);
+const isloadingTask = ref(false);
 const swal = inject("$swal");
 const settingStore = useSettingStore();
 const toastr = useToastr();
@@ -35,6 +38,7 @@ const tecstatus = ref([
         value: 3,
     },
 ]);
+const listtask = ref();
 const showList = ref(true);
 const editing = ref(false);
 const editingtask = ref(false);
@@ -72,7 +76,6 @@ const form = reactive({
     site: "",
     user_id: authUserStore.user.id,
     tasktype: 0,
-    taskname: "",
     plandate: "",
     planenddate: "",
 });
@@ -83,6 +86,20 @@ const formtask = ref({
     task_name: "",
     iscompleted: 0,
 });
+
+ const formatDate =(dateString) => {
+      const options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+       timeZone: "Asia/Shanghai",
+      };
+      const formattedDate = new Date(dateString).toLocaleString("en-US", options);
+      return formattedDate;
+    }
 
 const getItems = () => {
     isloading.value = true;
@@ -97,9 +114,35 @@ const getItems = () => {
             lists.value = response.data;
             selectedItems.value = [];
 
+
         });
 };
+//detroy task
+const drop = async (id)  => {
 
+     // Show the SweetAlert2 dialog
+    const result = await swal({
+        title: "Are you sure?",
+        text: "You wanna Drop this task?",
+        icon: "warning",
+        showCancelButton: true,
+    });
+
+    // Check if the user confirmed
+    if (result.isConfirmed) {
+        isloading.value = true;
+    axios
+        .put(`/api/dailytask/drop/${id}`,)
+        .then((response) => {
+        toastr.success("Data drop successfully!");
+        isloading.value = false;
+           getItems();
+
+        });
+    }
+
+};
+//show modal task
 const OpenModalTask = () => {
     $("#FormModalTask").modal("show");
 };
@@ -107,15 +150,16 @@ const OpenModalTask = () => {
 const showTasks = (value) => {
     OpenModalTask();
     formtask.value.dailytask_id = value.id;
-
     taskdate.value = value.taskdate;
     startdate.value = value.startdate
+    isloadingTask.value = true;
     // Fetch tasks based on dailytask_id
     axios
         .get(`/api/dailytask/${value.id}/tasks`)
         .then((response) => {
             listasks.value = response.data;
             OpenModalTask();
+            isloadingTask.value = false;
         })
         .catch((error) => {
             console.error("Error fetching tasks:", error);
@@ -124,6 +168,7 @@ const showTasks = (value) => {
 };
 
 const AddNewTask = () => {
+    isloadingTask.value = true;
     axios
         .post("/api/dailytask/addnewTask", {
 
@@ -132,11 +177,23 @@ const AddNewTask = () => {
             iscompleted: formtask.value.iscompleted
         })
         .then((response) => {
-            $("#FormModalTask").modal("hide");
+            // $("#FormModalTask").modal("hide");
             toastr.success("Data created successfully!");
+             // Fetch tasks using GET request after the POST request is successful
+      axios
+        .get(`/api/dailytask/${formtask.value.dailytask_id}/tasks`)
+        .then((response) => {
+          listasks.value = response.data;
+        isloadingTask.value = false;
+        })
+        .catch((error) => {
+          console.error("Error fetching tasks:", error);
+          toastr.error("Error fetching tasks. Please try again.");
+        })
 
-            // Clear formtask after successful save
-            formtask.value.dailytask_id = "";
+
+
+
             formtask.value.task_name = "";
         })
         .catch((error) => {
@@ -191,10 +248,35 @@ const completedTaskCount = computed(() => completedTasks.value.length);
 const toggleList =() =>{
      showList.value = !showList.value;
 }
+
+const delTask =(item)=>{
+   // Continue with the POST request
+  axios
+    .delete(`/api/dailytask/deleteTask/${item.id}`)
+    .then((response) => {
+      // Fetch tasks using GET request after the POST request is successful
+      axios
+        .get(`/api/dailytask/${item.dailytask_id}/tasks`)
+        .then((response) => {
+          listasks.value = response.data;
+            toastr.success('Task successfull Deleted');
+        })
+        .catch((error) => {
+          console.error("Error fetching tasks:", error);
+          toastr.error("Error fetching tasks. Please try again.");
+        })
+
+    })
+    .catch((error) => {
+      console.error("Error adding new task:", error);
+      toastr.error("Error adding new task. Please try again.");
+    });
+}
+
+//end modal task
 const createDataSchema = yup.object({
     site: yup.string().required(),
     tasktype: yup.string().required(),
-    taskname: yup.string().required(),
     plandate: yup.string().required(),
     planenddate: yup.string().required(),
 });
@@ -202,7 +284,6 @@ const createDataSchema = yup.object({
 const editDataSchema = yup.object({
     site: yup.string().required(),
     tasktype: yup.string().required(),
-    taskname: yup.string().required(),
     plandate: yup.string().required(),
     planenddate: yup.string().required(),
 });
@@ -221,9 +302,10 @@ const createData = (values, actions) => {
         });
 };
 
-const addUser = () => {
-    editing.value = false;
-    $("#FormModal").modal("show");
+const addUser = (value) => {
+    editing.value = value.id == undefined ? false : true;
+
+     $("#FormModal").modal("show");
 };
 
 
@@ -253,35 +335,46 @@ const handleSubmit = (values, actions) => {
     }
 };
 
-//start date
+//start Prio
 const startTaskhandle = async (task) => {
-    // Show the SweetAlert2 dialog
-    const result = await swal({
-        title: "Are you sure?",
-        text: "You wanna start your task now?",
-        icon: "warning",
-        showCancelButton: true,
-    });
+      try {
+        // Fetch tasks using GET request after the POST request is successful
+        const response = await axios.get(`/api/dailytask/${task.id}/tasks`);
+        listasks.value = response.data;
 
-    // Check if the user confirmed
-    if (result.isConfirmed) {
-        try {
+        // Check if listtasks is null
+        if (!listasks.value || listasks.value.length === 0) {
+            // Show a warning message using SweetAlert2
+            swal.fire({
+                title: "Warning!",
+                text: "No tasks found. Please add tasks before starting your priority.",
+                icon: "warning"
+            });
+            return; // Exit the function early
+        }
+
+        // Show the SweetAlert2 dialog for confirmation
+        const result = await swal.fire({
+            title: "Are you sure?",
+            text: "You want to start your task now?",
+            icon: "warning",
+            showCancelButton: true,
+        });
+
+        // Check if the user confirmed
+        if (result.isConfirmed) {
             // Make the axios PUT request
-            const response = await axios.put(
-                `/api/dailytask/onhandler/` + task.id,
-                task
-            );
+            const updateResponse = await axios.put(`/api/dailytask/onhandler/` + task.id, task);
 
             // Handle the response
-            toastr.success(response.data.message);
+            toastr.success(updateResponse.data.message);
 
             // Refresh your data or perform any other actions
             getItems();
-        } catch (error) {
-            console.error(error);
-            // Handle the error if needed
-            toastr.error("An error occurred while updating the task.");
         }
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        toastr.error("An error occurred while updating the task.");
     }
 };
 
@@ -554,23 +647,13 @@ onMounted(() => {
                                                     </h5>
                                                     <h5>
                                                         <b>Planned Date:</b>
-                                                        {{
-                                                            moment(
-                                                                task.plandate
-                                                            ).format(
-                                                                "MMMM D, YYYY h:mm A"
-                                                            )
-                                                        }}
+                                                        {{(task.plandate)}}
+
                                                     </h5>
                                                     <h5>
                                                         <b>Planned End Date:</b>
-                                                        {{
-                                                            moment(
-                                                                task.planenddate
-                                                            ).format(
-                                                                "MMMM D, YYYY h:mm A"
-                                                            )
-                                                        }}
+                                                        {{(task.planenddate)}}
+
                                                     </h5>
                                                 </div>
 
@@ -610,6 +693,7 @@ onMounted(() => {
                                                             >Type:</b
                                                         >
                                                         {{ task.tasktype }}
+
                                                     </h5>
                                                 </div>
                                                 <div class="col-4">
@@ -645,6 +729,7 @@ onMounted(() => {
                                                 :disabled="
                                                     task.startdate !== null
                                                 "
+                                                @click="drop(task.id)"
                                                 type="button"
                                                 class="btn btn btn-danger float-right fa fa-trash"
                                                 style="
@@ -654,6 +739,7 @@ onMounted(() => {
                                             >
                                                 &nbsp;Drop</button
                                             ><button
+                                            @click="addUser(task)"
                                                 type="button"
                                                 :disabled="
                                                     task.startdate !== null
@@ -741,45 +827,6 @@ onMounted(() => {
                                             errors.site
                                         }}</span>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="site">Type</label>
-                                        <Field name="tasktype">
-                                            <select
-                                                v-model="form.tasktype"
-                                                class="form-control"
-                                                :required="true"
-                                            >
-                                                <option value="" disabled>
-                                                    Select an option
-                                                </option>
-                                                <option
-                                                    v-for="option in taskoptions"
-                                                    :key="option.value"
-                                                    v-bind:value="option.value"
-                                                >
-                                                    {{ option.name }}
-                                                </option>
-                                            </select>
-                                        </Field>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="task">Task</label>
-                                        <Field
-                                            v-model="form.taskname"
-                                            name="taskname"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.taskname,
-                                            }"
-                                            id="taskname"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Task"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.taskname
-                                        }}</span>
-                                    </div>
 
                                     <div class="form-group">
                                         <label for="end-time"
@@ -802,6 +849,27 @@ onMounted(() => {
                                             class="form-control flatpickr"
                                             id="planenddate"
                                         />
+                                    </div>
+                                       <div class="form-group">
+                                        <label for="site">Type</label>
+                                        <Field name="tasktype">
+                                            <select
+                                                v-model="form.tasktype"
+                                                class="form-control"
+                                                :required="true"
+                                            >
+                                                <option value="" disabled>
+                                                    Select an option
+                                                </option>
+                                                <option
+                                                    v-for="option in taskoptions"
+                                                    :key="option.value"
+                                                    v-bind:value="option.value"
+                                                >
+                                                    {{ option.name }}
+                                                </option>
+                                            </select>
+                                        </Field>
                                     </div>
                                 </div>
                             </div>
@@ -853,7 +921,7 @@ onMounted(() => {
                     <ul class="nav nav-tabs" id="myTabs">
                         <li class="nav-item">
                             <a
-                                class="nav-link active"
+                                class="nav-link btn btn-primary active"
                                 id="tab1"
                                 data-toggle="tab"
                                 href="#taskList"
@@ -862,7 +930,7 @@ onMounted(() => {
                         </li>
                         <li class="nav-item" v-if="!startdate">
                             <a
-                                class="nav-link "
+                                class="nav-link btn btn-primary "
                                 id="tab2"
                                 data-toggle="tab"
                                 href="#formTask"
@@ -873,11 +941,29 @@ onMounted(() => {
                     </ul>
                     <div class="tab-content">
                         <!-- Tab 1: Task List -->
-                        <div class="tab-pane fade show active" id="taskList">
-                            <div class="mt-2" v-if="listasks.length > 0">
-
-
+                        <div  class="tab-pane fade show active" id="taskList">
+                            <div class="mt-2" v-if="listasks.length > 0" style="max-height: 300px; overflow-y: auto;">
                                 <!-- Separate List for incomplete tasks -->
+
+                                <ContentLoader v-if="isloadingTask" viewBox="0 0 250 110">
+                        <rect
+                            x="0"
+                            y="0"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="50"
+                        />
+
+                        <rect
+                            x="0"
+                            y="0"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="50"
+                        />
+                                </ContentLoader>
                                 <ul
                                     class="list-group"
                                     v-for="item in listasks"
@@ -886,9 +972,13 @@ onMounted(() => {
                                     <li
                                         v-if="item.iscompleted !== 1"
                                         class="list-group-item mt-2 "
-                                        @click="handleCompleteTask(item)"
+
                                     >
-                                        <i 
+                                    <div class="d-flex justify-content-between">
+                                    <div class="d-flex">
+                                         <i
+                                          @click="handleCompleteTask(item)"
+                                                 v-if="startdate"
                                             :class="{
                                                 'cursor-pointer mr-2': true,
                                                 'fa fa-check-circle':
@@ -909,6 +999,12 @@ onMounted(() => {
                                         >
                                             {{ item.task_name }}
                                         </span>
+                                    </div>
+                                    <div  class="d-flex">
+                                        <i v-if="!startdate" class="fa fa-trash" @click="delTask(item)"></i>
+                                    </div>
+                                    </div>
+
                                     </li>
                                 </ul>
 
@@ -962,7 +1058,7 @@ onMounted(() => {
                             </div>
                         </div>
                         <!-- Tab 2: Form Task -->
-                        <div class="tab-pane fade" id="formTask" v-if="!startdate">
+                        <div class="tab-pane fade " id="formTask" v-if="!startdate">
                             <Form @submit="AddNewTask">
                                 <div class="col-md-12">
                                     <div class="row">
@@ -975,7 +1071,7 @@ onMounted(() => {
                                             />
 
                                             <div
-                                                class="mt-2"
+                                                class="m-2"
                                                 style="
                                                     display: flex;
                                                     align-items: center;
@@ -986,6 +1082,7 @@ onMounted(() => {
                                                     name="'task_name"
                                                     type="text"
                                                     class="form-control"
+                                                    required
                                                     placeholder="Enter Task"
                                                     style="margin-right: 5px"
                                                 />
@@ -993,7 +1090,7 @@ onMounted(() => {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
+                                <div class="modal-footer" style="border: none;">
                                     <button
                                         type="button"
                                         class="btn btn-secondary"
@@ -1069,4 +1166,29 @@ a {
     color: #2b2b2b;
     text-decoration: none;
 }
+   .nav-tabs {
+            border-bottom: 2px solid #2196F3;
+        }
+
+        .nav-tabs .nav-item {
+            margin-bottom: -1px;
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid transparent;
+            border-radius: 0;
+            color: #2196F3;
+            transition: background-color 0.3s;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #2196F3;
+            color: #fff;
+            border-color: #2196F3;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background-color: #0069D9;
+            border-color: #0069D9;
+        }
 </style>

@@ -13,15 +13,15 @@ class TaskController extends Controller
 {
     public function index()
     {
-        // $startOfWeek = Carbon::now()->startOfWeek();
-        // $endOfWeek = Carbon::now()->endOfWeek();
+
         $data = Task::query()
             ->when(request('query'), function ($query, $searchQuery) {
                 $query->where('site', 'like', "%{$searchQuery}%");
                 $query->where('type', TaskType::from(request('type')));
             })
-            // ->whereBetween('plandate', [$startOfWeek, $endOfWeek])
-            ->where('status_task', null)
+
+            ->whereNull('status_task')
+            ->orWhere('status_task', '!=', 1)
             ->where('user_id', auth()->user()->id)
             ->latest()
             ->get() // Replace paginate with get to retrieve all records
@@ -31,19 +31,21 @@ class TaskController extends Controller
                 'user_id' => $dailytask->user_id,
                 'taskdate' => $dailytask->taskdate,
                 'project' => $dailytask->project,
-                'plandate' => $dailytask->plandate,
-                'planenddate' => $dailytask->planenddate,
+                'plandate' => $dailytask->plandate->format('m/d/Y h:i A'),
+                'planenddate' => $dailytask->planenddate->format('m/d/Y h:i A'),
                 'startdate' => $dailytask->startdate,
                 'enddate' => $dailytask->enddate,
                 'tasktype' => [
-                    'listtask' => $dailytask->tasktype->listtask(),
+                    $dailytask->tasktype->listtask(),
                 ],
                 'status' => $dailytask->status,
                 'attachment' => $dailytask->attachment,
                 'PWS' => $dailytask->PWS,
                 'remarks' => $dailytask->remarks,
                 'immediate_hid' => $dailytask->immediate_hid,
+                'status_task' =>$dailytask->status_task,
                 'created_at' => $dailytask->created_at->format('m/d/Y h:i A'),
+                ''
             ]);
 
         return $data;
@@ -57,7 +59,6 @@ class TaskController extends Controller
         request()->validate([
             'site' => 'required',
             'tasktype' => 'required',
-            'taskname' => 'required',
             'plandate' => 'required',
             'planenddate' => 'required',
         ]);
@@ -78,7 +79,6 @@ class TaskController extends Controller
                 'startdate' => request('startdate'),
                 'enddate' => request('enddate'),
                 'tasktype' => request('tasktype'),
-                'taskname' => request('taskname'),
                 'status' => request('status'),
                 'attachment' => request('attachment'),
                 'PWS' => request('PWS'),
@@ -144,5 +144,30 @@ class TaskController extends Controller
         );
 
         return response()->json(['message' => 'success']);
+    }
+
+    public function drop($id)
+    {
+      // Find the Task by $id
+    $task = Task::find($id);
+    // Check if the Task exists
+    if (!$task) {
+        return response()->json(['message' => 'Task not found'], 404);
+    }
+    // Find and delete the associated ListTask
+    $listTask = ListTask::where('dailytask_id', $id)->first();
+    if ($listTask) {
+        $listTask->delete();
+    }
+    // Delete the Task
+    $task->delete();
+    return response()->json(['message' => 'Task and associated ListTask successfully deleted']);
+    }
+
+    public function deleteTask($id)
+    {
+        $data = ListTask::find($id);
+        $data->delete();
+        return response()->json(['message' => 'Task successfull Deleted']);
     }
 }

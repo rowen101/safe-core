@@ -13,11 +13,8 @@ class Appointment extends Model
     use HasFactory;
 
     protected $table = 'appointments';
-
     protected $guarded = [];
-
     protected $appends = ['formatted_start_time', 'formatted_end_time'];
-
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',

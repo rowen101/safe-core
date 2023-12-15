@@ -18,10 +18,8 @@ class MenuSeeder extends Seeder
         $json = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $str), true );
         foreach ($json as $value) {
             $rowdata = new Menu();
-            $rowdata->id = $value["id"];
-            $rowdata->menu_code = $value["menuCode"];
+            $rowdata->menu_id = $value["menu_id"];
             $rowdata->menu_title = $value["menuTitle"];
-            $rowdata->description = $value["description"];
             $rowdata->parent_id = $value["parent_id"];
             $rowdata->menu_icon = $value["menuIcon"];
             $rowdata->menu_route = $value["menuRoute"];

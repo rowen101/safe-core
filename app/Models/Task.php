@@ -21,7 +21,6 @@ class Task extends Model
         'startdate',
         'enddate',
         'tasktype',
-        'taskname',
         'status',
         'attachment',
         'PWS',

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('site');
             $table->timestamp('taskdate');
             $table->integer('tasktype');
-            $table->string('taskname');
             $table->timestamp('plandate');
             $table->timestamp('planenddate');
             $table->string('project')->nullable();

@@ -11,7 +11,7 @@ class UserController extends Controller
     {
         $users = User::query()
             ->when(request('query'), function ($query, $searchQuery) {
-                $query->where('name', 'like', "%{$searchQuery}%");
+                $query->where('username', 'like', "%{$searchQuery}%");
             })
             ->latest()
             ->paginate(setting('pagination_limit'));
@@ -22,13 +22,13 @@ class UserController extends Controller
     public function store()
     {
         request()->validate([
-            'name' => 'required',
+            'username' => 'required',
             'email' => 'required|unique:users,email',
             'password' => 'required|min:8',
         ]);
 
         return User::create([
-            'name' => request('name'),
+            'username' => request('username'),
             'email' => request('email'),
             'password' => bcrypt(request('password')),
         ]);
@@ -37,13 +37,13 @@ class UserController extends Controller
     public function update(User $user)
     {
         request()->validate([
-            'name' => 'required',
+            'username' => 'required',
             'email' => 'required|unique:users,email,'.$user->id,
             'password' => 'sometimes|min:8',
         ]);
 
         $user->update([
-            'name' => request('name'),
+            'username' => request('username'),
             'email' => request('email'),
             'password' => request('password') ? bcrypt(request('password')) : $user->password,
             'email' => request('email'),

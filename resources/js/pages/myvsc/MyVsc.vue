@@ -59,6 +59,10 @@ const getItems = () => {
     });
 };
 
+const onFilterDate =() => {
+    $("#FormModalfilterDate").modal("show");
+}
+
 onMounted(() => {
     getItems();
 });
@@ -99,7 +103,7 @@ onMounted(() => {
                                         </button>
                                     </div>
                                     <div class="d-flex">
-                                        <i class="fa fa-filter mr-1"></i>
+                                        <i class="fa fa-filter mr-1" @click="onFilterDate"></i>
                                     </div>
                                 </div>
                                 <ContentLoader
@@ -183,7 +187,7 @@ onMounted(() => {
 
                                                 <hr class="bg-white" />
                                                 <div
-                                                    class="d-flex justify-content-between"
+
                                                 >
                                                     <div
                                                         v-if="
@@ -191,15 +195,13 @@ onMounted(() => {
                                                             task.task_lists
                                                                 .length > 0
                                                         "
-                                                        class="d-flex mr-2"
                                                     >
-                                                        <span class="badge"
+                                                         <span class="badge"
                                                             >task</span
                                                         >
-                                                        <div class="text-left">
-                                                            <ul>
+                                                         <ul class="list-group text-dark">
                                                                 <li
-                                                                    class="list-unstyled"
+                                                                   class="list-group-item"
                                                                     v-for="taskList in task.task_lists"
                                                                     :key="
                                                                         taskList.id
@@ -221,8 +223,8 @@ onMounted(() => {
                                                                     }}
                                                                 </li>
                                                             </ul>
-                                                        </div>
                                                     </div>
+
                                                     <span
                                                         v-else
                                                         class="text-center"
@@ -270,9 +272,7 @@ onMounted(() => {
                                             <i class="fa fa-camera"></i>
                                         </button>
                                     </div>
-                                    <div class="d-flex">
-                                        <i class="fa fa-filter mr-1"></i>
-                                    </div>
+
                                 </div>
                                 <table class="table table-bordered table-sm">
                                     <thead>
@@ -300,4 +300,35 @@ onMounted(() => {
             </div>
         </div>
     </div>
+     <div
+        class="modal fade"
+        id="FormModalfilterDate"
+        data-backdrop="static"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        Filter Date
+                    </h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <span>show</span>
+                </div>
+            </div>
+        </div>
+     </div>
 </template>
