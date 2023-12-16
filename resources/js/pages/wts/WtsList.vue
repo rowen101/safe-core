@@ -981,9 +981,9 @@ onMounted(() => {
                                                  v-if="startdate"
                                             :class="{
                                                 'cursor-pointer mr-2': true,
-                                                'fa fa-check-circle':
+                                                'fa fa-check-circle text-primary':
                                                     item.iscompleted === 1,
-                                                'fa fa-circle':
+                                                'fa fa-circle text-primary':
                                                     item.iscompleted !== 1,
                                             }"
                                             style="font-size: 15px"
@@ -1001,7 +1001,7 @@ onMounted(() => {
                                         </span>
                                     </div>
                                     <div  class="d-flex">
-                                        <i v-if="!startdate" class="fa fa-trash" @click="delTask(item)"></i>
+                                        <i v-if="!startdate" class="fa fa-trash text-danger" @click="delTask(item)"></i>
                                     </div>
                                     </div>
 

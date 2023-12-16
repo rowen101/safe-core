@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardStatController;
 use App\Http\Controllers\Admin\MyClosePrioController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\TechController;
 use App\Http\Controllers\Admin\UserController;
@@ -84,6 +85,9 @@ Route::middleware('auth')->group(function () {
 
     //my close prio
     Route::resource('/api/mycloseprio', MyClosePrioController::class);
+
+    //site name
+    Route::resource('/api/site', SiteController::class);
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');
