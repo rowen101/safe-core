@@ -45,13 +45,11 @@ const toggleList =() =>{
 const handleSubmit = () => {
       // Assuming isLoadingSite and errors are defined in your setup
       isLoadingSite.value = true;
-      errors.value = '';
-
       axios
         .post('/api/site', {
             id : formSite.value?.id,
             site_name : formSite.value?.site_name,
-            is_active : formSite.value?.is_active
+          
         })
         .then((response) => {
           // Assuming getItems is a function to fetch data
@@ -86,8 +84,8 @@ const handleSubmit = () => {
 const handleIsActiveSite = (item) => {
   // Assuming formtask is a ref
   formSite.value.is_active = item.is_active === 1 ? 0 : 1;
-
-  // Continue with the POST request
+  //  alert(formSite.value.is_active)
+//   // Continue with the POST request
   axios
     .post("/api/site", {
       id: item.id,

@@ -43,7 +43,7 @@ class SiteController extends Controller
             ],
             [
                 'site_name' => $request->site_name,
-                'is_active' => 1
+                'is_active' => $request->is_active
             ]
         );
 
