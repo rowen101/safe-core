@@ -292,9 +292,8 @@ const createData = (values, actions) => {
     axios
         .post("/api/dailytask", form)
         .then((response) => {
-            lists.value.data.unshift(response.data);
+            getItems();
             $("#FormModal").modal("hide");
-
             toastr.success("data created successfully!");
         })
         .catch((error) => {
@@ -397,10 +396,12 @@ const endTaskhandle = async (task) => {
 
             if (endstart) {
                 // If taskdate is the same as the current date and time, set status to "HIT"
-                task.status = "HIT";
+                task.remarks = "HIT";
+                task.status = "On Schedule";
             } else {
                 // If taskdate is different from the current date and time, set status to "MISS"
-                task.status = "MISS";
+                task.remarks = "MISS";
+                task.status = "Behind Schedule";
             }
             // Make the axios PUT request
             const response = await axios.put(

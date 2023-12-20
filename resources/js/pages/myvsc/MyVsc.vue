@@ -280,8 +280,10 @@ onMounted(() => {
                                             <th>Planed Date</th>
                                             <th>Total Task</th>
                                             <th>Complete</th>
+                                            <th>Reason</th>
                                             <th>Remarks</th>
-                                            <th>Percentage</th>
+                                            <th>Percentage Task</th>
+
                                         </tr>
                                     </thead>
 

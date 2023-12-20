@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->integer('created_by')->default(0)->nullable();
             $table->integer('updated_by')->nullable();
+            $table->integer('sitehead_user_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

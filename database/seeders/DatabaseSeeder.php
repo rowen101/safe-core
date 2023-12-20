@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Database\Seeders\Admin\MenuSeeder;
+use Database\Seeders\Admin\UserSeeder;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -15,13 +17,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             MenuSeeder::class,
+            UserSeeder::class
         ]);
 
-        // \App\Models\User::factory(10)->create();
-
-        \App\Models\User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@admin.com',
-        ]);
+       
     }
 }

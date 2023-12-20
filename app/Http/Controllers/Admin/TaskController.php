@@ -12,20 +12,21 @@ use App\Http\Controllers\Controller;
 class TaskController extends Controller
 {
     public function index()
-    {
-
-        $data = Task::query()
-            ->when(request('query'), function ($query, $searchQuery) {
-                $query->where('site', 'like', "%{$searchQuery}%");
-                $query->where('type', TaskType::from(request('type')));
-            })
-
-            ->whereNull('status_task')
-            ->orWhere('status_task', '!=', 1)
-            ->where('user_id', auth()->user()->id)
-            ->latest()
-            ->get() // Replace paginate with get to retrieve all records
-            ->map(fn ($dailytask) => [
+{
+    $data = Task::query()
+        ->when(request('query'), function ($query, $searchQuery) {
+            $query->where('site', 'like', "%{$searchQuery}%");
+            $query->where('type', TaskType::from(request('type')));
+        })
+        ->where(function ($query) {
+            $query->whereNull('status_task')
+                  ->orWhere('status_task', '!=', 1);
+        })
+        ->where('user_id', auth()->user()->id)
+        ->orderBy('taskdate', 'asc')
+        ->get()
+        ->map(function ($dailytask) {
+            return [
                 'id' => $dailytask->id,
                 'site' => $dailytask->site,
                 'user_id' => $dailytask->user_id,
@@ -43,13 +44,14 @@ class TaskController extends Controller
                 'PWS' => $dailytask->PWS,
                 'remarks' => $dailytask->remarks,
                 'immediate_hid' => $dailytask->immediate_hid,
-                'status_task' =>$dailytask->status_task,
+                'status_task' => $dailytask->status_task,
                 'created_at' => $dailytask->created_at->format('m/d/Y h:i A'),
-                ''
-            ]);
+            ];
+        });
 
-        return $data;
-    }
+    return $data;
+}
+
 
 
     public function store()
@@ -114,6 +116,7 @@ class TaskController extends Controller
             // Start date is not empty, update end date and status
             $task->enddate = now(); // You may want to replace 'now()' with the appropriate logic to set the end date
             $task->status = $request->status; // Set the status accordingly
+            $task->remarks = $request->remarks; // Set the status accordingly
             $task->status_task = 1;
         }
 

@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             $rowdata->password =Hash::make( $value["password"]);
             $rowdata->password_change_date = $value["passwordChangeDate"];
             $rowdata->role = $value["role"];
-            $rowdata->name = $value["firstName"].' '.$value["lastName"];
+            $rowdata->username = $value["username"];
             $rowdata->first_name = $value["firstName"];
             $rowdata->last_name = $value["lastName"];
             $rowdata->last_ip_address = $value["lastIPAddress"];
@@ -34,6 +34,7 @@ class UserSeeder extends Seeder
             $rowdata->avatar = $value["avatar"];
             $rowdata->is_active = $value["isActive"];
             $rowdata->remember_token = $value["remember_token"];
+            $rowdata->sitehead_user_id = $value["sitehead_user_id"];
             $rowdata->created_by = 0;
             $rowdata->save();
         }
