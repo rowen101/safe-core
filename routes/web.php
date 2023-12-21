@@ -1,20 +1,22 @@
 <?php
 
-use App\Http\Controllers\Admin\AppointmentController;
-use App\Http\Controllers\Admin\AppointmentStatusController;
-use App\Http\Controllers\Admin\ClientController;
-use App\Http\Controllers\Admin\DashboardStatController;
-use App\Http\Controllers\Admin\MyClosePrioController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\SettingController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\TechController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\VirtualSCController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\VirtualSCController;
+use App\Http\Controllers\Admin\AppointmentController;
+use App\Http\Controllers\Admin\MyClosePrioController;
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\DashboardStatController;
+use App\Http\Controllers\Admin\AppointmentStatusController;
+use App\Http\Controllers\Admin\UserMenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +90,12 @@ Route::middleware('auth')->group(function () {
 
     //site name
     Route::resource('/api/site', SiteController::class);
+
+    //menu controller
+    Route::resource('/api/menu', MenuController::class);
+
+    //menu username
+    Route::resource('/api/menu/usermenu', UserMenuController::class);
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');

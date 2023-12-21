@@ -10,6 +10,7 @@ import TechList from './pages/techrecomm/TechList.vue';
 import WTSList from './pages/wts/WtsList.vue';
 import MyVsc from './pages/myvsc/MyVsc.vue';
 import MyClosedPrio from './pages/mycloseprio/MyClosePrioList.vue';
+import UserMenu from './pages/usermenu/UserMenuList.vue';
 
 export default [
     {
@@ -43,7 +44,7 @@ export default [
     },
 
     {
-        path: '/admin/users',
+        path: '/admin/user',
         name: 'admin.users',
         component: UserList,
     },
@@ -78,7 +79,7 @@ export default [
     },
 
     {
-        path: '/admin/weekly-task-schedule/myclosedprio',
+        path: '/admin/weekly-task-schedule/my-closed-prio',
         name: 'My Closed Prio',
         component: MyClosedPrio,
     },
@@ -86,6 +87,11 @@ export default [
         path: '/admin/weekly-task-schedule/myvsc',
         name: 'My VSC',
         component: MyVsc,
+    },
+    {
+        path: '/admin/usermenu',
+        name: 'User Menu',
+        component: UserMenu,
     }
 
 ]

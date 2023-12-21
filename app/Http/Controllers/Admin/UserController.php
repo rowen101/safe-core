@@ -25,12 +25,16 @@ class UserController extends Controller
             'username' => 'required',
             'email' => 'required|unique:users,email',
             'password' => 'required|min:8',
+            'first_name' => 'required',
+            'last_name' => 'required'
         ]);
 
         return User::create([
             'username' => request('username'),
             'email' => request('email'),
             'password' => bcrypt(request('password')),
+            'first_name' => request('first_name'),
+            'last_name' => request('last_name')
         ]);
     }
 
@@ -40,6 +44,8 @@ class UserController extends Controller
             'username' => 'required',
             'email' => 'required|unique:users,email,'.$user->id,
             'password' => 'sometimes|min:8',
+            'first_name' => 'required',
+            'last_name' => 'required'
         ]);
 
         $user->update([
@@ -47,10 +53,13 @@ class UserController extends Controller
             'email' => request('email'),
             'password' => request('password') ? bcrypt(request('password')) : $user->password,
             'email' => request('email'),
+            'first_name' => request('first_name'),
+            'last_name' => request('last_name')
         ]);
 
         return $user;
     }
+    
 
     public function destory(User $user)
     {

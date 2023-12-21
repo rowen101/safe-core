@@ -19,7 +19,7 @@ const currentThemeMode = computed(() => {
     <div v-if="authUserStore.user.name !== ''" class="wrapper" :class="currentThemeMode">
         <AppNavbar />
         <SidebarLeft/>
-        <div class="content-wrapper">
+        <div class="content-wrapper" style="min-height: 471.667px;">
             <router-view></router-view>
         </div>
         <SidebarRight />
@@ -29,3 +29,4 @@ const currentThemeMode = computed(() => {
     <router-view></router-view>
 </div>
 </template>
+

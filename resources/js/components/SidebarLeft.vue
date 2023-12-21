@@ -7,6 +7,24 @@ const router = useRouter();
 const authUserStore = useAuthUserStore();
 const settingStore = useSettingStore();
 
+const menulist = ref({ data: [] });
+
+const getmenu = () => {
+    axios
+        .get("/api/menu")
+        .then((response) => {
+            menulist.value = response.data;
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+const isCurrentRoute = (route) => {
+    return route === router.currentRoute.value.path;
+};
+
 const logout = () => {
     axios.post("/logout").then((response) => {
         authUserStore.user.name = "";
@@ -16,11 +34,12 @@ const logout = () => {
 
 onMounted(() => {
     $('[data-widget="treeview"]').Treeview("init");
+    getmenu();
 });
 </script>
 
 <template>
-    <aside class="main-sidebar sidebar-dark-primary elevation-4 fixed">
+     <aside class="main-sidebar sidebar-dark-primary elevation-4 position-fixed">
         <a href="#" class="brand-link">
             <img
                 :src="'/img/safe1.png'"
@@ -33,8 +52,8 @@ onMounted(() => {
             }}</span>
         </a>
 
-        <div class="sidebar ">
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex ">
+        <div class="sidebar">
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
                     <img
                         :src="authUserStore.user.avatar"
@@ -56,135 +75,58 @@ onMounted(() => {
                     role="menu"
                     data-accordion="false"
                 >
-                    <li class="nav-item">
-                        <router-link
-                            to="/admin/dashboard"
-                            active-class="active"
-                            class="nav-link"
-                        >
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>Dashboard</p>
-                        </router-link>
-                    </li>
-
-                    <!-- <li class="nav-item">
-                        <router-link to="/admin/client"
-                            :class="$route.path.startsWith('/admin/client') ? 'active' : ''" class="nav-link">
-                            <i class="nav-icon fas fa-calendar-alt"></i>
-                            <p>
-                                Client
-                            </p>
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/admin/appointments"
-                            :class="$route.path.startsWith('/admin/appointments') ? 'active' : ''" class="nav-link">
-                            <i class="nav-icon fas fa-calendar-alt"></i>
-                            <p>
-                                Appointments
-                            </p>
-                        </router-link>
-                    </li> -->
-
                     <li
-                        class="nav-item"
-                        v-if="authUserStore.user.role === 'ADMIN'"
+                        v-for="item in menulist"
+                        :key="item.id"
+                        :class="{
+                            'nav-item': true,
+                            'has-submenu':
+                                item.submenus && item.submenus.length > 0,
+                        }"
                     >
                         <router-link
-                            to="/admin/users"
-                            active-class="active"
-                            class="nav-link"
+                            :class="{
+                                'nav-link': true,
+                                active: isCurrentRoute(item.menu_route),
+                            }"
+                            :to="`${item.menu_route}`"
                         >
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>Users</p>
-                        </router-link>
-                    </li>
-
-                    <li class="nav-item">
-                        <router-link
-                            to="/admin/tech-recommendation"
-                            active-class="active"
-                            class="nav-link"
-                        >
-                            <i class="nav-icon fas fas fa-server"></i>
-                            <p>Tech Recommendation</p>
-
+                            <i :class="'nav-icon ' + item.menu_icon"></i>
+                            <p>{{ item.menu_title }}</p>
+                            <i
+                                v-if="item.submenus && item.submenus.length > 0"
+                                class="fas fa-angle-left right"
+                            ></i>
                         </router-link>
 
-                    </li>
+                      
 
-                    <li class="nav-item menu-open">
-                        <router-link
-                            to="#"
-
-                            class="nav-link"
+                        <ul
+                            v-if="item.submenus && item.submenus.length > 0"
+                            class="nav nav-treeview"
                         >
-                            <i class="nav-icon fas fa-server"></i>
-                            <p>Weekly Task Schedule</p>
-                            <i class="fas fa-angle-left right"></i>
-                        </router-link>
-                           <ul class="nav nav-treeview">
-                            <li class="nav-item">
-
+                            <li
+                                v-for="submenu in item.submenus"
+                                :key="submenu.id"
+                                class="nav-item"
+                            >
                                 <router-link
-                            to="/admin/weekly-task-schedule/myprio"
-                            active-class="active"
-                            class="nav-link"
-                        >
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>My Prio</p>
+                                    :class="{
+                                        'nav-link': true,
+                                        active: isCurrentRoute(
+                                            submenu.menu_route
+                                        ),
+                                    }"
+                                    :to="submenu.menu_route"
+                                >
+                                    <i
+                                        :class="'nav-icon ' + submenu.menu_icon"
+                                    ></i>
+                                    <p>{{ submenu.menu_title }}</p>
+                                </router-link>
 
-                        </router-link>
-                            </li>
-                            <li class="nav-item">
-                                   <router-link
-                            to="/admin/weekly-task-schedule/myclosedprio"
-                            active-class="active"
-                            class="nav-link"
-                        >
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>My Closed Prio</p>
-
-                        </router-link>
-                            </li>
-                             <li class="nav-item">
-
-                                <router-link
-                            to="/admin/weekly-task-schedule/myvsc"
-                            active-class="active"
-                            class="nav-link"
-                        >
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>My VSC</p>
-
-                        </router-link>
                             </li>
                         </ul>
-                    </li>
-
-                    <li
-                        class="nav-item"
-                        v-if="authUserStore.user.role === 'ADMIN'"
-                    >
-                        <router-link
-                            to="/admin/settings"
-                            active-class="active"
-                            class="nav-link"
-                        >
-                            <i class="nav-icon fas fa-cog"></i>
-                            <p>Settings</p>
-                        </router-link>
-                    </li>
-
-                    <li class="nav-item">
-                        <router-link
-                            to="/admin/profile"
-                            active-class="active"
-                            class="nav-link"
-                        >
-                            <i class="nav-icon fas fa-user"></i>
-                            <p>Profile</p>
-                        </router-link>
                     </li>
 
                     <li class="nav-item">

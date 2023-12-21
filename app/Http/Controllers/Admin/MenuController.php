@@ -17,29 +17,55 @@ class MenuController extends Controller
         {
             $userId = auth()->user()->id;
 
-            $menu = Menu::select('menus.*')
-                ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
-                ->where('menus.is_active', 1)
-                ->where('menus.app_id', 1)
-                ->where('menus.parent_id', 0)
-                ->where('usermenus.user_id', $userId)
-                ->orderBy('menus.sort_order', 'ASC')
-                ->get();
-
-            // For each top-level menu item, fetch and attach its submenus based on user access
-            $menu->each(function ($menuItem) use ($userId) {
-                $menuItem->submenus = Menu::select('menus.*')
-                    ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
+            // Check if the user ID is 1
+            if ($userId == 1) {
+                // If user ID is 1, show all menus
+                $menu = Menu::select('menus.*')
                     ->where('menus.is_active', 1)
-                    ->where('menus.parent_id', $menuItem->id)
+                    ->where('menus.parent_id', 0)
+                    ->orderBy('menus.sort_order', 'ASC')
+                    ->get();
+
+                 // For each top-level menu item, fetch and attach its submenus based on user access
+                 $menu->each(function ($menuItem){
+                    $menuItem->submenus = Menu::select('menus.*')
+                        ->where('menus.is_active', 1)
+                        ->where('menus.parent_id', $menuItem->menu_id)
+                        ->orderBy('menus.sort_order', 'ASC')
+                        ->get();
+                });
+
+            } else {
+                // If user ID is not 1, show menus based on user access
+                $menu = Menu::select('menus.*')
+                    ->join('usermenus', 'menus.menu_id', '=', 'usermenus.menu_id')
+                    ->where('menus.is_active', 1)
+                    ->where('menus.parent_id', 0)
                     ->where('usermenus.user_id', $userId)
                     ->orderBy('menus.sort_order', 'ASC')
                     ->get();
-            });
+
+                // For each top-level menu item, fetch and attach its submenus based on user access
+                $menu->each(function ($menuItem) use ($userId) {
+                    $menuItem->submenus = Menu::select('menus.*')
+                        ->join('usermenus', 'menus.menu_id', '=', 'usermenus.menu_id')
+                        ->where('menus.is_active', 1)
+                        ->where('menus.parent_id', $menuItem->id)
+                        ->where('usermenus.user_id', $userId)
+                        ->orderBy('menus.sort_order', 'ASC')
+                        ->get();
+                });
+            }
 
             return $menu;
         }
 
+
+        public function usermenu()
+        {
+          
+
+        }
     /**
      * Show the form for creating a new resource.
      *
