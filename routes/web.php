@@ -47,7 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/api/users/{user}', [UserController::class, 'update']);
     Route::delete('/api/users/{user}', [UserController::class, 'destory']);
     Route::delete('/api/users', [UserController::class, 'bulkDelete']);
-
+    Route::get('/api/users/userlist', [UserController::class, 'listuser']);
+ Route::patch('/api/users/{user}/change-sitehead', [UserController::class, 'changesitehead']);
     //client
     Route::get('/api/view-clients', [ClientController::class,'viewclient']);
     Route::get('/api/clients', [ClientController::class, 'index']);
@@ -95,7 +96,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('/api/menu', MenuController::class);
 
     //menu username
-    Route::resource('/api/menu/usermenu', UserMenuController::class);
+    Route::resource('/api/usermenu', UserMenuController::class);
+    Route::get('/api/usermenu/retrieve/{id}', [UserMenuController::class, 'retrieveUserMenu']);
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');

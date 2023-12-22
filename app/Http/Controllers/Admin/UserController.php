@@ -19,14 +19,22 @@ class UserController extends Controller
         return $users;
     }
 
+    public function listuser()
+    {
+        $data = User::where('is_active', 1)
+        ->where('username', '!=', 'admin')
+        ->get();
+
+        return response()->json($data);
+    }
     public function store()
     {
         request()->validate([
-            'username' => 'required',
+            'username' => 'required|unique:users,username',
             'email' => 'required|unique:users,email',
             'password' => 'required|min:8',
             'first_name' => 'required',
-            'last_name' => 'required'
+            'last_name' => 'required',
         ]);
 
         return User::create([
@@ -34,7 +42,8 @@ class UserController extends Controller
             'email' => request('email'),
             'password' => bcrypt(request('password')),
             'first_name' => request('first_name'),
-            'last_name' => request('last_name')
+            'last_name' => request('last_name'),
+
         ]);
     }
 
@@ -45,7 +54,8 @@ class UserController extends Controller
             'email' => 'required|unique:users,email,'.$user->id,
             'password' => 'sometimes|min:8',
             'first_name' => 'required',
-            'last_name' => 'required'
+            'last_name' => 'required',
+
         ]);
 
         $user->update([
@@ -54,18 +64,28 @@ class UserController extends Controller
             'password' => request('password') ? bcrypt(request('password')) : $user->password,
             'email' => request('email'),
             'first_name' => request('first_name'),
-            'last_name' => request('last_name')
+            'last_name' => request('last_name'),
+
         ]);
 
         return $user;
     }
-    
+
 
     public function destory(User $user)
     {
         $user->delete();
 
         return response()->noContent();
+    }
+
+    public function changesitehead(User $user)
+    {
+        $user->update([
+            'sitehead_user_id' => request('sitehead_user_id'),
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
     public function changeRole(User $user)

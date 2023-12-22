@@ -13,6 +13,8 @@ const users = ref({'data': []});
 const editing = ref(false);
 const formValues = ref();
 const form = ref(null);
+const listuseroption = ref([]);
+const selectedSiteHead = ref(null);
 
 const getUsers = (page = 1) => {
     axios.get(`/api/users?page=${page}`, {
@@ -26,6 +28,8 @@ const getUsers = (page = 1) => {
         selectAll.value = false;
     })
 }
+
+
 
 const createUserSchema = yup.object({
     username: yup.string().required(),
@@ -56,6 +60,7 @@ const createUser = (values, { resetForm, setErrors }) => {
         .catch((error) => {
             if (error.response.data.errors) {
                 setErrors(error.response.data.errors);
+                toastr.warning(error.response.data.errors.username);
             }
         })
 };
@@ -63,6 +68,7 @@ const createUser = (values, { resetForm, setErrors }) => {
 const addUser = () => {
     editing.value = false;
     $('#userFormModal').modal('show');
+
 };
 
 const editUser = (user) => {
@@ -71,9 +77,14 @@ const editUser = (user) => {
     $('#userFormModal').modal('show');
     formValues.value = {
         id: user.id,
-        name: user.name,
+        username: user.username,
         email: user.email,
+        sitehead_user_id: user.sitehead_user_id,
+        first_name: user.first_name,
+        last_name: user.last_name
     };
+
+
 };
 
 const updateUser = (values, { setErrors }) => {
@@ -204,10 +215,10 @@ onMounted(() => {
                             <tr>
                                 <th><input type="checkbox" v-model="selectAll" @change="selectAllUsers" /></th>
                                 <th style="width: 10px">#</th>
-                                <th>User Name</th>
+                                <th>Name</th>
                                 <th>Email</th>
                                 <th>Registered Date</th>
-                                <th>Role</th>
+                                <th>Site Head</th>
                                 <th>Options</th>
                             </tr>
                         </thead>
@@ -283,16 +294,17 @@ onMounted(() => {
                         </div>
                 </div>
               </div>
+               <div class="form-group">
+            <label for="password">Password</label>
+            <Field name="password" type="password" class="form-control"
+                :class="{ 'is-invalid': errors.password }" id="password" aria-describedby="passwordHelp"
+                placeholder="Enter password" />
+            <span class="invalid-feedback">{{ errors.password }}</span>
+        </div>
+        <div>
 
-
-
-                        <div class="form-group">
-                            <label for="email">Password</label>
-                            <Field name="password" type="password" class="form-control "
-                                :class="{ 'is-invalid': errors.password }" id="password" aria-describedby="nameHelp"
-                                placeholder="Enter password" />
-                            <span class="invalid-feedback">{{ errors.password }}</span>
-                        </div>
+</div>
+       
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

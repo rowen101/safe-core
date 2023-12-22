@@ -99,15 +99,15 @@ onMounted(() => {
                             ></i>
                         </router-link>
 
-                      
+
 
                         <ul
                             v-if="item.submenus && item.submenus.length > 0"
                             class="nav nav-treeview"
                         >
                             <li
-                                v-for="submenu in item.submenus"
-                                :key="submenu.id"
+                                    v-for="submenu in item.submenus"
+                                    :key="submenu.id"
                                 class="nav-item"
                             >
                                 <router-link

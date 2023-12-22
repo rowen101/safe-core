@@ -14,25 +14,33 @@ class UserMenuController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $menu = Menu::select('menus.*')
+    public function index(Request $request)
+{
+    $user_id = $request->input('user_id');
+
+    $menu = Menu::select('menus.*')
         ->where('menus.is_active', 1)
         ->where('menus.parent_id', 0)
         ->orderBy('menus.sort_order', 'ASC')
         ->get();
 
-        // For each top-level menu item, fetch and attach its submenus based on user access
-        $menu->each(function ($menuItem){
-            $menuItem->submenus = Menu::select('menus.*')
-                ->where('menus.is_active', 1)
-                ->where('menus.parent_id', $menuItem->menu_id)
-                ->orderBy('menus.sort_order', 'ASC')
-                ->get();
-        });
+    // For each top-level menu item, fetch and attach its submenus based on user access
+    $menu->each(function ($menuItem) use ($user_id) {
+        $menuItem->submenus = Menu::select('menus.*')
+            ->where('menus.is_active', 1)
+            ->where('menus.parent_id', $menuItem->menu_id)
+            ->orderBy('menus.sort_order', 'ASC')
+            ->get();
 
-        return response()->json($menu);
-    }
+        // Check if the user has access to this menu item
+        $menuItem->hasAccess = UserMenu::where('user_id', $user_id)
+            ->where('menu_id', $menuItem->menu_id)
+            ->exists();
+    });
+
+    return response()->json($menu);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -67,6 +75,12 @@ class UserMenuController extends Controller
         return response()->json(['message' => 'Data saved successfully']);
 
 
+    }
+
+    public function retrieveUserMenu($id)
+    {
+        Usermenu::where('user_id', $id)->get();
+        return response()->json(['message' => 'retrieved successfully!']);
     }
 
     /**

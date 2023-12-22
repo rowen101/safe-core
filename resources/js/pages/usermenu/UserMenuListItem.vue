@@ -24,7 +24,7 @@ const toggleSelection = () => {
     <tr>
         <td><input type="checkbox" :checked="selectAll" @change="toggleSelection" /></td>
         <td>{{ index + 1 }}</td>
-        <td>{{ user.username }}</td>
+        <td>{{ user.first_name + ' '+ user.last_name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.formatted_created_at }}</td>
 
@@ -33,7 +33,7 @@ const toggleSelection = () => {
                 <option v-for="role in roles" :value="role.value" :selected="(user.role === role.name)">{{ role.name }}</option>
             </select>
         </td> -->
-        <td>
+        <td class="text-center">
             <a href="#" @click.prevent="$emit('editUser', user)"><i class="fa fa-edit"></i></a>
 
         </td>

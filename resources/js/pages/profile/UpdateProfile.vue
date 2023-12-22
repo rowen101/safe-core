@@ -9,7 +9,7 @@ const toastr = useToastr();
 const errors = ref([]);
 const updateProfile = () => {
     axios.put('/api/profile', {
-        name: authUserStore.user.name,
+        username: authUserStore.user.username,
         first_name: authUserStore.user.first_name,
         last_name: authUserStore.user.last_name,
         email: authUserStore.user.email,
@@ -95,7 +95,7 @@ const handleFileChange = (event) => {
                                 <img @click="openFileInput" class="profile-user-img img-circle" :src="authUserStore.user.avatar" alt="User profile picture">
                             </div>
 
-                            <h3 class="profile-username text-center">{{ authUserStore.user.name }}</h3>
+                            <h3 class="profile-username text-center">{{ authUserStore.user.usermane }}</h3>
 
                             <p class="text-muted text-center">{{ authUserStore.user.role }}</p>
                         </div>
@@ -118,10 +118,10 @@ const handleFileChange = (event) => {
                                 <div class="tab-pane active" id="profile">
                                     <form @submit.prevent="updateProfile()" class="form-horizontal">
                                         <div class="form-group row">
-                                            <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                                            <label for="inputName" class="col-sm-2 col-form-label">User Name</label>
                                             <div class="col-sm-10">
-                                                <input v-model="authUserStore.user.name" type="text" class="form-control" id="inputName" placeholder="Name">
-                                                <span class="text-danger text-sm" v-if="errors && errors.name">{{ errors.name[0] }}</span>
+                                                <input v-model="authUserStore.user.username" type="text" class="form-control" id="inputName" placeholder="User name">
+                                                <span class="text-danger text-sm" v-if="errors && errors.username">{{ errors.username[0] }}</span>
                                             </div>
                                         </div>
                                          <div class="form-group row">
