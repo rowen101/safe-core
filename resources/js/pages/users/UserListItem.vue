@@ -64,7 +64,7 @@ onMounted(() => {
 </script>
 <template>
     <tr>
-        <td><input type="checkbox" :checked="selectAll" @change="toggleSelection" /></td>
+        <td ><input v-if="user.name != 'admin'" type="checkbox" :checked="selectAll" @change="toggleSelection" /></td>
         <td>{{ index + 1 }}</td>
         <td>{{ user.first_name +' '+ user.last_name }}</td>
         <td>{{ user.email }}</td>
@@ -74,9 +74,9 @@ onMounted(() => {
                 <option v-for="role in roles" :key="role.id"  :value="role.value"  :selected="(user.role === role.name)">{{ role.name }}</option>
             </select>
         </td> -->
-        <td>
-            <select class="form-control" @change="changeSitehead(user, $event.target.value)">
-                <option v-for="item in listuser" :key="item.id"  :value="item.id"  :selected="(user.sitehead_user_id === item.id)">{{ item.first_name +' '+ item.last_name }}</option>
+        <td >
+            <select v-if="user.name != 'admin'" class="form-control" @change="changeSitehead(user, $event.target.value)">
+                <option v-for="item in listuser"  :value="item.id"  :selected="(user.sitehead_user_id === item.id)">{{ item.first_name +' '+ item.last_name }}</option>
             </select>
         </td>
         <td>

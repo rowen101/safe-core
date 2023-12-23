@@ -2,7 +2,7 @@
 
 return [
     'default' => [
-        'app_name' => 'Laravel & Vue 3',
+        'app_name' => 'SLIM',
         'date_format' => 'm/d/Y',
         'pagination_limit' => 10,
     ],

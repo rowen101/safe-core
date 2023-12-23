@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             $rowdata->password =Hash::make( $value["password"]);
             $rowdata->password_change_date = $value["passwordChangeDate"];
             $rowdata->role = $value["role"];
-            $rowdata->username = $value["username"];
+            $rowdata->name = $value["name"];
             $rowdata->first_name = $value["firstName"];
             $rowdata->last_name = $value["lastName"];
             $rowdata->last_ip_address = $value["lastIPAddress"];

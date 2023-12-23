@@ -173,4 +173,16 @@ class TaskController extends Controller
         $data->delete();
         return response()->json(['message' => 'Task successfull Deleted']);
     }
+
+    public function FilterTaskdate(Request $request)
+    {
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+
+        $tasks = Task::when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+            return $query->whereBetween('taskdate', [Carbon::parse($fromDate), Carbon::parse($toDate)]);
+        })->get();
+
+        return response()->json('tasks');
+    }
 }

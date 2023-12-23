@@ -31,23 +31,7 @@ const getUsers = (page = 1) => {
         });
 };
 
-const createUserSchema = yup.object({
-    username: yup.string().required(),
-    last_name: yup.string().required(),
-    first_name: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().required().min(8),
-});
 
-const editUserSchema = yup.object({
-    username: yup.string().required(),
-    last_name: yup.string().required(),
-    first_name: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().when((password, schema) => {
-        return password ? schema.required().min(8) : schema;
-    }),
-});
 
 const createUser = (values, { resetForm, setErrors }) => {
     axios
@@ -163,12 +147,12 @@ onMounted(() => {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Users</h1>
+
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Users</li>
+                        <li class="breadcrumb-item active">Users Menu</li>
                     </ol>
                 </div>
             </div>
@@ -177,41 +161,29 @@ onMounted(() => {
 
     <div class="content">
         <div class="container-fluid">
-            <div class="d-flex justify-content-between">
-                <div class="d-flex">
-                    <button
-                        @click="addUser"
-                        type="button"
-                        class="mb-2 btn btn-primary"
-                    >
-                        <i class="fa fa-plus-circle mr-1"></i>
-                        Add New User
-                    </button>
-                    <div v-if="selectedUsers.length > 0">
-                        <button
-                            @click="bulkDelete"
-                            type="button"
-                            class="ml-2 mb-2 btn btn-danger"
-                        >
-                            <i class="fa fa-trash mr-1"></i>
-                            Delete Selected
-                        </button>
-                        <span class="ml-2"
-                            >Selected {{ selectedUsers.length }} users</span
-                        >
-                    </div>
-                </div>
-                <div>
+
+            <div class="card">
+                <div class="card-header">
+                        <div class="card-title">
+                            <h5>
+User Menu
+                            </h5>
+                        </div>
+
+                        <div class="card-tools">
+
                     <input
                         type="text"
                         v-model="searchQuery"
                         class="form-control"
                         placeholder="Search..."
                     />
-                </div>
-            </div>
-            <div class="card">
+
+                        </div>
+                    </div>
+
                 <div class="card-body">
+
                     <table class="table table-bordered table-sm">
                         <thead>
                             <tr>

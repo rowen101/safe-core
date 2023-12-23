@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/dailytask/{id}/tasks',[TaskController::class, 'getTask']);
     Route::put('/api/dailytask/drop/{id}',[TaskController::class, 'drop']);
      Route::delete('/api/dailytask/deleteTask/{id}',[TaskController::class, 'deleteTask']);
+     Route::get('/api/dailytask/filter-taskdate',[TaskController::class,'FilterTaskdate']);
     //myvsc controller
     Route::resource('/api/myvsc', VirtualSCController::class);
 

@@ -49,11 +49,14 @@ const handleSubmit = () => {
         .post('/api/site', {
             id : formSite.value?.id,
             site_name : formSite.value?.site_name,
-          
+            is_active : true
+
         })
         .then((response) => {
           // Assuming getItems is a function to fetch data
           getItems();
+         // Reset the form after successful post
+         formSite.value = { id: null, site_name: '', is_active: true };
           toastr.success(response.data.message);
           isLoadingSite.value = false;
         })
@@ -64,21 +67,21 @@ const handleSubmit = () => {
         });
     };
 
-    const createData = (values, { resetForm, setErrors }) => {
-   axios
-        .post('/api/site', formSite)
-        .then((response) => {
-          // Assuming getItems is a function to fetch data
-          getItems();
-          toastr.success(response.data.message);
-          isLoadingSite.value = false;
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 422) {
-            errors.value = error.response.data.errors;
-          }
-        });
-};
+// const createData = (values, { resetForm, setErrors }) => {
+//    axios
+//         .post('/api/site', formSite)
+//         .then((response) => {
+//           // Assuming getItems is a function to fetch data
+//           getItems();
+//           toastr.success(response.data.message);
+//           isLoadingSite.value = false;
+//         })
+//         .catch((error) => {
+//           if (error.response && error.response.status === 422) {
+//             errors.value = error.response.data.errors;
+//           }
+//         });
+// };
 
 // click task item to complete or cancel
 const handleIsActiveSite = (item) => {

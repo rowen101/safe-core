@@ -57,7 +57,7 @@ onMounted(() => {
                 <div class="image">
                     <img
                         :src="authUserStore.user.avatar"
-                        class="img-circle elevation-2"
+                        class="img-circle elevation-1"
                         alt="User Image"
                     />
                 </div>

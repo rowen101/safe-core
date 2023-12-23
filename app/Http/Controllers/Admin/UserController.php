@@ -11,7 +11,7 @@ class UserController extends Controller
     {
         $users = User::query()
             ->when(request('query'), function ($query, $searchQuery) {
-                $query->where('username', 'like', "%{$searchQuery}%");
+                $query->where('name', 'like', "%{$searchQuery}%");
             })
             ->latest()
             ->paginate(setting('pagination_limit'));
@@ -22,7 +22,7 @@ class UserController extends Controller
     public function listuser()
     {
         $data = User::where('is_active', 1)
-        ->where('username', '!=', 'admin')
+        ->where('name', '!=', 'admin')
         ->get();
 
         return response()->json($data);
@@ -30,7 +30,7 @@ class UserController extends Controller
     public function store()
     {
         request()->validate([
-            'username' => 'required|unique:users,username',
+            'name' => 'required|unique:users,name',
             'email' => 'required|unique:users,email',
             'password' => 'required|min:8',
             'first_name' => 'required',
@@ -38,7 +38,7 @@ class UserController extends Controller
         ]);
 
         return User::create([
-            'username' => request('username'),
+            'name' => request('name'),
             'email' => request('email'),
             'password' => bcrypt(request('password')),
             'first_name' => request('first_name'),
@@ -50,7 +50,7 @@ class UserController extends Controller
     public function update(User $user)
     {
         request()->validate([
-            'username' => 'required',
+            'name' => 'required',
             'email' => 'required|unique:users,email,'.$user->id,
             'password' => 'sometimes|min:8',
             'first_name' => 'required',
@@ -59,7 +59,7 @@ class UserController extends Controller
         ]);
 
         $user->update([
-            'username' => request('username'),
+            'name' => request('username'),
             'email' => request('email'),
             'password' => request('password') ? bcrypt(request('password')) : $user->password,
             'email' => request('email'),

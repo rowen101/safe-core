@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted, reactive, watch, computed  } from "vue";
+import { ref, onMounted, reactive, watch, computed } from "vue";
 import { Form, Field, useResetForm } from "vee-validate";
 import * as yup from "yup";
 import { useToastr } from "../../toastr.js";
@@ -16,7 +16,7 @@ import { inject } from "vue";
 import { ContentLoader } from "vue-content-loader";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-
+import Datepicker from 'vue3-datepicker'
 const isloading = ref(false);
 const isloadingTask = ref(false);
 const swal = inject("$swal");
@@ -71,35 +71,85 @@ const taskoptions = ref([
     },
 ]);
 
+const Sdate = ref();
+const StrHours = ref('1:00 AM');
 
+const Edate = ref();
+const EndHours = ref('1:00 AM');
+
+const starthours = ref(Array.from({ length: 24 }, (_, i) => {
+    const hour = (i % 12) + 1;
+    const period = i < 12 ? 'AM' : 'PM';
+    return `${hour}:00 ${period}`;
+}))
+
+const endhours = ref(Array.from({ length: 24 }, (_, i) => {
+    const hour = (i % 12) + 1;
+    const period = i < 12 ? 'AM' : 'PM';
+    return `${hour}:00 ${period}`;
+}))
+
+
+// Create a reactive form object
 const form = reactive({
     site: "",
-    user_id: authUserStore.user.id,
+    user_id: authUserStore.user.id, // Make sure authUserStore is defined
     tasktype: 0,
-    plandate: "",
-    planenddate: "",
+    plandate: '',
+    planenddate: '',
 });
+
+// Watch for changes in Sdate and StrHours and update plandate
+watch([Sdate, StrHours], () => {
+    // Create a new Date object from the original date string
+    const originalDate = new Date(Sdate.value);
+
+    // Extract the components of the date
+    const year = originalDate.getFullYear();
+    const month = String(originalDate.getMonth() + 1).padStart(2, '0');
+    const day = String(originalDate.getDate()).padStart(2, '0');
+    form.plandate = `${year}-${month}-${day} ${StrHours.value}`;
+
+});
+
+// Watch for changes in Edate and EndHours and update planenddate
+watch([Edate, EndHours], () => {
+    const originalDate = new Date(Edate.value);
+    // Extract the components of the date
+    const year = originalDate.getFullYear();
+    const month = String(originalDate.getMonth() + 1).padStart(2, '0');
+    const day = String(originalDate.getDate()).padStart(2, '0');
+    form.planenddate = `${year}-${month}-${day} ${EndHours.value}`;
+
+});
+
+const formattedSDateTime = () => {
+    return `${this.Edate} ${this.EndHours}`;
+}
+const formattedEDateTime = () => {
+    return `${this.Sdate} ${this.StrHours}`;
+}
 //task
 const formtask = ref({
-    id:"",
+    id: "",
     dailytask_id: "",
     task_name: "",
     iscompleted: 0,
 });
 
- const formatDate =(dateString) => {
-      const options = {
+const formatDate = (dateString) => {
+    const options = {
         year: "numeric",
         month: "long",
         day: "numeric",
         hour: "numeric",
         minute: "numeric",
         second: "numeric",
-       timeZone: "Asia/Shanghai",
-      };
-      const formattedDate = new Date(dateString).toLocaleString("en-US", options);
-      return formattedDate;
-    }
+        timeZone: "Asia/Shanghai",
+    };
+    const formattedDate = new Date(dateString).toLocaleString("en-US", options);
+    return formattedDate;
+}
 
 const getItems = () => {
     isloading.value = true;
@@ -118,9 +168,9 @@ const getItems = () => {
         });
 };
 //detroy task
-const drop = async (id)  => {
+const drop = async (id) => {
 
-     // Show the SweetAlert2 dialog
+    // Show the SweetAlert2 dialog
     const result = await swal({
         title: "Are you sure?",
         text: "You wanna Drop this task?",
@@ -131,14 +181,14 @@ const drop = async (id)  => {
     // Check if the user confirmed
     if (result.isConfirmed) {
         isloading.value = true;
-    axios
-        .put(`/api/dailytask/drop/${id}`,)
-        .then((response) => {
-        toastr.success("Data drop successfully!");
-        isloading.value = false;
-           getItems();
+        axios
+            .put(`/api/dailytask/drop/${id}`,)
+            .then((response) => {
+                toastr.success("Data drop successfully!");
+                isloading.value = false;
+                getItems();
 
-        });
+            });
     }
 
 };
@@ -179,17 +229,17 @@ const AddNewTask = () => {
         .then((response) => {
             // $("#FormModalTask").modal("hide");
             toastr.success("Data created successfully!");
-             // Fetch tasks using GET request after the POST request is successful
-      axios
-        .get(`/api/dailytask/${formtask.value.dailytask_id}/tasks`)
-        .then((response) => {
-          listasks.value = response.data;
-        isloadingTask.value = false;
-        })
-        .catch((error) => {
-          console.error("Error fetching tasks:", error);
-          toastr.error("Error fetching tasks. Please try again.");
-        })
+            // Fetch tasks using GET request after the POST request is successful
+            axios
+                .get(`/api/dailytask/${formtask.value.dailytask_id}/tasks`)
+                .then((response) => {
+                    listasks.value = response.data;
+                    isloadingTask.value = false;
+                })
+                .catch((error) => {
+                    console.error("Error fetching tasks:", error);
+                    toastr.error("Error fetching tasks. Please try again.");
+                })
 
 
 
@@ -203,74 +253,74 @@ const AddNewTask = () => {
 };
 // click task item to complete or cancel
 const handleCompleteTask = (item) => {
-  // Assuming formtask is a ref
-  formtask.value.iscompleted = item.iscompleted === 1 ? 0 : 1;
+    // Assuming formtask is a ref
+    formtask.value.iscompleted = item.iscompleted === 1 ? 0 : 1;
 
-  // Continue with the POST request
-  axios
-    .post("/api/dailytask/addnewTask", {
-      id: item.id,
-      dailytask_id: item.dailytask_id,
-      task_name: item.task_name,
-      iscompleted: formtask.value.iscompleted,
-    })
-    .then((response) => {
-      // Fetch tasks using GET request after the POST request is successful
-      axios
-        .get(`/api/dailytask/${item.dailytask_id}/tasks`)
+    // Continue with the POST request
+    axios
+        .post("/api/dailytask/addnewTask", {
+            id: item.id,
+            dailytask_id: item.dailytask_id,
+            task_name: item.task_name,
+            iscompleted: formtask.value.iscompleted,
+        })
         .then((response) => {
-          listasks.value = response.data;
-          //toastr.success("Data created successfully!");
+            // Fetch tasks using GET request after the POST request is successful
+            axios
+                .get(`/api/dailytask/${item.dailytask_id}/tasks`)
+                .then((response) => {
+                    listasks.value = response.data;
+                    //toastr.success("Data created successfully!");
+                })
+                .catch((error) => {
+                    console.error("Error fetching tasks:", error);
+                    toastr.error("Error fetching tasks. Please try again.");
+                })
+
         })
         .catch((error) => {
-          console.error("Error fetching tasks:", error);
-          toastr.error("Error fetching tasks. Please try again.");
-        })
-
-    })
-    .catch((error) => {
-      console.error("Error adding new task:", error);
-      toastr.error("Error adding new task. Please try again.");
-    });
+            console.error("Error adding new task:", error);
+            toastr.error("Error adding new task. Please try again.");
+        });
 };
 
 
 const completedTasks = computed(() => {
-  if (!Array.isArray(listasks.value)) {
-    return [];
-  }
+    if (!Array.isArray(listasks.value)) {
+        return [];
+    }
 
-  return listasks.value.filter((item) => item.iscompleted === 1);
+    return listasks.value.filter((item) => item.iscompleted === 1);
 });
 
 const completedTaskCount = computed(() => completedTasks.value.length);
 
-const toggleList =() =>{
-     showList.value = !showList.value;
+const toggleList = () => {
+    showList.value = !showList.value;
 }
 
-const delTask =(item)=>{
-   // Continue with the POST request
-  axios
-    .delete(`/api/dailytask/deleteTask/${item.id}`)
-    .then((response) => {
-      // Fetch tasks using GET request after the POST request is successful
-      axios
-        .get(`/api/dailytask/${item.dailytask_id}/tasks`)
+const delTask = (item) => {
+    // Continue with the POST request
+    axios
+        .delete(`/api/dailytask/deleteTask/${item.id}`)
         .then((response) => {
-          listasks.value = response.data;
-            toastr.success('Task successfull Deleted');
+            // Fetch tasks using GET request after the POST request is successful
+            axios
+                .get(`/api/dailytask/${item.dailytask_id}/tasks`)
+                .then((response) => {
+                    listasks.value = response.data;
+                    toastr.success('Task successfull Deleted');
+                })
+                .catch((error) => {
+                    console.error("Error fetching tasks:", error);
+                    toastr.error("Error fetching tasks. Please try again.");
+                })
+
         })
         .catch((error) => {
-          console.error("Error fetching tasks:", error);
-          toastr.error("Error fetching tasks. Please try again.");
-        })
-
-    })
-    .catch((error) => {
-      console.error("Error adding new task:", error);
-      toastr.error("Error adding new task. Please try again.");
-    });
+            console.error("Error adding new task:", error);
+            toastr.error("Error adding new task. Please try again.");
+        });
 }
 
 //end modal task
@@ -304,7 +354,7 @@ const createData = (values, actions) => {
 const addUser = (value) => {
     editing.value = value.id == undefined ? false : true;
 
-     $("#FormModal").modal("show");
+    $("#FormModal").modal("show");
 };
 
 
@@ -336,7 +386,7 @@ const handleSubmit = (values, actions) => {
 
 //start Prio
 const startTaskhandle = async (task) => {
-      try {
+    try {
         // Fetch tasks using GET request after the POST request is successful
         const response = await axios.get(`/api/dailytask/${task.id}/tasks`);
         listasks.value = response.data;
@@ -508,58 +558,21 @@ onMounted(() => {
             <div class="col-md-12">
                 <div class="d-flex justify-content-between">
                     <div class="d-flex">
-                        <button
-                            @click="addUser"
-                            type="button"
-                            class="mb-2 btn btn-primary"
-                        >
+                        <button @click="addUser" type="button" class="mb-2 btn btn-primary">
                             <i class="fa fa-plus-circle mr-1"></i>
                             New Task
                         </button>
                     </div>
                     <div class="d-flex">
-                        <input
-                            type="text"
-                            v-model="searchQuery"
-                            class="form-control"
-                            placeholder="Search..."
-                        />
+                        <input type="text" v-model="searchQuery" class="form-control" placeholder="Search..." />
                     </div>
                 </div>
                 <div class="col-12" id="accordion">
                     <ContentLoader v-if="isloading" viewBox="0 0 250 110">
-                        <rect
-                            x="0"
-                            y="0"
-                            rx="3"
-                            ry="3"
-                            width="250"
-                            height="10"
-                        />
-                        <rect
-                            x="0"
-                            y="20"
-                            rx="3"
-                            ry="3"
-                            width="250"
-                            height="10"
-                        />
-                        <rect
-                            x="0"
-                            y="40"
-                            rx="3"
-                            ry="3"
-                            width="250"
-                            height="10"
-                        />
-                        <rect
-                            x="0"
-                            y="60"
-                            rx="3"
-                            ry="3"
-                            width="250"
-                            height="10"
-                        />
+                        <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
+                        <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
+                        <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
+                        <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
                     </ContentLoader>
                     <div v-else>
                         <div v-if="lists.length === 0">
@@ -571,23 +584,14 @@ onMounted(() => {
                             </div>
                         </div>
                         <div v-else>
-                            <div
-                                class="card card-primary"
-                                v-for="task in lists"
-                                :key="task.id"
-                            >
+                            <div class="card card-primary" v-for="task in lists" :key="task.id">
                                 <div class="card-header bg-white">
                                     <h4 class="card-title">
-                                        <a
-                                            style="
+                                        <a style="
                                                 color: #2b2b2b;
                                                 text-decoration: none;
-                                            "
-                                            data-toggle="collapse"
-                                            :href="'#collapse' + task.id"
-                                        >
-                                            <i class="fas fa-calendar-alt"></i
-                                            >&nbsp;<b>{{
+                                            " data-toggle="collapse" :href="'#collapse' + task.id">
+                                            <i class="fas fa-calendar-alt"></i>&nbsp;<b>{{
                                                 moment(task.taskdate).format(
                                                     "MMMM D, YYYY"
                                                 )
@@ -595,32 +599,19 @@ onMounted(() => {
                                         </a>
                                     </h4>
                                     <div class="card-tools">
-                                        <button
-
-                                            type="button"
-                                            class="btn btn-sm btn-primary float-right"
-                                            style="margin-left: 10px"
-                                            @click="showTasks(task)"
-                                        >
+                                        <button type="button" class="btn btn-sm btn-primary float-right"
+                                            style="margin-left: 10px" @click="showTasks(task)">
                                             <i class="fas fa-tasks"></i>
                                         </button>
-                                        <button
-                                            :disabled="task.startdate === null"
-                                            type="button"
-                                            class="btn btn-sm btn-danger float-right"
-                                            style="margin-left: 10px"
-                                            @click="endTaskhandle(task)"
-                                        >
+                                        <button :disabled="task.startdate === null" type="button"
+                                            class="btn btn-sm btn-danger float-right" style="margin-left: 10px"
+                                            @click="endTaskhandle(task)">
                                             End
                                         </button>
 
-                                        <button
-                                            v-if="!task.startdate"
-                                            type="button"
-                                            class="btn btn-sm btn-success float-right"
-                                            style="margin-left: 10px"
-                                            @click="startTaskhandle(task)"
-                                        >
+                                        <button v-if="!task.startdate" type="button"
+                                            class="btn btn-sm btn-success float-right" style="margin-left: 10px"
+                                            @click="startTaskhandle(task)">
                                             Start
                                         </button>
                                         <p class="float-right"></p>
@@ -629,11 +620,7 @@ onMounted(() => {
                                     </div>
                                 </div>
 
-                                <div
-                                    :id="'collapse' + task.id"
-                                    class="collapse"
-                                    data-parent="#accordion"
-                                >
+                                <div :id="'collapse' + task.id" class="collapse" data-parent="#accordion">
                                     <div class="card-body">
                                         <div class="col-md-12">
                                             <div class="row">
@@ -648,12 +635,12 @@ onMounted(() => {
                                                     </h5>
                                                     <h5>
                                                         <b>Planned Date:</b>
-                                                        {{(task.plandate)}}
+                                                        {{ (task.plandate) }}
 
                                                     </h5>
                                                     <h5>
                                                         <b>Planned End Date:</b>
-                                                        {{(task.planenddate)}}
+                                                        {{ (task.planenddate) }}
 
                                                     </h5>
                                                 </div>
@@ -664,56 +651,46 @@ onMounted(() => {
                                                         {{
                                                             task.startdate !==
                                                             null
-                                                                ? moment(
-                                                                      task.startdate
-                                                                  ).format(
-                                                                      "MMMM D, YYYY, h:mm A"
-                                                                  )
-                                                                : ""
+                                                            ? moment(
+                                                                task.startdate
+                                                            ).format(
+                                                                "MMMM D, YYYY, h:mm A"
+                                                            )
+                                                            : ""
                                                         }}
                                                     </h5>
                                                     <h5>
-                                                        <b
-                                                            >Accomplished
-                                                            Date:</b
-                                                        >
+                                                        <b>Accomplished
+                                                            Date:</b>
                                                         {{
                                                             task.enddate !==
                                                             null
-                                                                ? moment(
-                                                                      task.enddate
-                                                                  ).format(
-                                                                      "MMMM D, YYYY, h:mm A"
-                                                                  )
-                                                                : ""
+                                                            ? moment(
+                                                                task.enddate
+                                                            ).format(
+                                                                "MMMM D, YYYY, h:mm A"
+                                                            )
+                                                            : ""
                                                         }}
                                                     </h5>
 
                                                     <h5 class="closestatus">
-                                                        <b style="color: black"
-                                                            >Type:</b
-                                                        >
+                                                        <b style="color: black">Type:</b>
                                                         {{ task.tasktype }}
 
                                                     </h5>
                                                 </div>
                                                 <div class="col-4">
                                                     <h5 class="ongoing">
-                                                        <b style="color: black"
-                                                            >Status:</b
-                                                        >
+                                                        <b style="color: black">Status:</b>
                                                         {{ task.status }}
                                                     </h5>
                                                     <h5>
-                                                        <b style="color: black"
-                                                            >Attachment:</b
-                                                        >
+                                                        <b style="color: black">Attachment:</b>
                                                         {{ task.attachment }}
                                                     </h5>
                                                     <h5 class="closestatus">
-                                                        <b style="color: black"
-                                                            >PWS:</b
-                                                        >
+                                                        <b style="color: black">PWS:</b>
                                                         {{ task.PWS }}
                                                     </h5>
 
@@ -726,40 +703,22 @@ onMounted(() => {
                                         </div>
 
                                         <div style="margin: 0.5%">
-                                            <button
-                                                :disabled="
-                                                    task.startdate !== null
-                                                "
-                                                @click="drop(task.id)"
-                                                type="button"
-                                                class="btn btn btn-danger float-right fa fa-trash"
-                                                style="
+                                            <button :disabled="task.startdate !== null
+                                                " @click="drop(task.id)" type="button"
+                                                class="btn btn btn-danger float-right fa fa-trash" style="
                                                     margin-left: 10px;
                                                     margin-bottom: 5px;
-                                                "
-                                            >
-                                                &nbsp;Drop</button
-                                            ><button
-                                            @click="addUser(task)"
-                                                type="button"
-                                                :disabled="
-                                                    task.startdate !== null
-                                                "
-                                                class="btn btn btn-danger far fa-edit float-left"
-                                                style="
+                                                ">
+                                                &nbsp;Drop</button><button @click="addUser(task)" type="button" :disabled="task.startdate !== null
+                                                    " class="btn btn btn-danger far fa-edit float-left" style="
                                                     margin-right: 5px;
                                                     margin-bottom: 5px;
-                                                "
-                                            >
-                                                &nbsp;&nbsp;Edit</button
-                                            ><button
-                                                type="button"
-                                                class="btn btn float-left fa fa-file btn-primary"
-                                                style="
+                                                ">
+                                                &nbsp;&nbsp;Edit</button><button type="button"
+                                                class="btn btn float-left fa fa-file btn-primary" style="
                                                     margin-right: 5px;
                                                     margin-bottom: 5px;
-                                                "
-                                            >
+                                                ">
                                                 &nbsp;&nbsp;Attachment
                                             </button>
                                         </div>
@@ -773,28 +732,16 @@ onMounted(() => {
         </div>
     </div>
 
-    <div
-        class="modal fade"
-        id="FormModal"
-        data-backdrop="static"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-    >
-        <div class="modal-dialog modal-sm" role="document">
+    <div class="modal fade" id="FormModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
                         <span v-if="editing">Edit My Scheduled</span>
                         <span v-else>Add My Scheduled</span>
                     </h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -804,69 +751,76 @@ onMounted(() => {
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-12">
-                                    <Field
-                                        v-model="form.user_id"
-                                        type="hidden"
-                                        name="user_id"
-                                        id="user_id"
-                                    />
+
+                                 
+                                    <Field v-model="form.user_id" type="hidden" name="user_id" id="user_id" />
                                     <div class="form-group">
                                         <label for="site">Site Name</label>
-                                        <Field
-                                            v-model="form.site"
-                                            name="site"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.site,
-                                            }"
-                                            id="site"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Site Name"
-                                        />
+
+                                        <Field v-model="form.site" name="site" type="text" class="form-control" :class="{
+                                            'is-invalid': errors.site,
+                                        }" id="site" aria-describedby="nameHelp" placeholder="Enter Site Name" />
                                         <span class="invalid-feedback">{{
                                             errors.site
                                         }}</span>
                                     </div>
+                                    <div class="d-flex justify-content-between">
 
-                                    <div class="form-group">
-                                        <label for="end-time"
-                                            >Start Date & Time</label
-                                        >
-                                        <input
-                                            v-model="form.plandate"
-                                            type="text"
-                                            class="form-control flatpickr"
-                                            id="plandate"
-                                        />
+                                        <div class="d-flex">
+                                            <div class="form-group">
+                                                <label for="end-time">Start Date</label>
+                                                <datepicker class="form-control" v-model="Sdate"></datepicker>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <!-- Dropdown for selecting hours -->
+                                                <label for="end-time">Hour</label>
+                                                <select class="form-control" v-model="StrHours" id="plandate">
+                                                    <option v-for="hour in starthours" :key="hour" :value="hour">{{ hour }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="d-fex">
+
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="d-flex justify-content-between">
+
+                                        <div class="d-flex">
+                                            <div class="form-group">
+                                                <label for="end-time">End Date</label>
+                                                <datepicker class="form-control" v-model="Edate"></datepicker>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <!-- Dropdown for selecting hours -->
+                                                <label for="end-time">Hour</label>
+                                                <select class="form-control" v-model="EndHours" id="plandate">
+                                                    <option v-for="hour in endhours" :key="hour" :value="hour">{{ hour }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="d-fex">
+
+
+                                        </div>
+
                                     </div>
                                     <div class="form-group">
-                                        <label for="end-time"
-                                            >End Date & Time</label
-                                        >
-                                        <input
-                                            v-model="form.planenddate"
-                                            type="text"
-                                            class="form-control flatpickr"
-                                            id="planenddate"
-                                        />
-                                    </div>
-                                       <div class="form-group">
                                         <label for="site">Type</label>
                                         <Field name="tasktype">
-                                            <select
-                                                v-model="form.tasktype"
-                                                class="form-control"
-                                                :required="true"
-                                            >
+                                            <select v-model="form.tasktype" class="form-control" :required="true">
                                                 <option value="" disabled>
                                                     Select an option
                                                 </option>
-                                                <option
-                                                    v-for="option in taskoptions"
-                                                    :key="option.value"
-                                                    v-bind:value="option.value"
-                                                >
+                                                <option v-for="option in taskoptions" :key="option.value"
+                                                    v-bind:value="option.value">
                                                     {{ option.name }}
                                                 </option>
                                             </select>
@@ -877,11 +831,7 @@ onMounted(() => {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-dismiss="modal"
-                        >
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Cancel
                         </button>
                         <button type="submit" class="btn btn-primary">
@@ -893,27 +843,15 @@ onMounted(() => {
         </div>
     </div>
 
-    <div
-        class="modal fade"
-        id="FormModalTask"
-        data-backdrop="static"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-    >
+    <div class="modal fade" id="FormModalTask" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
                         My Task of {{ moment(taskdate).format("MM/D/YYYY") }}
                     </h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -921,137 +859,83 @@ onMounted(() => {
                 <div class="modal-body">
                     <ul class="nav nav-tabs" id="myTabs">
                         <li class="nav-item">
-                            <a
-                                class="nav-link btn btn-primary active"
-                                id="tab1"
-                                data-toggle="tab"
-                                href="#taskList"
-                                >Task List</a
-                            >
+                            <a class="nav-link btn btn-primary active" id="tab1" data-toggle="tab" href="#taskList">Task
+                                List</a>
                         </li>
                         <li class="nav-item" v-if="!startdate">
-                            <a
-                                class="nav-link btn btn-primary "
-                                id="tab2"
-                                data-toggle="tab"
-                                href="#formTask"
-                            >
-                                Task</a
-                            >
+                            <a class="nav-link btn btn-primary " id="tab2" data-toggle="tab" href="#formTask">
+                                Task</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <!-- Tab 1: Task List -->
-                        <div  class="tab-pane fade show active" id="taskList">
+                        <div class="tab-pane fade show active" id="taskList">
                             <div class="mt-2" v-if="listasks.length > 0" style="max-height: 300px; overflow-y: auto;">
                                 <!-- Separate List for incomplete tasks -->
 
                                 <ContentLoader v-if="isloadingTask" viewBox="0 0 250 110">
-                        <rect
-                            x="0"
-                            y="0"
-                            rx="3"
-                            ry="3"
-                            width="250"
-                            height="50"
-                        />
+                                    <rect x="0" y="0" rx="3" ry="3" width="250" height="50" />
 
-                        <rect
-                            x="0"
-                            y="0"
-                            rx="3"
-                            ry="3"
-                            width="250"
-                            height="50"
-                        />
+                                    <rect x="0" y="0" rx="3" ry="3" width="250" height="50" />
                                 </ContentLoader>
-                                <ul
-                                    class="list-group"
-                                    v-for="item in listasks"
-                                    :key="item.id"
-                                >
-                                    <li
-                                        v-if="item.iscompleted !== 1"
-                                        class="list-group-item mt-2 "
+                                <ul class="list-group" v-for="item in listasks" :key="item.id">
+                                    <li v-if="item.iscompleted !== 1" class="list-group-item mt-2 ">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="d-flex">
+                                                <i @click="handleCompleteTask(item)" v-if="startdate" :class="{
+                                                    'cursor-pointer mr-2': true,
+                                                    'fa fa-check-circle text-primary':
+                                                        item.iscompleted === 1,
+                                                    'fa fa-circle text-primary':
+                                                        item.iscompleted !== 1,
+                                                }" style="font-size: 15px"></i>
 
-                                    >
-                                    <div class="d-flex justify-content-between">
-                                    <div class="d-flex">
-                                         <i
-                                          @click="handleCompleteTask(item)"
-                                                 v-if="startdate"
-                                            :class="{
-                                                'cursor-pointer mr-2': true,
-                                                'fa fa-check-circle text-primary':
-                                                    item.iscompleted === 1,
-                                                'fa fa-circle text-primary':
-                                                    item.iscompleted !== 1,
-                                            }"
-                                            style="font-size: 15px"
-
-                                        ></i>
-
-                                        <span
-                                            :class="{
-                                                'font-italic':
-                                                    item.iscompleted === 1,
-                                                '': item.iscompleted !== 1,
-                                            }"
-                                        >
-                                            {{ item.task_name }}
-                                        </span>
-                                    </div>
-                                    <div  class="d-flex">
-                                        <i v-if="!startdate" class="fa fa-trash text-danger" @click="delTask(item)"></i>
-                                    </div>
-                                    </div>
+                                                <span :class="{
+                                                    'font-italic':
+                                                        item.iscompleted === 1,
+                                                    '': item.iscompleted !== 1,
+                                                }">
+                                                    {{ item.task_name }}
+                                                </span>
+                                            </div>
+                                            <div class="d-flex">
+                                                <i v-if="!startdate" class="fa fa-trash text-danger"
+                                                    @click="delTask(item)"></i>
+                                            </div>
+                                        </div>
 
                                     </li>
                                 </ul>
 
                                 <!-- List for completed tasks -->
-                                  <li class="m-2 list-unstyled">
+                                <li class="m-2 list-unstyled">
                                     <button class="btn btn-sm bg-secondary" @click="toggleList"
-                                         v-if="completedTaskCount > 0">
-                                         <i :class="['fa', showList ? 'fa-arrow-down' : 'fa-arrow-right']"></i>
+                                        v-if="completedTaskCount > 0">
+                                        <i :class="['fa', showList ? 'fa-arrow-down' : 'fa-arrow-right']"></i>
                                         &nbsp;Completed {{ completedTaskCount }}
 
                                     </button>
                                 </li>
-                                <div  v-if="showList">
-                                <ul
-
-                                    class="list-group"
-                                    v-for="item in listasks"
-                                    :key="item.id"
-                                >
-                                    <li
-                                        v-if="item.iscompleted === 1"
-                                        class="list-group-item mt-2"
-                                    >
-                                        <i
-                                            :class="{
+                                <div v-if="showList">
+                                    <ul class="list-group" v-for="item in listasks" :key="item.id">
+                                        <li v-if="item.iscompleted === 1" class="list-group-item mt-2">
+                                            <i :class="{
                                                 'cursor-pointer mr-2': true,
                                                 'fa fa-check-circle':
                                                     item.iscompleted === 1,
                                                 'fa fa-circle':
                                                     item.iscompleted !== 1,
-                                            }"
-                                            style="font-size: 15px"
-                                            @click="handleCompleteTask(item)"
-                                        ></i>
+                                            }" style="font-size: 15px" @click="handleCompleteTask(item)"></i>
 
-                                        <span
-                                            :class="{
+                                            <span :class="{
                                                 'font-italic':
                                                     item.iscompleted === 1,
                                                 '': item.iscompleted !== 1,
-                                            }"
-                                        >
-                                            <del>{{ item.task_name }}</del>
-                                        </span>
-                                    </li>
-                                </ul>
+                                            }">
+                                                <del>{{ item.task_name }}</del>
+                                            </span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="mt-2 text-center" v-else>
@@ -1064,47 +948,26 @@ onMounted(() => {
                                 <div class="col-md-12">
                                     <div class="row">
                                         <div class="col-12">
-                                            <Field
-                                                v-model="formtask.dailytask_id"
-                                                type="hidden"
-                                                name="dailytask_id"
-                                                id="dailytask_id"
-                                            />
+                                            <Field v-model="formtask.dailytask_id" type="hidden" name="dailytask_id"
+                                                id="dailytask_id" />
 
-                                            <div
-                                                class="m-2"
-                                                style="
+                                            <div class="m-2" style="
                                                     display: flex;
                                                     align-items: center;
-                                                "
-                                            >
-                                                <Field
-                                                    v-model="formtask.task_name"
-                                                    name="'task_name"
-                                                    type="text"
-                                                    class="form-control"
-                                                    required
-                                                    placeholder="Enter Task"
-                                                    style="margin-right: 5px"
-                                                />
+                                                ">
+                                                <Field v-model="formtask.task_name" name="'task_name" type="text"
+                                                    class="form-control" required placeholder="Enter Task"
+                                                    style="margin-right: 5px" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer" style="border: none;">
-                                    <button
-                                        type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal"
-                                    >
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                         Cancel
                                     </button>
-                                    <button
-                                        type="submit"
-                                        class="btn btn-primary"
-                                    >
-                                        <i class="fas fa-plus-circle"></i
-                                        >&nbsp;Save
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus-circle"></i>&nbsp;Save
                                     </button>
                                 </div>
                             </Form>
@@ -1115,27 +978,15 @@ onMounted(() => {
         </div>
     </div>
 
-    <div
-        class="modal fade"
-        id="deleteClientModal"
-        data-backdrop="static"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-    >
+    <div class="modal fade" id="deleteClientModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
                         <span>Delete Record</span>
                     </h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -1143,18 +994,10 @@ onMounted(() => {
                     <h5>Are you sure you want to delete this record ?</h5>
                 </div>
                 <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-dismiss="modal"
-                    >
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Cancel
                     </button>
-                    <button
-                        @click.prevent="deleteUser"
-                        type="button"
-                        class="btn btn-primary"
-                    >
+                    <button @click.prevent="deleteUser" type="button" class="btn btn-primary">
                         Delete User
                     </button>
                 </div>
@@ -1167,29 +1010,30 @@ a {
     color: #2b2b2b;
     text-decoration: none;
 }
-   .nav-tabs {
-            border-bottom: 2px solid #2196F3;
-        }
 
-        .nav-tabs .nav-item {
-            margin-bottom: -1px;
-        }
+.nav-tabs {
+    border-bottom: 2px solid #2196F3;
+}
 
-        .nav-tabs .nav-link {
-            border: 1px solid transparent;
-            border-radius: 0;
-            color: #2196F3;
-            transition: background-color 0.3s;
-        }
+.nav-tabs .nav-item {
+    margin-bottom: -1px;
+}
 
-        .nav-tabs .nav-link.active {
-            background-color: #2196F3;
-            color: #fff;
-            border-color: #2196F3;
-        }
+.nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-radius: 0;
+    color: #2196F3;
+    transition: background-color 0.3s;
+}
 
-        .nav-tabs .nav-link:hover {
-            background-color: #0069D9;
-            border-color: #0069D9;
-        }
+.nav-tabs .nav-link.active {
+    background-color: #2196F3;
+    color: #fff;
+    border-color: #2196F3;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #0069D9;
+    border-color: #0069D9;
+}
 </style>

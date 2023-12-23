@@ -2,11 +2,15 @@
 import { onMounted, ref } from "vue";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import moment from "moment";
-import ListItem from "./ListItem.vue";
+import ListItem from "./listitem.vue";
 import html2canvas from "html2canvas";
 import { ContentLoader } from "vue-content-loader";
+import Datepicker from 'vue3-datepicker'
 const authUserStore = useAuthUserStore();
 
+
+const fromDate = ref('');
+const toDate = ref('');
 const isloading = ref(false);
 //format date
 const getFormattedDate = () => {
@@ -59,7 +63,7 @@ const getItems = () => {
     });
 };
 
-const onFilterDate =() => {
+const onFilterDate = () => {
     $("#FormModalfilterDate").modal("show");
 }
 
@@ -94,11 +98,7 @@ onMounted(() => {
                             <div class="container-fluid">
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
-                                        <button
-                                            @click="capturevsc"
-                                            type="button"
-                                            class="mb-2 btn btn-sm btn-success"
-                                        >
+                                        <button @click="capturevsc" type="button" class="mb-2 btn btn-sm btn-success">
                                             <i class="fa fa-camera"></i>
                                         </button>
                                     </div>
@@ -106,78 +106,34 @@ onMounted(() => {
                                         <i class="fa fa-filter mr-1" @click="onFilterDate"></i>
                                     </div>
                                 </div>
-                                <ContentLoader
-                                    v-if="isloading"
-                                    viewBox="0 0 250 110"
-                                >
-                                    <rect
-                                        x="0"
-                                        y="0"
-                                        rx="3"
-                                        ry="3"
-                                        width="250"
-                                        height="10"
-                                    />
-                                    <rect
-                                        x="0"
-                                        y="20"
-                                        rx="3"
-                                        ry="3"
-                                        width="250"
-                                        height="10"
-                                    />
-                                    <rect
-                                        x="0"
-                                        y="40"
-                                        rx="3"
-                                        ry="3"
-                                        width="250"
-                                        height="10"
-                                    />
-                                    <rect
-                                        x="0"
-                                        y="60"
-                                        rx="3"
-                                        ry="3"
-                                        width="250"
-                                        height="10"
-                                    />
+                                <ContentLoader v-if="isloading" viewBox="0 0 250 110">
+                                    <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
+                                    <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
+                                    <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
+                                    <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
                                 </ContentLoader>
                                 <div v-else class="row">
-                                    <div
-                                        class="col-lg-3 col-6"
-                                        v-for="task in lists"
-                                        :key="task.id"
-                                    >
+                                    <div class="col-lg-3 col-6" v-for="task in lists" :key="task.id">
                                         <!-- <div class="small-box bg-info"> -->
-                                        <div
-                                            :class="
-                                                'small-box ' +
-                                                (moment(task.taskdate).format(
-                                                    'MMMM D, YYYY'
-                                                ) === formattedDate
-                                                    ? 'bg-primary'
-                                                    : 'bg-info')
-                                            "
-                                        >
+                                        <div :class="'small-box ' +
+                                            (moment(task.taskdate).format(
+                                                'MMMM D, YYYY'
+                                            ) === formattedDate
+                                                ? 'bg-primary'
+                                                : 'bg-info')
+                                            ">
                                             <div class="inner">
-                                                <div
-                                                    class="card text-center text-dark"
-                                                >
+                                                <div class="card text-center text-dark">
                                                     <h5 class="mt-1">
                                                         {{
                                                             moment(
                                                                 task.taskdate
                                                             ).format("dddd")
                                                         }}
-                                                        <i
-                                                            class="far fa-calendar-alt"
-                                                        ></i>
+                                                        <i class="far fa-calendar-alt"></i>
                                                     </h5>
                                                 </div>
-                                                <div
-                                                    class="card text-center text-dark"
-                                                >
+                                                <div class="card text-center text-dark">
                                                     {{
                                                         moment(
                                                             task.taskdate
@@ -186,50 +142,31 @@ onMounted(() => {
                                                 </div>
 
                                                 <hr class="bg-white" />
-                                                <div
-
-                                                >
-                                                    <div
-                                                        v-if="
-                                                            task.task_lists &&
+                                                <div>
+                                                    <div v-if="task.task_lists &&
                                                             task.task_lists
                                                                 .length > 0
-                                                        "
-                                                    >
-                                                         <span class="badge"
-                                                            >task</span
-                                                        >
-                                                         <ul class="list-group text-dark">
-                                                                <li
-                                                                   class="list-group-item"
-                                                                    v-for="taskList in task.task_lists"
-                                                                    :key="
-                                                                        taskList.id
-                                                                    "
-                                                                >
-                                                                    <i
-                                                                        :class="
-                                                                            taskList.iscompleted ==
-                                                                            1
-                                                                                ? 'fa fa-check-circle'
-                                                                                : 'fa fa-circle'
-                                                                        "
-                                                                        style="
+                                                            ">
+                                                        <span class="badge">task</span>
+                                                        <ul class="list-group text-dark">
+                                                            <li class="list-group-item" v-for="taskList in task.task_lists"
+                                                                :key="taskList.id
+                                                                    ">
+                                                                <i :class="taskList.iscompleted ==
+                                                                        1
+                                                                        ? 'fa fa-check-circle'
+                                                                        : 'fa fa-circle'
+                                                                    " style="
                                                                             font-size: 15px;
-                                                                        "
-                                                                    ></i>
-                                                                    &nbsp;{{
-                                                                        taskList.task_name
-                                                                    }}
-                                                                </li>
-                                                            </ul>
+                                                                        "></i>
+                                                                &nbsp;{{
+                                                                    taskList.task_name
+                                                                }}
+                                                            </li>
+                                                        </ul>
                                                     </div>
 
-                                                    <span
-                                                        v-else
-                                                        class="text-center"
-                                                        >No task</span
-                                                    >
+                                                    <span v-else class="text-center">No task</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -264,11 +201,7 @@ onMounted(() => {
                             <div class="container-fluid">
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
-                                        <button
-                                            @click="capturehitrate"
-                                            type="button"
-                                            class="mb-2 btn btn-sm btn-success"
-                                        >
+                                        <button @click="capturehitrate" type="button" class="mb-2 btn btn-sm btn-success">
                                             <i class="fa fa-camera"></i>
                                         </button>
                                     </div>
@@ -288,11 +221,7 @@ onMounted(() => {
                                     </thead>
 
                                     <tbody>
-                                        <ListItem
-                                            v-for="item in listscount"
-                                            :key="item.id"
-                                            :item="item"
-                                        />
+                                        <ListItem v-for="item in listscount" :key="item.id" :item="item" />
                                     </tbody>
                                 </table>
                             </div>
@@ -302,35 +231,41 @@ onMounted(() => {
             </div>
         </div>
     </div>
-     <div
-        class="modal fade"
-        id="FormModalfilterDate"
-        data-backdrop="static"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-    >
+    <div class="modal fade" id="FormModalfilterDate" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
-                        Filter Date
+                        <span>My VSC Summary Report</span>
                     </h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
                 <div class="modal-body">
-                    <span>show</span>
+                    <div class=" d-flex justify-content-center align-items-center card border-0">
+                        <div>
+                            <label for="fromDate">From:</label>
+                            <datepicker v-model="fromDate"></datepicker>
+                        </div>
+
+                        <div>
+                            <label for="toDate">To:</label>
+                            <datepicker v-model="toDate"></datepicker>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button @click="applyFilter" type="button" class="btn btn-primary">
+                        Generate
+                    </button>
                 </div>
             </div>
         </div>
-     </div>
+    </div>
 </template>
+

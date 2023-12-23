@@ -34,28 +34,13 @@ const props = defineProps({
          <td v-if="item.remarks === 'MISS'" class="bg-danger text-center">{{ item.remarks }}</td>
 
          <td :class="{
-  'bg-danger': item.percentage_completed >= 0 && item.percentage_completed <= 50,
-  'bg-orange': item.percentage_completed > 50 && item.percentage_completed <= 90,
-  'bg-success': item.percentage_completed === 100,
-  'text-center': true
-}">
-  {{ item.percentage_completed}} %
-</td>
-         <td v-if="item.percentage_completed ===50" class="bg-orange text-center">{{ item.percentage_completed}}</td>
-
-        <!-- <td :class="{ 'text-center': true, 'bg-success': item.status === 'HIT', 'bg-danger': item.status !== 'HIT' && item.status !== '' }">{{ item.status }}</td> -->
-
-
-        <!-- <td>
-            <span class="badge" :class="`badge-${item.status.color}`" >{{
-                item.status.name
-            }} </span>
-
-            &nbsp;<span v-if="item.status.name === 'APPROVED'" class="badge" :class="`badge-${item.status.color}`" v-html="getStatusHtml(item.status)"></span>
-
-        </td> -->
-
-
+        'bg-danger': item.percentage_completed >= 0 && item.percentage_completed <= 59,
+        'bg-orange': item.percentage_completed > 60 && item.percentage_completed <= 90,
+        'bg-success': item.percentage_completed === 100,
+        'text-center': true
+        }">
+        {{ item.percentage_completed}} %
+        </td>
     </tr>
 </template>
 

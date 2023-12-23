@@ -32,7 +32,7 @@ const getUsers = (page = 1) => {
 
 
 const createUserSchema = yup.object({
-    username: yup.string().required(),
+    name: yup.string().required(),
     last_name: yup.string().required(),
     first_name: yup.string().required(),
     email: yup.string().email().required(),
@@ -40,7 +40,7 @@ const createUserSchema = yup.object({
 });
 
 const editUserSchema = yup.object({
-    username: yup.string().required(),
+    name: yup.string().required(),
     last_name: yup.string().required(),
     first_name: yup.string().required(),
     email: yup.string().email().required(),
@@ -60,7 +60,7 @@ const createUser = (values, { resetForm, setErrors }) => {
         .catch((error) => {
             if (error.response.data.errors) {
                 setErrors(error.response.data.errors);
-                toastr.warning(error.response.data.errors.username);
+                toastr.warning(error.response.data.errors.name);
             }
         })
 };
@@ -77,7 +77,7 @@ const editUser = (user) => {
     $('#userFormModal').modal('show');
     formValues.value = {
         id: user.id,
-        username: user.username,
+        name: user.name,
         email: user.email,
         sitehead_user_id: user.sitehead_user_id,
         first_name: user.first_name,
@@ -260,9 +260,9 @@ onMounted(() => {
                     v-slot="{ errors }" :initial-values="formValues">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="username">Username</label>
-                            <Field name="username" type="text" class="form-control" :class="{ 'is-invalid': errors.name }"
-                                id="username" aria-describedby="nameHelp" placeholder="Enter full username" />
+                            <label for="name">Username</label>
+                            <Field name="name" type="text" class="form-control" :class="{ 'is-invalid': errors.name }"
+                                id="name" aria-describedby="nameHelp" placeholder="Enter full username" />
                             <span class="invalid-feedback">{{ errors.name }}</span>
                         </div>
 
@@ -304,7 +304,7 @@ onMounted(() => {
         <div>
 
 </div>
-       
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

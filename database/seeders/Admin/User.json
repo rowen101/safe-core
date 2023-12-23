@@ -8,7 +8,7 @@
         "role": 1,
         "firstName": "System",
         "lastName": "Administrator",
-        "username": "admin",
+        "name": "admin",
         "isChangePassword": 0,
         "lastIPAddress": null,
         "lastActivity": null,

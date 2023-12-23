@@ -10,7 +10,7 @@ class Menu extends Model
     protected $guarded = [];
     protected $table = 'menus';
 
-    protected $fillable = ['id','app_id', 'menu_code', 'menu_title', 'description','parent_id','menu_icon','menu_route','sort_order','is_active'];
+    protected $fillable = ['id', 'menu_code', 'menu_title', 'description','parent_id','menu_icon','menu_route','sort_order','is_active'];
 
     public function submenus()
     {
