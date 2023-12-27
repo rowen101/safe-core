@@ -29,9 +29,9 @@ use App\Http\Controllers\Admin\UserMenuController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 // Route::get('/admin/dashboard', function () {
 //     return view('dashboard');
@@ -82,8 +82,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/dailytask/addnewTask',[TaskController::class, 'addTask']);
     Route::get('/api/dailytask/{id}/tasks',[TaskController::class, 'getTask']);
     Route::put('/api/dailytask/drop/{id}',[TaskController::class, 'drop']);
-     Route::delete('/api/dailytask/deleteTask/{id}',[TaskController::class, 'deleteTask']);
-     Route::get('/api/dailytask/filter-taskdate',[TaskController::class,'FilterTaskdate']);
+    Route::delete('/api/dailytask/deleteTask/{id}',[TaskController::class, 'deleteTask']);
+    Route::get('/api/dailytask/filter-taskdate',[TaskController::class,'FilterTaskdate']);
+    Route::get('/api/dailytask/site',[SiteController::class,'site']);
     //myvsc controller
     Route::resource('/api/myvsc', VirtualSCController::class);
 

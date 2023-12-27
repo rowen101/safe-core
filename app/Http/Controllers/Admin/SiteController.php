@@ -19,6 +19,13 @@ class SiteController extends Controller
         return $data;
     }
 
+    public function site()
+    {
+        $sites = tbl_site::all();
+
+        return response()->json(['message' => 'success', 'data' => $sites]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

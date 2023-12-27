@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Task;
 use App\Models\ListTask;
+use App\Models\tbl_site;
 use App\Enums\TaskType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -52,6 +53,11 @@ class TaskController extends Controller
     return $data;
 }
 
+        public function show($id)
+        {
+
+        }
+       
 
 
     public function store()

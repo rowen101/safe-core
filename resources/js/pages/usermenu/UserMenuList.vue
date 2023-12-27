@@ -14,7 +14,7 @@ const editing = ref(false);
 const formValues = ref();
 const form = ref(null);
 const modalname = ref(null);
-
+const menulist = ref([]);
 
 const selectedMenus = ref([]);
 const getUsers = (page = 1) => {
@@ -34,36 +34,23 @@ const getUsers = (page = 1) => {
 
 
 const createUser = (values, { resetForm, setErrors }) => {
-    axios
-        .post("/api/users", values)
-        .then((response) => {
-            users.value.data.unshift(response.data);
-            $("#userFormModal").modal("hide");
-            resetForm();
-            toastr.success("User created successfully!");
-        })
-        .catch((error) => {
-            if (error.response.data.errors) {
-                setErrors(error.response.data.errors);
-            }
-        });
+
 };
 
 const addUser = () => {
-    editing.value = false;
-    $("#userFormModal").modal("show");
+
 };
 
 const editUser = (user) => {
-   axios
-        .get("/api/usermenu",{
+    axios
+        .get("/api/usermenu", {
             params: {
-                user_id: user.id, // replace with the actual user ID
+                user_id: user.id,
+
             },
         })
         .then((response) => {
             menulist.value = response.data;
-            console.log(response.data);
         })
         .catch((error) => {
             console.log(error);
@@ -85,22 +72,22 @@ const editUser = (user) => {
 
 
 const handleSubmit = () => {
-   // Prepare the data to be sent to your API
-        const postData = {
-            user_id : formValues.value.id,
-            menu_id: selectedMenus.value,
-            // other data properties
-        };
+    // Prepare the data to be sent to your API
+    const postData = {
+        user_id: formValues.value.id,
+        menu_id: selectedMenus.value,
+        // other data properties
+    };
 
-        // Make the API call using your preferred method (Axios, fetch, etc.)
-        // Example using Axios:
-        axios.post('/api/usermenu', postData)
-            .then(response => {
-                toastr.success("User Menu Save successfully!");
-            })
-            .catch(error => {
-                setErrors(error.response.data.errors);
-            });
+    // Make the API call using your preferred method (Axios, fetch, etc.)
+    // Example using Axios:
+    axios.post('/api/usermenu', postData)
+        .then(response => {
+            toastr.success("User Menu Save successfully!");
+        })
+        .catch(error => {
+            setErrors(error.response.data.errors);
+        });
 
 };
 
@@ -127,7 +114,8 @@ const confirmUserDeletion = (id) => {
 
 
 
-const menulist = ref({ data: [] });
+
+
 
 
 watch(
@@ -164,23 +152,18 @@ onMounted(() => {
 
             <div class="card">
                 <div class="card-header">
-                        <div class="card-title">
-                            <h5>
-User Menu
-                            </h5>
-                        </div>
-
-                        <div class="card-tools">
-
-                    <input
-                        type="text"
-                        v-model="searchQuery"
-                        class="form-control"
-                        placeholder="Search..."
-                    />
-
-                        </div>
+                    <div class="card-title">
+                        <h5>
+                            User Menu
+                        </h5>
                     </div>
+
+                    <div class="card-tools">
+
+                        <input type="text" v-model="searchQuery" class="form-control" placeholder="Search..." />
+
+                    </div>
+                </div>
 
                 <div class="card-body">
 
@@ -188,11 +171,7 @@ User Menu
                         <thead>
                             <tr>
                                 <th>
-                                    <input
-                                        type="checkbox"
-                                        v-model="selectAll"
-                                        @change="selectAllUsers"
-                                    />
+                                    <input type="checkbox" v-model="selectAll" @change="selectAllUsers" />
                                 </th>
                                 <th style="width: 10px">#</th>
                                 <th>Name</th>
@@ -203,16 +182,9 @@ User Menu
                             </tr>
                         </thead>
                         <tbody v-if="users.data.length > 0">
-                            <UserMenuListItem
-                                v-for="(user, index) in users.data"
-                                :key="user.id"
-                                :user="user"
-                                :index="index"
-                                @edit-user="editUser"
-                                @confirm-user-deletion="confirmUserDeletion"
-                                @toggle-selection="toggleSelection"
-                                :select-all="selectAll"
-                            />
+                            <UserMenuListItem v-for="(user, index) in users.data" :key="user.id" :user="user" :index="index"
+                                @edit-user="editUser" @confirm-user-deletion="confirmUserDeletion"
+                                @toggle-selection="toggleSelection" :select-all="selectAll" />
                         </tbody>
                         <tbody v-else>
                             <tr>
@@ -224,92 +196,48 @@ User Menu
                     </table>
                 </div>
             </div>
-            <Bootstrap4Pagination
-                :data="users"
-                @pagination-change-page="getUsers"
-            />
+            <Bootstrap4Pagination :data="users" @pagination-change-page="getUsers" />
         </div>
     </div>
 
-    <div
-        class="modal fade"
-        id="userFormModal"
-        data-backdrop="static"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-    >
+    <div class="modal fade" id="userFormModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
-                        <span v-if="editing"
-                            >User Menu for {{ modalname }}</span
-                        >
+                        <span v-if="editing">User Menu for {{ modalname }}</span>
                     </h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <Form
-                    ref="form"
-                    @submit="handleSubmit"
-
-                    :initial-values="formValues"
-                >
+                <Form ref="form" @submit="handleSubmit" :initial-values="formValues">
                     <div class="modal-body">
-                     <table class="table table-sm">
+                        <table class="table table-sm">
     <tr>
         <td class="text-bold">Menu Name</td>
     </tr>
     <tr v-for="item in menulist" :key="item.menu_id">
         <td colspan="5">
             <div class="custom-control custom-checkbox">
-                <input
-                    class="custom-control-input"
-                    type="checkbox"
-                    v-model="selectedMenus"
-                    :value="item.menu_id"
-                    :id="'menu_id_' + item.menu_id"
-                    :checked="item.hasAccess"
-
-                />
-                <label
-                    :for="'menu_id_' + item.menu_id"
-                    class="custom-control-label"
-
-                >
-                    {{ item.menu_title }}
+                <input  class="custom-control-input"  type="checkbox" v-model="selectedMenus"
+                    :value="item.menu_id" :id="'menu_id_' + item.menu_id"
+                    />
+                <label :for="'menu_id_' + item.menu_id" class="custom-control-label">
+                    {{ item.menu_title +' '+ item.hasAccess }}
                 </label>
             </div>
-            <table
-                class="table table-sm"
-                v-if="item.submenus && item.submenus.length > 0"
-            >
+            <table class="table table-sm" v-if="item.submenus && item.submenus.length > 0">
                 <tr v-for="submenu in item.submenus" :key="submenu.id">
                     <td class="text-danger">
                         <div class="custom-control custom-checkbox">
-                            <input
-                                class="custom-control-input"
-                                type="checkbox"
-                                v-model="selectedMenus"
-                                :value="submenu.menu_id"
-                                :id="'menu_id_' + submenu.menu_id"
-
-
-                            />
-                            <label
-                                :for="'menu_id_' + submenu.menu_id"
-                                class="custom-control-label"
-
-                            >
-                                {{ submenu.menu_title }}
+                            <input class="custom-control-input" type="checkbox"
+                                v-model="selectedMenus" :value="submenu.menu_id"
+                                v-bind:id="'menu_id_' + submenu.menu_id"
+                                :checked="submenu.hasAccess" />
+                            <label :for="'menu_id_' + submenu.menu_id" class="custom-control-label">
+                                {{ submenu.menu_title +' '+ submenu.hasAccess }}
                             </label>
                         </div>
                     </td>
@@ -318,13 +246,11 @@ User Menu
         </td>
     </tr>
 </table>
+
+
                     </div>
                     <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-dismiss="modal"
-                        >
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Cancel
                         </button>
                         <button type="submit" class="btn btn-primary">
@@ -336,27 +262,15 @@ User Menu
         </div>
     </div>
 
-    <div
-        class="modal fade"
-        id="deleteUserModal"
-        data-backdrop="static"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-    >
+    <div class="modal fade" id="deleteUserModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
                         <span>Delete User</span>
                     </h5>
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -364,18 +278,10 @@ User Menu
                     <h5>Are you sure you want to delete this user ?</h5>
                 </div>
                 <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-dismiss="modal"
-                    >
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Cancel
                     </button>
-                    <button
-                        @click.prevent="deleteUser"
-                        type="button"
-                        class="btn btn-primary"
-                    >
+                    <button @click.prevent="deleteUser" type="button" class="btn btn-primary">
                         Delete User
                     </button>
                 </div>

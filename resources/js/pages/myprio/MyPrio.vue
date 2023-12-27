@@ -4,7 +4,7 @@ import { ref, onMounted, reactive, watch, computed } from "vue";
 import { Form, Field, useResetForm } from "vee-validate";
 import * as yup from "yup";
 import { useToastr } from "../../toastr.js";
-import WtsListItem from "./WtsListItem.vue";
+import MyListItem from "./MyPrioListItem.vue";
 import { debounce } from "lodash";
 import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
@@ -123,12 +123,8 @@ watch([Edate, EndHours], () => {
 
 });
 
-const formattedSDateTime = () => {
-    return `${this.Edate} ${this.EndHours}`;
-}
-const formattedEDateTime = () => {
-    return `${this.Sdate} ${this.StrHours}`;
-}
+const listsite = ref({ data: [] });
+
 //task
 const formtask = ref({
     id: "",
@@ -151,6 +147,17 @@ const formatDate = (dateString) => {
     return formattedDate;
 }
 
+const getSite = () => {
+    axios.get(`/api/dailytask/site`)
+    .then(response =>{
+        listsite.value = response.data
+        console.log(response.data.site_name);
+    })
+    .catch(error=>{
+        actions.setErrors(error.response.data.errors);
+    });
+
+}
 const getItems = () => {
     isloading.value = true;
     axios
@@ -352,6 +359,7 @@ const createData = (values, actions) => {
 };
 
 const addUser = (value) => {
+
     editing.value = value.id == undefined ? false : true;
 
     $("#FormModal").modal("show");
@@ -524,6 +532,7 @@ onMounted(() => {
         defaultHour: 10,
     });
     getItems();
+    getSite();
 
 
 });
@@ -752,7 +761,7 @@ onMounted(() => {
                             <div class="row">
                                 <div class="col-12">
 
-                                 
+
                                     <Field v-model="form.user_id" type="hidden" name="user_id" id="user_id" />
                                     <div class="form-group">
                                         <label for="site">Site Name</label>
