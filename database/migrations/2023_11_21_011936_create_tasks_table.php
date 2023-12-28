@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('site');
             $table->timestamp('taskdate');
             $table->integer('tasktype');
-            $table->timestamp('plandate');
-            $table->timestamp('planenddate');
+            $table->timestamp('plandate')->useCurrent();
+            $table->timestamp('planenddate')->useCurrent();
             $table->string('project')->nullable();
             $table->timestamp('startdate')->nullable();
             $table->timestamp('enddate')->nullable();

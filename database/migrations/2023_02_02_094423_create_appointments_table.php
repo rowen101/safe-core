@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained();
             $table->string('title');
             $table->text('description');
-            $table->timestamp('start_time');
-            $table->timestamp('end_time');
+            $table->timestamp('start_time')->useCurrent();
+            $table->timestamp('end_time')->useCurrent();
             $table->tinyInteger('status');
             $table->timestamps();
         });
