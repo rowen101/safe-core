@@ -11,6 +11,7 @@ export const useAuthUserStore = defineStore('AuthUserStore', () => {
         avatar: '',
         first_name: '',
         last_name: '',
+        gender: ''
     });
 
     const getAuthUser = async () => {

@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Safexpress</title>
+    <title>SLIVSC</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" type="image/png" sizes="16x16" href="http://safexpress.com.ph/favicon.ico">
      <!-- Google Font: Source Sans Pro -->

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
 
-class VirtualSCController extends Controller
+class VirtualASController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,10 +33,10 @@ class VirtualSCController extends Controller
                 $query->where('iscompleted', 1);
             }
         ])
-        ->where('user_id', $userId)
-        ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-        ->orderBy('id', 'asc')
-        ->get();
+            ->where('user_id', $userId)
+            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->orderBy('id', 'asc')
+            ->get();
 
         // Calculate the percentage of completed tasks
         $tasksList->transform(function ($task) {
@@ -113,5 +113,41 @@ class VirtualSCController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function FilterVSC(Request $request)
+    {
+        $userId = auth()->user()->id;
+
+        // Retrieve start and end dates from the request
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+        $dailyTasks = Task::orderBy('taskdate', 'asc')
+            ->with('taskLists')
+            ->where('user_id', $userId)
+            ->whereBetween('taskdate', [$startDate, $endDate])
+            ->get();
+
+        $tasksList = Task::withCount([
+            'taskLists',
+            'taskLists as completed_task_count' => function ($query) {
+                $query->where('iscompleted', 1);
+            }
+        ])
+            ->where('user_id', $userId)
+            ->whereBetween('taskdate', [$startDate, $endDate])
+            ->orderBy('id', 'asc')
+            ->get();
+
+        // Calculate the percentage of completed tasks
+        $tasksList->transform(function ($task) {
+            $task->percentage_completed = ($task->task_lists_count > 0)
+                ? ($task->completed_task_count / $task->task_lists_count) * 100
+                : 0;
+            return $task;
+        });
+
+        return response()->json(['dailyTasks' => $dailyTasks, 'TaskList' => $tasksList]);
     }
 }

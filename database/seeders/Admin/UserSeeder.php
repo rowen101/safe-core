@@ -28,6 +28,7 @@ class UserSeeder extends Seeder
             $rowdata->name = $value["name"];
             $rowdata->first_name = $value["firstName"];
             $rowdata->last_name = $value["lastName"];
+            $rowdata->gender = $value["gender"];
             $rowdata->last_ip_address = $value["lastIPAddress"];
             $rowdata->last_activity = $value["lastActivity"];
             $rowdata->incorrect_logins = $value["incorrectLogins"];

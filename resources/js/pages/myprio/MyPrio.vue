@@ -38,6 +38,8 @@ const tecstatus = ref([
         value: 3,
     },
 ]);
+
+const listsite = ref();
 const listtask = ref();
 const showList = ref(true);
 const editing = ref(false);
@@ -70,6 +72,7 @@ const taskoptions = ref([
         value: 6,
     },
 ]);
+
 
 const Sdate = ref();
 const StrHours = ref('1:00 AM');
@@ -123,7 +126,7 @@ watch([Edate, EndHours], () => {
 
 });
 
-const listsite = ref({ data: [] });
+
 
 //task
 const formtask = ref({
@@ -148,15 +151,16 @@ const formatDate = (dateString) => {
 }
 
 const getSite = () => {
-    axios.get(`/api/dailytask/site`)
-    .then(response =>{
-        listsite.value = response.data
-        console.log(response.data.site_name);
-    })
-    .catch(error=>{
-        actions.setErrors(error.response.data.errors);
-    });
 
+    axios
+        .get(`/api/getsite`)
+        .then((response) => {
+
+            listsite.value = response.data;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 }
 const getItems = () => {
     isloading.value = true;
@@ -359,7 +363,7 @@ const createData = (values, actions) => {
 };
 
 const addUser = (value) => {
-
+getSite();
     editing.value = value.id == undefined ? false : true;
 
     $("#FormModal").modal("show");
@@ -532,7 +536,7 @@ onMounted(() => {
         defaultHour: 10,
     });
     getItems();
-    getSite();
+
 
 
 });
@@ -587,8 +591,11 @@ onMounted(() => {
                         <div v-if="lists.length === 0">
                             <!-- Show this card when the list is empty -->
                             <div class="card card-secondary">
-                                <div class="card-body">
-                                    <h2 class="text-center">No Prio</h2>
+                                <div class="card-body d-flex align-items-center justify-content-center">
+                                 <div class="image-container">
+                                     <img :src="'/img/no task.jpg'" alt="No Task" class="img-fluid" draggable="false"/>
+                                    <div class="overlay"></div>
+                                 </div>
                                 </div>
                             </div>
                         </div>
@@ -636,12 +643,12 @@ onMounted(() => {
                                                 <div class="col-4">
                                                     <h5>
                                                         <b>Site:</b>
-                                                        {{ task.site }}
+                                                        {{ task.site_name }}
                                                     </h5>
-                                                    <h5>
+                                                    <!-- <h5>
                                                         <b>Project:</b>
                                                         {{ task.project }}
-                                                    </h5>
+                                                    </h5> -->
                                                     <h5>
                                                         <b>Planned Date:</b>
                                                         {{ (task.plandate) }}
@@ -698,10 +705,10 @@ onMounted(() => {
                                                         <b style="color: black">Attachment:</b>
                                                         {{ task.attachment }}
                                                     </h5>
-                                                    <h5 class="closestatus">
+                                                    <!-- <h5 class="closestatus">
                                                         <b style="color: black">PWS:</b>
                                                         {{ task.PWS }}
-                                                    </h5>
+                                                    </h5> -->
 
                                                     <h5>
                                                         <b>Remarks:</b>
@@ -764,14 +771,12 @@ onMounted(() => {
 
                                     <Field v-model="form.user_id" type="hidden" name="user_id" id="user_id" />
                                     <div class="form-group">
-                                        <label for="site">Site Name</label>
-
-                                        <Field v-model="form.site" name="site" type="text" class="form-control" :class="{
-                                            'is-invalid': errors.site,
-                                        }" id="site" aria-describedby="nameHelp" placeholder="Enter Site Name" />
-                                        <span class="invalid-feedback">{{
-                                            errors.site
-                                        }}</span>
+                                         <label for="siteDropdown">Select a Site:</label>
+                                            <select class="form-control" id="siteDropdown" v-model="form.site">
+                                            <option value="" disabled>Select a site</option>
+                                            <option v-for="site in listsite" :key="site.id" :value="site.id">{{ site.site_name }}</option>
+                                            </select>
+                                      
                                     </div>
                                     <div class="d-flex justify-content-between">
 
@@ -781,6 +786,7 @@ onMounted(() => {
                                                 <datepicker class="form-control" v-model="Sdate"></datepicker>
 
                                             </div>
+
                                             <div class="form-group">
                                                 <!-- Dropdown for selecting hours -->
                                                 <label for="end-time">Hour</label>
@@ -949,6 +955,7 @@ onMounted(() => {
                             </div>
                             <div class="mt-2 text-center" v-else>
                                 <span>No Task</span>
+                                <!-- <img :src="imageUrl" alt="No Task" /> -->
                             </div>
                         </div>
                         <!-- Tab 2: Form Task -->
@@ -1045,4 +1052,18 @@ a {
     background-color: #0069D9;
     border-color: #0069D9;
 }
+.image-container {
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 1;
+}
+
 </style>

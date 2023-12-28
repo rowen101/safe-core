@@ -30,8 +30,10 @@ const props = defineProps({
         <td class="text-center">{{ item.task_lists_count }}</td>
         <td>{{ item.completed_task_count }}</td>
         <td class="text-center"><span v-if="item.status !== 'On Going'">{{  item.status }}</span></td>
-        <td v-if="item.remarks === 'HIT'" class="bg-primary text-center">{{ item.remarks }}</td>
-         <td v-if="item.remarks === 'MISS'" class="bg-danger text-center">{{ item.remarks }}</td>
+    <td v-if="item.remarks === 'HIT'" class="bg-success text-center">{{ item.remarks }}</td>
+<td v-else-if="item.remarks === 'MISS'" class="bg-danger text-center">{{ item.remarks }}</td>
+<td v-else-if="item.remarks === null" class="text-center">{{item.startdate != null ? 'On Going!':''}}</td>
+
 
          <td :class="{
         'bg-danger': item.percentage_completed >= 0 && item.percentage_completed <= 59,

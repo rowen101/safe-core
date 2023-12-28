@@ -46,6 +46,7 @@ onMounted(() => {
                 alt="AdminLTE Logo"
                 class="brand-image"
                 style="opacity: 0.8"
+                draggable="false"
             />
             <span class="brand-text font-weight-light">{{
                 settingStore.setting.app_name
@@ -54,12 +55,17 @@ onMounted(() => {
 
         <div class="sidebar">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
+                <!-- <div class="image">
                     <img
                         :src="authUserStore.user.avatar"
                         class="img-circle elevation-1"
                         alt="User Image"
                     />
+                </div> -->
+
+                <div class="image">
+                     <img v-if="authUserStore.user.gender =='Male'" :src="'/img/boy.png'" class="img-circle elevation-1" alt="Profile"  draggable="false"/>
+                     <img v-if="authUserStore.user.gender =='Female'" :src="'/img/girl.png'" class="img-circle elevation-1" alt="Profile"  draggable="false"/>
                 </div>
                 <div class="info">
                     <a href="#" class="d-block">{{

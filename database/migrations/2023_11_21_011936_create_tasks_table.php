@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('immediate_hid');
-            $table->string('site');
+            $table->integer('site');
             $table->timestamp('taskdate');
             $table->integer('tasktype');
             $table->timestamp('plandate');

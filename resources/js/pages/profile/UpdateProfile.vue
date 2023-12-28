@@ -141,7 +141,7 @@ const handleFileChange = (event) => {
                                         <div class="form-group row">
                                             <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                                             <div class="col-sm-10">
-                                                <input v-model="authUserStore.user.email" type="email" class="form-control " id="inputEmail"
+                                                <input readonly v-model="authUserStore.user.email" type="email" class="form-control " id="inputEmail"
                                                     placeholder="Email">
                                                 <span class="text-danger text-sm" v-if="errors && errors.email">{{ errors.email[0] }}</span>
                                             </div>

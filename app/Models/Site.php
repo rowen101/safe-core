@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class tbl_site extends Model
+class Site extends Model
 {
-    use HasFactory;
+
 
     protected $table = 'tbl_sites';
 
