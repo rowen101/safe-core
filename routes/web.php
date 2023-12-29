@@ -36,7 +36,7 @@ use App\Http\Controllers\Admin\UserMenuController;
 // Route::get('/admin/dashboard', function () {
 //     return view('dashboard');
 // });
-Auth::routes();
+// Auth::routes();
 
 Route::middleware('auth')->group(function () {
     Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
