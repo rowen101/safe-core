@@ -5,6 +5,7 @@ namespace App\Providers;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Laravel\Fortify\Fortify;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -24,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Fortify::registerView(function () {
+            return view('auth.register');
+        });
         Schema::defaultStringLength(191);
         Carbon::macro('toFormattedDate', function () {
             return $this->format('Y-m-d');

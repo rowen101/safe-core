@@ -29,16 +29,14 @@ use App\Http\Controllers\Admin\UserMenuController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/api/settings', [SettingController::class, 'index']);
-Route::post('/api/settings', [SettingController::class, 'update']);
-
-Route::get('/admin/dashboard', function () {
-    return view('dashboard');
-});
+// Route::get('/admin/dashboard', function () {
+//     return view('dashboard');
+// });
+Auth::routes();
 
 Route::middleware('auth')->group(function () {
     Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
@@ -68,7 +66,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/api/appointments/{appointment}/edit', [AppointmentController::class, 'update']);
     Route::delete('/api/appointments/{appointment}', [AppointmentController::class, 'destroy']);
     //setting
-
+    Route::get('/api/settings', [SettingController::class, 'index']);
+    Route::post('/api/settings', [SettingController::class, 'update']);
 
     Route::get('/api/profile', [ProfileController::class, 'index']);
     Route::put('/api/profile', [ProfileController::class, 'update']);

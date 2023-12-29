@@ -28,7 +28,8 @@ const isCurrentRoute = (route) => {
 const logout = () => {
     axios.post("/logout").then((response) => {
         authUserStore.user.name = "";
-        router.push("/login");
+    //    router.push("/login");
+        window.location.reload();
     });
 };
 
