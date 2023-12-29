@@ -25,9 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Fortify::registerView(function () {
-            return view('auth.register');
-        });
+        
         Schema::defaultStringLength(191);
         Carbon::macro('toFormattedDate', function () {
             return $this->format('Y-m-d');
