@@ -46,17 +46,17 @@ Here is the YouTube playlist link: https://www.youtube.com/watch?v=IoPOi-Xp_Ng&l
 - Run the application:
 - ```php artisan serve```
 - ```npm run dev```
-- You can now log in with user "john@example.com", password "password"
+- You can now log in with user "admin@admin.com", password "admin123"
 
 
 ## Authors
 
-- [@clovon](https://www.github.com/clovon)
+- [@rowen101](https://www.github.com/rowen101)
 
 
 ## Feedback
 
-If you have any feedback, please reach out to me at channel.clovon@gmail.com
+If you have any feedback, please reach out to me at rgrowengonzales@gmail.com
 
 
 ## License
