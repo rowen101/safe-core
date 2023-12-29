@@ -4,7 +4,7 @@ import AppointmentForm from './pages/appointments/AppointmentForm.vue';
 import UserList from './pages/users/UserList.vue';
 import UpdateSetting from './pages/settings/UpdateSetting.vue';
 import UpdateProfile from './pages/profile/UpdateProfile.vue';
-// import Login from './pages/auth/Login.vue';
+import Login from './pages/auth/Login.vue';
 // import Register from './pages/auth/Register.vue';
 import ClientList from './pages/client/ClientList.vue';
 import TechList from './pages/techrecomm/TechList.vue';
@@ -14,11 +14,11 @@ import MyClosedPrio from './pages/mycloseprio/MyClosePrioList.vue';
 import UserMenu from './pages/usermenu/UserMenuList.vue';
 
 export default [
-    // {
-    //     path: '/login',
-    //     name: 'admin.login',
-    //     component: Login,
-    // },
+    {
+        path: '/login',
+        name: 'admin.login',
+        component: Login,
+    },
     // {
     //     path: '/register',
     //     name: 'admin.register',

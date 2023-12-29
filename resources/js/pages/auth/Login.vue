@@ -17,17 +17,17 @@ const errorMessage = ref('');
 const handleSubmit = () => {
     loading.value = true;
     errorMessage.value = '';
-    alert(form);
-    // axios.post('/login', form)
-    //     .then(() => {
-    //         router.push('/admin/dashboard');
-    //     })
-    //     .catch((error) => {
-    //         errorMessage.value = error.response.data.message;
-    //     })
-    //     .finally(() => {
-    //         loading.value = false;
-    //     });
+
+    axios.post('/login', form)
+        .then(() => {
+            router.push('/admin/dashboard');
+        })
+        .catch((error) => {
+            errorMessage.value = error.response.data.message;
+        })
+        .finally(() => {
+            loading.value = false;
+        });
 };
 </script>
 
