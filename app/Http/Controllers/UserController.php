@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
-    public   function login(Request $request)
+    public function login(Request $request)
     {
         $user= User::where('email', $request->email)->first();
         // print_r($data);
@@ -27,7 +27,7 @@ class UserController extends Controller
              return response($response, 201);
     }
 
- public function register(Request $request){
+    public function register(Request $request){
         $data = $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email',
