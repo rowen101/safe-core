@@ -28,13 +28,13 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::resource('menu', MenuController::class);
     Route::get('profile', [ProfileController::class, 'index']);
     Route::put('profile', [ProfileController::class, 'update']);
-
+    Route::resource('site', SiteController::class);
 
     });
 
     // Route::get('settings', [SettingController::class, 'index']);
     // Route::resource('menu', MenuController::class);
-    Route::resource('site', SiteController::class);
+
 Route::post('login',[UserController::class, 'login']);
 Route::post('register',[UserController::class, 'register']);
 
