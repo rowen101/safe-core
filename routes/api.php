@@ -22,7 +22,7 @@ use App\Http\Controllers\Admin\MenuController;
 // });
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
-    Route::get('settings', [SettingController::class, 'index']);
+    // Route::get('settings', [SettingController::class, 'index']);
     Route::post('settings', [SettingController::class, 'update']);
     Route::resource('menu', MenuController::class);
     Route::get('profile', [ProfileController::class, 'index']);
@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
     // Route::get('settings', [SettingController::class, 'index']);
     // Route::resource('menu', MenuController::class);
+    Route::get('settings', [SettingController::class, 'index']);
 Route::post('login',[UserController::class, 'login']);
 Route::post('register',[UserController::class, 'register']);
 
