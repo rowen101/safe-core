@@ -29,9 +29,9 @@ use App\Http\Controllers\Admin\UserMenuController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
 // Route::get('/admin/dashboard', function () {
 //     return view('dashboard');
@@ -109,14 +109,12 @@ Route::middleware('auth')->group(function () {
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');
 
-// Auth::routes();
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/{any?}', function () {
     return view('welcome');
 })->where('any', '.*');
 
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
