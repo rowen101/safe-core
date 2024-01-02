@@ -16,8 +16,12 @@ class SiteController extends Controller
      */
     public function index()
     {
-        $data = Site::all();
-        return $data;
+        try {
+            $data = Site::all();
+            return $data;
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error retrieving data'], 500);
+        }
     }
 
 
