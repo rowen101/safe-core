@@ -1,11 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-
+import api from "../services/api.js"
 const selectedAppointmentStatus = ref('all');
 const totalAppointmentsCount = ref(0);
 
 const getAppointmentsCount = () => {
-    axios.get('/api/stats/appointments', {
+    api.instance.get('/api/stats/appointments', {
         params: {
             status: selectedAppointmentStatus.value,
         }
@@ -19,7 +19,7 @@ const selectedDateRange = ref('today');
 const totalUsersCount = ref(0);
 
 const getUsersCount = () => {
-    axios.get('/api/stats/users', {
+    api.instance.get('/api/stats/users', {
         params: {
             date_range: selectedDateRange.value,
         }

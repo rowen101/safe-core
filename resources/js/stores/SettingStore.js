@@ -2,6 +2,9 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useStorage } from '@vueuse/core'
+import api from "../services/api.js"
+
+// const authUserStore = useAuthUserStore();
 
 export const useSettingStore = defineStore('SettingStore', () => {
     const setting = ref({
@@ -15,10 +18,13 @@ export const useSettingStore = defineStore('SettingStore', () => {
     };
 
     const getSetting = async () => {
-        await axios.get('/api/settings')
-            .then((response) => {
-                setting.value = response.data;
-            });
+        try {
+            const response = await api.instance.get('settings');
+            setting.value = response.data;
+          } catch (error) {
+            // Handle errors, log, or perform other actions as needed
+            console.error(error);
+          }
     };
 
     return { setting, getSetting, theme, changeTheme };

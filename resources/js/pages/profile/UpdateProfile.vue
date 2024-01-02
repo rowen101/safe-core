@@ -8,22 +8,28 @@ const toastr = useToastr();
 
 const errors = ref([]);
 const updateProfile = () => {
-    axios.put('/api/profile', {
-        name: authUserStore.user.name,
-        first_name: authUserStore.user.first_name,
-        last_name: authUserStore.user.last_name,
-        email: authUserStore.user.email,
-        role: authUserStore.user.role,
-    })
-    .then((response) => {
-        toastr.success('Profile updated successfully!');
-    })
-    .catch((error) => {
-        if (error.response && error.response.status === 422) {
-            errors.value = error.response.data.errors;
-        }
-    });
+  axios.put('/api/profile', {
+    name: authUserStore.user.name,
+    first_name: authUserStore.user.first_name,
+    last_name: authUserStore.user.last_name,
+    email: authUserStore.user.email,
+    role: authUserStore.user.role,
+  }, {
+    headers: {
+      Authorization: `Bearer ${authUserStore.getToken}`,
+    },
+  })
+  .then((response) => {
+    toastr.success('Profile updated successfully!');
+    console.log(`Profie Bearer ${authUserStore.getToken}`);
+  })
+  .catch((error) => {
+    if (error.response && error.response.status === 422) {
+      errors.value = error.response.data.errors;
+    }
+  });
 };
+
 
 const changePasswordForm = reactive({
     currentPassword: '',

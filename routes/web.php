@@ -41,70 +41,70 @@ use App\Http\Controllers\Admin\UserMenuController;
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
-    Route::get('/api/stats/users', [DashboardStatController::class, 'users']);
+    Route::get('stats/appointments', [DashboardStatController::class, 'appointments']);
+    Route::get('stats/users', [DashboardStatController::class, 'users']);
 
-    Route::get('/api/users', [UserController::class, 'index']);
-    Route::post('/api/users', [UserController::class, 'store']);
-    Route::patch('/api/users/{user}/change-role', [UserController::class, 'changeRole']);
-    Route::put('/api/users/{user}', [UserController::class, 'update']);
-    Route::delete('/api/users/{user}', [UserController::class, 'destory']);
-    Route::delete('/api/users', [UserController::class, 'bulkDelete']);
-    Route::get('/api/users/userlist', [UserController::class, 'listuser']);
- Route::patch('/api/users/{user}/change-sitehead', [UserController::class, 'changesitehead']);
+    Route::get('users', [UserController::class, 'index']);
+    Route::post('users', [UserController::class, 'store']);
+    Route::patch('users/{user}/change-role', [UserController::class, 'changeRole']);
+    Route::put('users/{user}', [UserController::class, 'update']);
+    Route::delete('users/{user}', [UserController::class, 'destory']);
+    Route::delete('users', [UserController::class, 'bulkDelete']);
+    Route::get('users/userlist', [UserController::class, 'listuser']);
+ Route::patch('users/{user}/change-sitehead', [UserController::class, 'changesitehead']);
     //client
-    Route::get('/api/view-clients', [ClientController::class,'viewclient']);
-    Route::get('/api/clients', [ClientController::class, 'index']);
-    Route::post('/api/clients', [ClientController::class, 'store']);
-    Route::put('/api/clients/{client}', [ClientController::class, 'update']);
-    Route::delete('/api/clients/{client}', [ClientController::class, 'destory']);
-    Route::delete('/api/clients', [ClientController::class, 'bulkDelete']);
+    Route::get('view-clients', [ClientController::class,'viewclient']);
+    Route::get('clients', [ClientController::class, 'index']);
+    Route::post('clients', [ClientController::class, 'store']);
+    Route::put('clients/{client}', [ClientController::class, 'update']);
+    Route::delete('clients/{client}', [ClientController::class, 'destory']);
+    Route::delete('clients', [ClientController::class, 'bulkDelete']);
 
     //appointments
-    Route::get('/api/appointment-status', [AppointmentStatusController::class, 'getStatusWithCount']);
-    Route::get('/api/appointments', [AppointmentController::class, 'index']);
-    Route::post('/api/appointments/create', [AppointmentController::class, 'store']);
-    Route::get('/api/appointments/{appointment}/edit', [AppointmentController::class, 'edit']);
-    Route::put('/api/appointments/{appointment}/edit', [AppointmentController::class, 'update']);
-    Route::delete('/api/appointments/{appointment}', [AppointmentController::class, 'destroy']);
+    Route::get('appointment-status', [AppointmentStatusController::class, 'getStatusWithCount']);
+    Route::get('appointments', [AppointmentController::class, 'index']);
+    Route::post('appointments/create', [AppointmentController::class, 'store']);
+    Route::get('appointments/{appointment}/edit', [AppointmentController::class, 'edit']);
+    Route::put('appointments/{appointment}/edit', [AppointmentController::class, 'update']);
+    Route::delete('appointments/{appointment}', [AppointmentController::class, 'destroy']);
     //setting
-    Route::get('/api/settings', [SettingController::class, 'index']);
-    Route::post('/api/settings', [SettingController::class, 'update']);
+    // Route::get('settings', [SettingController::class, 'index']);
+    // Route::post('settings', [SettingController::class, 'update']);
 
-    Route::get('/api/profile', [ProfileController::class, 'index']);
-    Route::put('/api/profile', [ProfileController::class, 'update']);
-    Route::post('/api/upload-profile-image', [ProfileController::class, 'uploadImage']);
-    Route::post('/api/change-user-password', [ProfileController::class, 'changePassword']);
+    // Route::get('profile', [ProfileController::class, 'index']);
+    // Route::put('profile', [ProfileController::class, 'update']);
+    Route::post('upload-profile-image', [ProfileController::class, 'uploadImage']);
+    Route::post('change-user-password', [ProfileController::class, 'changePassword']);
 
-    Route::resource('/api/tech-recommendations', TechController::class);
-    Route::delete('/api/tech-recommendations', [TechController::class, 'bulkDelete']);
+    Route::resource('tech-recommendations', TechController::class);
+    Route::delete('tech-recommendations', [TechController::class, 'bulkDelete']);
 
     //tasks controller
-    Route::resource('/api/dailytask', TaskController::class);
-    Route::put('/api/dailytask/onhandler/{id}', [TaskController::class, 'onhandler']);
-    Route::post('/api/dailytask/addnewTask',[TaskController::class, 'addTask']);
-    Route::get('/api/dailytask/{id}/tasks',[TaskController::class, 'getTask']);
-    Route::put('/api/dailytask/drop/{id}',[TaskController::class, 'drop']);
-    Route::delete('/api/dailytask/deleteTask/{id}',[TaskController::class, 'deleteTask']);
-    Route::get('/api/dailytask/filter-taskdate',[TaskController::class,'FilterTaskdate']);
-    Route::get('/api/getsite',[TaskController::class,'getSite']);
+    Route::resource('dailytask', TaskController::class);
+    Route::put('dailytask/onhandler/{id}', [TaskController::class, 'onhandler']);
+    Route::post('dailytask/addnewTask',[TaskController::class, 'addTask']);
+    Route::get('dailytask/{id}/tasks',[TaskController::class, 'getTask']);
+    Route::put('dailytask/drop/{id}',[TaskController::class, 'drop']);
+    Route::delete('dailytask/deleteTask/{id}',[TaskController::class, 'deleteTask']);
+    Route::get('dailytask/filter-taskdate',[TaskController::class,'FilterTaskdate']);
+    Route::get('getsite',[TaskController::class,'getSite']);
     //myvsc controller
-    Route::post('/api/filter-vsc',[VirtualASController::class,'FilterVSC']);
-    Route::resource('/api/myvsc', VirtualASController::class);
+    Route::post('filter-vsc',[VirtualASController::class,'FilterVSC']);
+    Route::resource('myvsc', VirtualASController::class);
 
 
     //my close prio
-    Route::resource('/api/mycloseprio', MyClosePrioController::class);
+    Route::resource('mycloseprio', MyClosePrioController::class);
 
     //site name
-    Route::resource('/api/site', SiteController::class);
+    Route::resource('site', SiteController::class);
 
     //menu controller
-    Route::resource('/api/menu', MenuController::class);
+    Route::resource('menu', MenuController::class);
 
     //menu username
-    Route::resource('/api/usermenu', UserMenuController::class);
-    Route::get('/api/usermenu/retrieve/{id}', [UserMenuController::class, 'retrieveUserMenu']);
+    Route::resource('usermenu', UserMenuController::class);
+    Route::get('usermenu/retrieve/{id}', [UserMenuController::class, 'retrieveUserMenu']);
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');
@@ -112,3 +112,7 @@ Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middl
 // Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/{any?}', function () {
+    return view('welcome');
+})->where('any', '.*');
+

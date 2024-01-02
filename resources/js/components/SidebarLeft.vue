@@ -3,6 +3,7 @@ import { useAuthUserStore } from "../stores/AuthUserStore";
 import { useRouter } from "vue-router";
 import { useSettingStore } from "../stores/SettingStore";
 import { onMounted, ref } from "vue";
+import api from "../services/api.js"
 const router = useRouter();
 const authUserStore = useAuthUserStore();
 const settingStore = useSettingStore();
@@ -10,11 +11,11 @@ const settingStore = useSettingStore();
 const menulist = ref({ data: [] });
 
 const getmenu = () => {
-    axios
-        .get("/api/menu")
+    api.instance
+        .get("menu")
         .then((response) => {
             menulist.value = response.data;
-         
+
         })
         .catch((error) => {
             console.log(error);

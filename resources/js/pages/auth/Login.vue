@@ -18,8 +18,10 @@ const handleSubmit = () => {
     loading.value = true;
     errorMessage.value = '';
 
-    axios.post('/login', form)
-        .then(() => {
+    axios.post('api/login', form)
+        .then((response) => {
+            // localStorage.setItem('token', response.data.token)
+            authUserStore.setToken(response.data.token);
             router.push('/admin/dashboard');
         })
         .catch((error) => {
