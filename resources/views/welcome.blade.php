@@ -137,4 +137,11 @@
             </div>
         </div>
     </body>
+    <script>
+        @if($connected)
+            alert("Database Connection Status:\n\nConnected successfully to the database.");
+        @else
+            alert("Database Connection Status:\n\nConnection to the database failed.");
+        @endif
+    </script>
 </html>
