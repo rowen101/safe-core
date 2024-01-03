@@ -18,4 +18,8 @@ class WellcomeController extends Controller
 
         return view('welcome',compact('connected'));
     }
+    public function dashboard()
+    {
+        
+    }
 }
