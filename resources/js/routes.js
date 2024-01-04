@@ -5,9 +5,10 @@ import UserList from './pages/users/UserList.vue';
 import UpdateSetting from './pages/settings/UpdateSetting.vue';
 import UpdateProfile from './pages/profile/UpdateProfile.vue';
 import Login from './pages/auth/Login.vue';
+// import Register from './pages/auth/Register.vue';
 import ClientList from './pages/client/ClientList.vue';
 import TechList from './pages/techrecomm/TechList.vue';
-import WTSList from './pages/wts/WtsList.vue';
+import MyPrio from './pages/myprio/MyPrio.vue';
 import MyVsc from './pages/myvsc/MyVsc.vue';
 import MyClosedPrio from './pages/mycloseprio/MyClosePrioList.vue';
 import UserMenu from './pages/usermenu/UserMenuList.vue';
@@ -18,10 +19,14 @@ export default [
         name: 'admin.login',
         component: Login,
     },
-
+    // {
+    //     path: '/register',
+    //     name: 'admin.register',
+    //     component: Register,
+    // },
     {
         path: '/admin/dashboard',
-        name: 'admin.dashboard',
+        name: 'dashboard',
         component: Dashboard,
     },
 
@@ -75,7 +80,7 @@ export default [
     {
         path: '/admin/weekly-task-schedule/myprio',
         name: 'My Prio',
-        component: WTSList,
+        component: MyPrio,
     },
 
     {

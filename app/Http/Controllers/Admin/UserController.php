@@ -35,6 +35,7 @@ class UserController extends Controller
             'password' => 'required|min:8',
             'first_name' => 'required',
             'last_name' => 'required',
+            'gender' => 'required'
         ]);
 
         return User::create([
@@ -43,6 +44,7 @@ class UserController extends Controller
             'password' => bcrypt(request('password')),
             'first_name' => request('first_name'),
             'last_name' => request('last_name'),
+            'gender' => request('gender')
 
         ]);
     }
@@ -55,16 +57,18 @@ class UserController extends Controller
             'password' => 'sometimes|min:8',
             'first_name' => 'required',
             'last_name' => 'required',
+            'gender' => 'required'
 
         ]);
 
         $user->update([
-            'name' => request('username'),
+            'name' => request('name'),
             'email' => request('email'),
             'password' => request('password') ? bcrypt(request('password')) : $user->password,
             'email' => request('email'),
             'first_name' => request('first_name'),
             'last_name' => request('last_name'),
+            'gender' => request('gender')
 
         ]);
 

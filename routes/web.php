@@ -10,7 +10,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\VirtualSCController;
+use App\Http\Controllers\Admin\VirtualASController;
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\MyClosePrioController;
 
@@ -84,9 +84,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/api/dailytask/drop/{id}',[TaskController::class, 'drop']);
      Route::delete('/api/dailytask/deleteTask/{id}',[TaskController::class, 'deleteTask']);
      Route::get('/api/dailytask/filter-taskdate',[TaskController::class,'FilterTaskdate']);
-    //myvsc controller
-    Route::resource('/api/myvsc', VirtualSCController::class);
-
+     Route::get('/api/getsite',[TaskController::class,'getSite']);
+     //myvsc controller
+     Route::post('filter-vsc',[VirtualASController::class,'FilterVSC']);
+     Route::resource('myvsc', VirtualASController::class);
     //my close prio
     Route::resource('/api/mycloseprio', MyClosePrioController::class);
 

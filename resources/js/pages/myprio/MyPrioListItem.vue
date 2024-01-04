@@ -10,7 +10,7 @@ const authUserStore = useAuthUserStore();
 const props = defineProps({
     item: Object,
     index: Number,
-    selectAll: Boolean,
+ 
 });
 
 const emit = defineEmits(["userDeleted", "editUser", "confirmUserDeletion","showItem"]);

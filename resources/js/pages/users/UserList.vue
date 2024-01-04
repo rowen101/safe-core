@@ -2,6 +2,8 @@
 import axios from 'axios';
 import { ref, onMounted, reactive, watch } from 'vue';
 import { Form, Field, useResetForm } from 'vee-validate';
+
+
 import * as yup from 'yup';
 import { useToastr } from '../../toastr.js';
 import UserListItem from './UserListItem.vue';
@@ -16,6 +18,18 @@ const form = ref(null);
 const listuseroption = ref([]);
 const selectedSiteHead = ref(null);
 
+
+const genderoption = ref([
+    {
+        name: "Male",
+        value: 1,
+    },
+    {
+        name: "Female",
+        value: 2,
+    },
+
+]);
 const getUsers = (page = 1) => {
     axios.get(`/api/users?page=${page}`, {
         params: {
@@ -37,6 +51,7 @@ const createUserSchema = yup.object({
     first_name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().required().min(8),
+    gender: yup.string().required()
 });
 
 const editUserSchema = yup.object({
@@ -47,6 +62,7 @@ const editUserSchema = yup.object({
     password: yup.string().when((password, schema) => {
         return password ? schema.required().min(8) : schema;
     }),
+    gender: yup.string().required()
 });
 
 const createUser = (values, { resetForm, setErrors }) => {
@@ -81,7 +97,8 @@ const editUser = (user) => {
         email: user.email,
         sitehead_user_id: user.sitehead_user_id,
         first_name: user.first_name,
-        last_name: user.last_name
+        last_name: user.last_name,
+        gender: user.gender
     };
 
 
@@ -265,14 +282,34 @@ onMounted(() => {
                                 id="name" aria-describedby="nameHelp" placeholder="Enter full username" />
                             <span class="invalid-feedback">{{ errors.name }}</span>
                         </div>
-
-                        <div class="form-group">
+<div class="d-flex justify-content-between">
+                <div class="d-flex">
+ <div class="form-group">
                             <label for="email">Email</label>
                             <Field name="email" type="email" class="form-control "
                                 :class="{ 'is-invalid': errors.email }" id="email" aria-describedby="nameHelp"
                                 placeholder="Enter full name" />
                             <span class="invalid-feedback">{{ errors.email }}</span>
                         </div>
+                </div>
+                <div class="d-flex">
+                    <div class="form-group">
+      <label for="siteDropdown">Gender</label>
+      <Field
+        name="gender"
+        as="select"
+        class="form-control"
+        :class="{ 'is-invalid': errors.gender }"
+      >
+        <option value="" disabled>Select a gender</option>
+        <option v-for="item in genderoption" :key="item.name" :value="item.name">{{ item.name }}</option>
+      </Field>
+      <!-- <span v-show="errors.has('gender')" class="invalid-feedback">{{ errors.first('gender') }}</span> -->
+    </div>
+                </div>
+</div>
+
+
               <div class="d-flex justify-content-between">
                 <div class="d-flex">
 <div class="form-group">

@@ -19,6 +19,8 @@ class SiteController extends Controller
         return $data;
     }
 
+   
+
     /**
      * Show the form for creating a new resource.
      *

@@ -1,6 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue';
+import { useAuthUserStore } from "../stores/AuthUserStore";
 
+const authUserStore = useAuthUserStore();
 const selectedAppointmentStatus = ref('all');
 const totalAppointmentsCount = ref(0);
 
@@ -54,7 +56,7 @@ onMounted(() => {
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-3 col-6">
+                <!-- <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <div class="d-flex justify-content-between">
@@ -76,9 +78,9 @@ onMounted(() => {
                             <i class="fas fa-arrow-circle-right"></i>
                         </router-link>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="col-lg-3 col-6">
+                <div v-if="authUserStore.user.name == 'admin'" class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <div class="d-flex justify-content-between">
@@ -97,7 +99,7 @@ onMounted(() => {
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <router-link to="/admin/users" class="small-box-footer">
+                        <router-link to="/admin/user" class="small-box-footer">
                             View Users
                             <i class="fas fa-arrow-circle-right"></i>
                         </router-link>
