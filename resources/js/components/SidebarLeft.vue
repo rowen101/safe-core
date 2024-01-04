@@ -3,8 +3,6 @@ import { useAuthUserStore } from "../stores/AuthUserStore";
 import { useRouter } from "vue-router";
 import { useSettingStore } from "../stores/SettingStore";
 import { onMounted, ref } from "vue";
-// import api from "../services/api.js"
-import axios from "axios";
 const router = useRouter();
 const authUserStore = useAuthUserStore();
 const settingStore = useSettingStore();
@@ -13,11 +11,10 @@ const menulist = ref({ data: [] });
 
 const getmenu = () => {
     axios
-        .get("api/menu")
+        .get("/api/menu")
         .then((response) => {
             menulist.value = response.data;
             console.log(response.data);
-
         })
         .catch((error) => {
             console.log(error);
@@ -31,8 +28,7 @@ const isCurrentRoute = (route) => {
 const logout = () => {
     axios.post("/logout").then((response) => {
         authUserStore.user.name = "";
-    //    router.push("/login");
-        window.location.reload();
+        router.push("/login");
     });
 };
 
@@ -50,7 +46,7 @@ onMounted(() => {
                 alt="AdminLTE Logo"
                 class="brand-image"
                 style="opacity: 0.8"
-                draggable="false"
+                 draggable="false"
             />
             <span class="brand-text font-weight-light">{{
                 settingStore.setting.app_name
@@ -59,15 +55,18 @@ onMounted(() => {
 
         <div class="sidebar">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <!-- <div class="image">
+                <!-- <div v-if="authUserStore.user.avatar" class="image">
                     <img
                         :src="authUserStore.user.avatar"
                         class="img-circle elevation-1"
                         alt="User Image"
                     />
+                </div>
+                 <div v-else-if="authUserStore.user.avatar == null" class="image">
+                     <img v-if="authUserStore.user.gender =='Male'" :src="'/img/boy.png'" class="img-circle elevation-1" alt="Profile"  draggable="false"/>
+                     <img v-if="authUserStore.user.gender =='Female'" :src="'/img/girl.png'" class="img-circle elevation-1" alt="Profile"  draggable="false"/>
                 </div> -->
-
-                <div class="image">
+                 <div class="image">
                      <img v-if="authUserStore.user.gender =='Male'" :src="'/img/boy.png'" class="img-circle elevation-1" alt="Profile"  draggable="false"/>
                      <img v-if="authUserStore.user.gender =='Female'" :src="'/img/girl.png'" class="img-circle elevation-1" alt="Profile"  draggable="false"/>
                 </div>

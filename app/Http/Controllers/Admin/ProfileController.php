@@ -12,7 +12,7 @@ class ProfileController extends Controller
 {
     public function index(Request $request)
     {
-        return $request->user()->only(['id','name', 'email', 'role', 'avatar','first_name', 'last_name','gender','sitehead_user_id']);
+        return $request->user()->only(['id','name', 'email', 'role', 'avatar','first_name', 'last_name','gender']);
     }
 
     public function update(Request $request)
@@ -22,7 +22,6 @@ class ProfileController extends Controller
             'email' => ['required', 'email', Rule::unique('users')->ignore($request->user()->id)],
             'first_name' =>  ['required'],
             'last_name' => ['required'],
-
         ]);
 
         $request->user()->update($validated);

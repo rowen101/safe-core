@@ -1,11 +1,13 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import api from "../services/api.js"
+import { useAuthUserStore } from "../stores/AuthUserStore";
+
+const authUserStore = useAuthUserStore();
 const selectedAppointmentStatus = ref('all');
 const totalAppointmentsCount = ref(0);
 
 const getAppointmentsCount = () => {
-    api.instance.get('/api/stats/appointments', {
+    axios.get('/api/stats/appointments', {
         params: {
             status: selectedAppointmentStatus.value,
         }
@@ -19,7 +21,7 @@ const selectedDateRange = ref('today');
 const totalUsersCount = ref(0);
 
 const getUsersCount = () => {
-    api.instance.get('/api/stats/users', {
+    axios.get('/api/stats/users', {
         params: {
             date_range: selectedDateRange.value,
         }
@@ -54,7 +56,7 @@ onMounted(() => {
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-3 col-6">
+                <!-- <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <div class="d-flex justify-content-between">
@@ -76,9 +78,9 @@ onMounted(() => {
                             <i class="fas fa-arrow-circle-right"></i>
                         </router-link>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="col-lg-3 col-6">
+                <div v-if="authUserStore.user.name == 'admin'" class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <div class="d-flex justify-content-between">
@@ -97,7 +99,7 @@ onMounted(() => {
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <router-link to="/admin/users" class="small-box-footer">
+                        <router-link to="/admin/user" class="small-box-footer">
                             View Users
                             <i class="fas fa-arrow-circle-right"></i>
                         </router-link>

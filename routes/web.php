@@ -37,9 +37,6 @@ Route::get('/', function () {
 //     return view('dashboard');
 // });
 
-
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
     Route::get('/api/stats/users', [DashboardStatController::class, 'users']);
@@ -85,14 +82,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/dailytask/addnewTask',[TaskController::class, 'addTask']);
     Route::get('/api/dailytask/{id}/tasks',[TaskController::class, 'getTask']);
     Route::put('/api/dailytask/drop/{id}',[TaskController::class, 'drop']);
-    Route::delete('/api/dailytask/deleteTask/{id}',[TaskController::class, 'deleteTask']);
-    Route::get('/api/dailytask/filter-taskdate',[TaskController::class,'FilterTaskdate']);
-    Route::get('/api/getsite',[TaskController::class,'getSite']);
-    //myvsc controller
-    Route::post('/api/filter-vsc',[VirtualASController::class,'FilterVSC']);
-    Route::resource('/api/myvsc', VirtualASController::class);
-
-
+     Route::delete('/api/dailytask/deleteTask/{id}',[TaskController::class, 'deleteTask']);
+     Route::get('/api/dailytask/filter-taskdate',[TaskController::class,'FilterTaskdate']);
+     Route::get('/api/getsite',[TaskController::class,'getSite']);
+     //myvsc controller
+     Route::post('filter-vsc',[VirtualASController::class,'FilterVSC']);
+     Route::resource('myvsc', VirtualASController::class);
     //my close prio
     Route::resource('/api/mycloseprio', MyClosePrioController::class);
 
@@ -108,13 +103,3 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');
-
-
-// Route::get('/{any?}', function () {
-//     return view('welcome');
-// })->where('any', '.*');
-
-
-Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

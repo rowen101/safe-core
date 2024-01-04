@@ -776,7 +776,7 @@ onMounted(() => {
                                             <option value="" disabled>Select a site</option>
                                             <option v-for="site in listsite" :key="site.id" :value="site.id">{{ site.site_name }}</option>
                                             </select>
-                                      
+
                                     </div>
                                     <div class="d-flex justify-content-between">
 
@@ -872,6 +872,8 @@ onMounted(() => {
                 </div>
 
                 <div class="modal-body">
+
+                    
                     <ul class="nav nav-tabs" id="myTabs">
                         <li class="nav-item">
                             <a class="nav-link btn btn-primary active" id="tab1" data-toggle="tab" href="#taskList">Task
@@ -959,7 +961,7 @@ onMounted(() => {
                             </div>
                         </div>
                         <!-- Tab 2: Form Task -->
-                        <div class="tab-pane fade " id="formTask" v-if="!startdate">
+                        <div class="tab-pane fade " id="formTask" >
                             <Form @submit="AddNewTask">
                                 <div class="col-md-12">
                                     <div class="row">
