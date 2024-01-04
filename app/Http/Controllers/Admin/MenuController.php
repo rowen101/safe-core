@@ -50,7 +50,7 @@ class MenuController extends Controller
                     $menuItem->submenus = Menu::select('menus.*')
                         ->join('usermenus', 'menus.menu_id', '=', 'usermenus.menu_id')
                         ->where('menus.is_active', 1)
-                        ->where('menus.parent_id', $menuItem->id)
+                        ->where('menus.parent_id', $menuItem->menu_id)
                         ->where('usermenus.user_id', $userId)
                         ->orderBy('menus.sort_order', 'ASC')
                         ->get();
