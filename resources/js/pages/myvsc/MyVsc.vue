@@ -138,6 +138,7 @@ onMounted(() => {
                                 <div v-else class="row">
                                     <div class="col-lg-3 col-6" v-for="task in lists" :key="task.id">
                                         <!-- <div class="small-box bg-info"> -->
+
                                         <div :class="'small-box ' +
                                             (moment(task.taskdate).format(
                                                 'MMMM D, YYYY'
@@ -147,24 +148,27 @@ onMounted(() => {
                                             ">
                                             <div class="inner">
                                                 <div class="card text-center text-dark">
-                                                    <h5 class="mt-1">
+                                                    <p class="mt-1">
                                                         {{
                                                             moment(
                                                                 task.taskdate
                                                             ).format("dddd")
                                                         }}
-                                                        <i class="far fa-calendar-alt"></i>
-                                                    </h5>
-                                                </div>
-                                                <div class="card text-center text-dark">
-                                                    {{
+                                                        <i class="far fa-calendar-alt"></i><br>
+                                                         {{
                                                         moment(
                                                             task.taskdate
                                                         ).format("MMMM D, YYYY")
-                                                    }}
+                                                    }}<br>
+
+                                                    </p>
+<div class="border text-bold">  {{
+                                                       task.site_name
+                                                    }}</div>
                                                 </div>
 
-                                                <hr class="bg-white" />
+
+                                              
                                                 <div>
                                                     <div v-if="task.task_lists &&
                                                             task.task_lists

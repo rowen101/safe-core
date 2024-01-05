@@ -21,11 +21,14 @@ class VirtualASController extends Controller
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
 
-        $dailyTasks = Task::orderBy('taskdate', 'asc')
-            ->with('taskLists')
-            ->where('user_id', $userId)
-            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-            ->get();
+        $dailyTasks = Task::orderBy('tbl_dailytask.taskdate', 'asc')
+        ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
+        ->with('taskLists')
+        ->where('user_id', $userId)
+        ->whereBetween('tbl_dailytask.created_at', [$startOfWeek, $endOfWeek])
+        ->select('tbl_dailytask.*', 'tbl_sites.site_name') // Corrected the select statement
+        ->get();
+
 
         $tasksList = Task::withCount([
             'taskLists',
