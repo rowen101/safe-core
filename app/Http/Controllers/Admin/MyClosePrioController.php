@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Enums\TaskType;
+use Illuminate\Support\Carbon;
 class MyClosePrioController extends Controller
 {
 
@@ -27,6 +28,7 @@ class MyClosePrioController extends Controller
             $query->where('site', 'like', "%{$searchQuery}%");
             $query->where('type', TaskType::from(request('type')));
         })
+        ->orderBy('taskdate', 'asc')
         ->where('status_task', 1)
         ->where ('user_id', auth()->user()->id)
         ->latest()
@@ -54,6 +56,49 @@ class MyClosePrioController extends Controller
         ]);
 
          return $data;
+    }
+
+    public function FilterClosePrio(Request $request)
+    {
+        $userId = auth()->user()->id;
+
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+        $data = Task::query()
+        ->when(request('query'), function ($query, $searchQuery) {
+            $query->where('site', 'like', "%{$searchQuery}%");
+            $query->where('type', TaskType::from(request('type')));
+        })
+        ->where('status_task', 1)
+        ->where ('user_id', $userId)
+        ->whereBetween('taskdate', [$startDate, $endDate])
+        ->latest()
+        ->paginate(setting('pagination_limit'))
+        ->through(fn ($dailytask) => [
+            'id' => $dailytask->id,
+            'site' => $dailytask->site,
+            'user_id' => $dailytask->user_id,
+            'taskname' => $dailytask->taskname,
+            'taskdate' => $dailytask->taskdate->format('m-d-Y'),
+            'project' => $dailytask->project,
+            'plandate' => $dailytask->plandate->format('m-d-Y'),
+            'planenddate' => $dailytask->planenddate->format('m-d-Y'),
+            'startdate' => $dailytask->startdate->format('m-d-Y h:i A'),
+            'enddate' => $dailytask->enddate->format('m-d-Y h:i A'),
+            'tasktype' => [
+                'listtask' => $dailytask->tasktype->listtask(),
+            ],
+            'status' => $dailytask->status,
+            'attachment' => $dailytask->attachment,
+            'PWS' => $dailytask->PWS,
+            'remarks' => $dailytask->remarks,
+            'immediate_hid' => $dailytask->immediate_hid,
+            'created_at' => $dailytask->created_at->format('m/d/Y h:i A'),
+        ]);
+
+         return $data;
+
     }
 
     /**

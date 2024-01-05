@@ -10,11 +10,13 @@ import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import html2canvas from "html2canvas";
 import { ContentLoader } from "vue-content-loader";
+import Datepicker from 'vue3-datepicker'
 
 const isloading = ref(false);
 const toastr = useToastr();
 const lists = ref({ data: [] });
-
+const fromDate = ref('');
+const toDate = ref('');
 const authUserStore = useAuthUserStore();
 
 const getItems = (page = 1) => {
@@ -28,8 +30,7 @@ const getItems = (page = 1) => {
         .then((response) => {
 isloading.value = false;
             lists.value = response.data;
-            selectedItems.value = [];
-            selectAll.value = false;
+
 
         });
 };
@@ -45,7 +46,31 @@ const capturemycloseprio = () => {
         link.click();
     });
 };
+//filter datae
+const onFilterDate = () => {
+    $("#FormModalfilterDate").modal("show");
+}
+const applyFilter =() => {
+    isloading.value = true;
+    // Make an API request using Axios
+      axios.get('/api/filter-closeprio', {
+        start_date: fromDate.value,
+        end_date: toDate.value,
+      })
+      .then(response => {
+         isloading.value = false;
+        lists.value = response.data.dailyTasks;
 
+      })
+      .catch(error => {
+        // Handle errors
+        console.error(error);
+      })
+      .finally(() => {
+        // Close the modal or perform any other actions
+        $('#FormModalfilterDate').modal('hide');
+      });
+}
 const searchQuery = ref(null);
 
 watch(
@@ -144,7 +169,7 @@ onMounted(() => {
                                     </button>
                                 </div>
                                 <div class="d-flex">
-                                    <i class="fa fa-filter mr-1"></i>
+                                    <i  @click="onFilterDate" class="fa fa-filter mr-1"></i>
                                 </div>
                             </div>
 
@@ -157,7 +182,7 @@ onMounted(() => {
                                             <tr>
                                                 <th>Task</th>
                                                 <th>Planned Date</th>
-                                         
+
                                                 <th>Start Date</th>
                                                 <th>End Date</th>
                                                 <th>Task</th>
@@ -202,6 +227,54 @@ onMounted(() => {
 
 
 
+<div class="modal fade" id="FormModalfilterDate" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        <span>My Close Prio</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="fromtocenter">
+                        <div>
+                            <label for="fromDate">From:</label>
+                            <datepicker v-model="fromDate"></datepicker>
+                        </div>
 
+                        <div>
+                            <label for="toDate">To:</label>
+                            <datepicker v-model="toDate"></datepicker>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button @click="applyFilter" type="button" class="btn btn-primary">
+                        Generate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </template>
+
+<style scoped>
+    .fromtocenter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* Optional: Add additional styling if needed */
+        margin-top: 5px; /* Adjust as needed */
+    }
+</style>

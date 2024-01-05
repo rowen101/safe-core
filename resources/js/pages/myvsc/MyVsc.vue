@@ -70,7 +70,7 @@ const onFilterDate = () => {
 const applyFilter =() => {
     isloading.value = true;
     // Make an API request using Axios
-      axios.post('/api/filter-vsc', {
+      axios.get('/api/filter-vsc', {
         start_date: fromDate.value,
         end_date: toDate.value,
       })
@@ -267,7 +267,7 @@ onMounted(() => {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class=" d-flex justify-content-center align-items-center card border-0">
+                    <div class="fromtocenter">
                         <div>
                             <label for="fromDate">From:</label>
                             <datepicker v-model="fromDate"></datepicker>
@@ -278,6 +278,8 @@ onMounted(() => {
                             <datepicker v-model="toDate"></datepicker>
                         </div>
                     </div>
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -292,3 +294,13 @@ onMounted(() => {
     </div>
 </template>
 
+<style scoped>
+    .fromtocenter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* Optional: Add additional styling if needed */
+        margin-top: 5px; /* Adjust as needed */
+    }
+</style>
