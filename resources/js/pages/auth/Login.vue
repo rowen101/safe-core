@@ -17,9 +17,12 @@ const errorMessage = ref('');
 const handleSubmit = () => {
     loading.value = true;
     errorMessage.value = '';
-    axios.post('/login', form)
-        .then(() => {
-            router.push('/admin/dashboard');
+
+    axios.post('login', form)
+        .then((response) => {
+            // localStorage.setItem('token', response.data.token)
+            authUserStore.setToken(response.data.token);
+            router.push('/dashboard');
         })
         .catch((error) => {
             errorMessage.value = error.response.data.message;
