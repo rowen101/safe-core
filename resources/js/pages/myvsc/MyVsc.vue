@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import moment from "moment";
-import ListItem from "./listitem.vue";
+import ListItem from "./ListItem.vue";
 import html2canvas from "html2canvas";
 import { ContentLoader } from "vue-content-loader";
 import Datepicker from 'vue3-datepicker'
@@ -65,6 +65,29 @@ const getItems = () => {
 
 const onFilterDate = () => {
     $("#FormModalfilterDate").modal("show");
+}
+
+const applyFilter =() => {
+    isloading.value = true;
+    // Make an API request using Axios
+      axios.post('/api/filter-vsc', {
+        start_date: fromDate.value,
+        end_date: toDate.value,
+      })
+      .then(response => {
+         isloading.value = false;
+        lists.value = response.data.dailyTasks;
+        listscount.value = response.data.TaskList;
+        console.log(response.data);
+      })
+      .catch(error => {
+        // Handle errors
+        console.error(error);
+      })
+      .finally(() => {
+        // Close the modal or perform any other actions
+        $('#FormModalfilterDate').modal('hide');
+      });
 }
 
 onMounted(() => {
