@@ -87,7 +87,9 @@ Route::middleware('auth')->group(function () {
      Route::get('/api/getsite',[TaskController::class,'getSite']);
      //myvsc controller
      Route::post('/api/filter-vsc',[VirtualASController::class,'FilterVSC']);
-     Route::resource('api/myvsc', VirtualASController::class);
+
+     Route::resource('/api/myvsc', VirtualASController::class);
+
     //my close prio
     Route::resource('/api/mycloseprio', MyClosePrioController::class);
 

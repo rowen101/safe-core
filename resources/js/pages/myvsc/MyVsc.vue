@@ -70,7 +70,10 @@ const onFilterDate = () => {
 const applyFilter =() => {
     isloading.value = true;
     // Make an API request using Axios
-      axios.get('/api/filter-vsc', {
+
+      axios.post('/api/filter-vsc', {
+
+    
         start_date: fromDate.value,
         end_date: toDate.value,
       })
