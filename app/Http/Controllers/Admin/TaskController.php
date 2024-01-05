@@ -11,49 +11,52 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
+use function PHPSTORM_META\map;
+
 class TaskController extends Controller
 {
     public function index()
-    {
-        $data = Task::query()
-        ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site') // Adjust the column names accordingly
-            ->when(request('query'), function ($query, $searchQuery) {
-                $query->where('tbl_sites.site_name', 'like', "%{$searchQuery}%");
-                $query->where('type', TaskType::from(request('type')));
-            })
-            ->where(function ($query) {
-                $query->whereNull('tbl_dailytask.status_task')
-                    ->orWhere('tbl_dailytask.status_task', '!=', 1);
-            })
-            ->where('tbl_dailytask.user_id', auth()->user()->id)
-            ->orderBy('tbl_dailytask.taskdate', 'asc')
-            ->get()
-            ->map(function ($dailytask) {
-                return [
-                    'id' => $dailytask->id,
-                    'site_name' => $dailytask->site_name,
-                    'user_id' => $dailytask->user_id,
-                    'taskdate' => $dailytask->taskdate,
-                    'project' => $dailytask->project,
-                    'plandate' => $dailytask->plandate->format('m/d/Y h:i A'),
-                    'planenddate' => $dailytask->planenddate->format('m/d/Y h:i A'),
-                    'startdate' => $dailytask->startdate,
-                    'enddate' => $dailytask->enddate,
-                    'tasktype' => [
-                        $dailytask->tasktype->listtask(),
-                    ],
-                    'status' => $dailytask->status,
-                    'attachment' => $dailytask->attachment,
-                    'PWS' => $dailytask->PWS,
-                    'remarks' => $dailytask->remarks,
-                    'immediate_hid' => $dailytask->immediate_hid,
-                    'status_task' => $dailytask->status_task,
-                    'created_at' => $dailytask->created_at->format('m/d/Y h:i A'),
-                ];
-            });
+{
+    $data = Task::query()
+        ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site') // Assuming 'tasks' is the actual table name for the Task model
+        ->when(request('query'), function ($query, $searchQuery) {
+            $query->where('tbl_sites.site_name', 'like', "%{$searchQuery}%");
+            $query->where('type', TaskType::from(request('type')));
+        })
+        ->where(function ($query) {
+            $query->whereNull('tbl_dailytask.status_task')
+                ->orWhere('tbl_dailytask.status_task', '!=', 1);
+        })
+        ->where('tbl_dailytask.user_id', auth()->user()->id)
+        ->orderBy('tbl_dailytask.taskdate', 'asc')
+        ->get()
+        ->map(function ($dailytask) {
+            return [
+                'dailytask_id' => $dailytask->dailytask_id,
+                'site_name' => $dailytask->site_name,
+                'user_id' => $dailytask->user_id,
+                'taskdate' => $dailytask->taskdate,
+                'project' => $dailytask->project,
+                'plandate' => $dailytask->plandate->format('m/d/Y h:i A'),
+                'planenddate' => $dailytask->planenddate->format('m/d/Y h:i A'),
+                'startdate' => $dailytask->startdate,
+                'enddate' => $dailytask->enddate,
+                'tasktype' => [
+                    $dailytask->tasktype->listtask(),
+                ],
+                'status' => $dailytask->status,
+                'attachment' => $dailytask->attachment,
+                'PWS' => $dailytask->PWS,
+                'remarks' => $dailytask->remarks,
+                'immediate_hid' => $dailytask->immediate_hid,
+                'status_task' => $dailytask->status_task,
+                'created_at' => $dailytask->created_at->format('m/d/Y h:i A'),
+            ];
+        });
 
-        return $data;
-    }
+    return $data;
+}
+
 
     public function show($id)
     {
@@ -104,18 +107,16 @@ class TaskController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    public function onhandler(Request $request, $id)
+    public function onhandler(Request $request, $dailytask_id)
     {
 
-        // $task = Task::find($id);
-        // $task->startdate = $request->input('startdate');
-        // $task->status = "On Going";
+        $task = Task::where('dailytask_id', $dailytask_id)->first();
 
-        // $task->save();
-        // return response()->json(['message' => 'Task start successfully!']);
-        $task = Task::find($id);
 
-        // Check if the start date is empty
+        if (!$task) {
+            return response()->json(['message' => 'Task not found.']);
+        }
+        
         if (empty($request->input('startdate'))) {
             $task->startdate = now(); // Set the start date to the current date and time
             $task->status = "On Going";

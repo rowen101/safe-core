@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tbl_dailytask', function (Blueprint $table) {
-            $table->id();
+            $table->id('dailytask_id');
             $table->integer('user_id');
             $table->integer('immediate_hid');
             $table->string('site');

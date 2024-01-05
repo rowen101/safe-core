@@ -210,13 +210,13 @@ const OpenModalTask = () => {
 
 const showTasks = (value) => {
     OpenModalTask();
-    formtask.value.dailytask_id = value.id;
+    formtask.value.dailytask_id = value.dailytask_id;
     taskdate.value = value.taskdate;
     startdate.value = value.startdate
     isloadingTask.value = true;
     // Fetch tasks based on dailytask_id
     axios
-        .get(`/api/dailytask/${value.id}/tasks`)
+        .get(`/api/dailytask/${value.dailytask_id}/tasks`)
         .then((response) => {
             listasks.value = response.data;
             OpenModalTask();
@@ -371,22 +371,7 @@ getSite();
 
 
 
-const updateData = (values, { setErrors }) => {
-    axios
-        .put("/api/tech-recommendations/" + formValues.value.id, values)
-        .then((response) => {
-            const index = lists.value.data.findIndex(
-                (item) => item.id === response.data.id
-            );
-            lists.value.data[index] = response.data;
-            $("#FormModal").modal("hide");
-            toastr.success("successfully Updated!");
-        })
-        .catch((error) => {
-            setErrors(error.response.data.errors);
-            console.log(error);
-        });
-};
+
 const editMode = ref(false);
 const handleSubmit = (values, actions) => {
     if (editMode.value) {
@@ -400,7 +385,7 @@ const handleSubmit = (values, actions) => {
 const startTaskhandle = async (task) => {
     try {
         // Fetch tasks using GET request after the POST request is successful
-        const response = await axios.get(`/api/dailytask/${task.id}/tasks`);
+        const response = await axios.get(`/api/dailytask/${task.dailytask_id}/tasks`);
         listasks.value = response.data;
 
         // Check if listtasks is null
@@ -425,7 +410,7 @@ const startTaskhandle = async (task) => {
         // Check if the user confirmed
         if (result.isConfirmed) {
             // Make the axios PUT request
-            const updateResponse = await axios.put(`/api/dailytask/onhandler/` + task.id, task);
+            const updateResponse = await axios.put(`/api/dailytask/onhandler/` + task.dailytask_id, task);
 
             // Handle the response
             toastr.success(updateResponse.data.message);
@@ -467,7 +452,7 @@ const endTaskhandle = async (task) => {
             }
             // Make the axios PUT request
             const response = await axios.put(
-                `/api/dailytask/onhandler/` + task.id,
+                `/api/dailytask/onhandler/` + task.dailytask_id,
                 task
             );
 
@@ -880,7 +865,7 @@ onMounted(() => {
                                 Todo List</a>
 
                         </li>
-                        <li class="nav-item" v-if="!startdate">
+                        <li class="nav-item" >
                             <a class="nav-link btn btn-primary " id="tab2" data-toggle="tab" href="#formTask">
                                 Todo</a>
                         </li>

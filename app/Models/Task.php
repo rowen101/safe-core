@@ -10,8 +10,9 @@ class Task extends Model
 {
     use HasFactory;
     protected $table = 'tbl_dailytask';
+    protected $primaryKey = 'dailytask_id';
     protected $fillable = [
-        'id',
+        'dailytask_id',
         'user_id',
         'site',
         'taskdate',
