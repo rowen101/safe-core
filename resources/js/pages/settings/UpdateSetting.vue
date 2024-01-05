@@ -3,9 +3,6 @@ import { ref, onMounted, reactive, watch, computed  } from "vue";
 import { useToastr } from "@/toastr";
 import { ContentLoader } from "vue-content-loader";
 import { Form, Field, useResetForm } from "vee-validate";
-import { useAuthUserStore } from '../../stores/AuthUserStore';
-
-const authUserStore = useAuthUserStore();
 const settings = ref([]);
 const toastr = useToastr();
 const showList = ref(true);
@@ -21,18 +18,11 @@ const formValues = ref();
 
 const getItems = () => {
     isLoadingSite.value = true;
-    
     axios
-        .get(`/api/site`, {
-            headers: {
-                    Authorization: `Bearer ${authUserStore.getToken}`,
-
-                   },
-        })
+        .get(`/api/site`)
         .then((response) => {
             isLoadingSite.value = false;
             listItem.value = response.data;
-
         })
         .catch((error) => {
             console.log(error);
@@ -57,7 +47,6 @@ const handleSubmit = () => {
       isLoadingSite.value = true;
       axios
         .post('/api/site', {
-
             id : formSite.value?.id,
             site_name : formSite.value?.site_name,
             is_active : true

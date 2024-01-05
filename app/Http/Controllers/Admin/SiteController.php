@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Site;
+use App\Models\tbl_site;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller
@@ -15,11 +15,11 @@ class SiteController extends Controller
      */
     public function index()
     {
-        $data =Site::all();
+        $data =tbl_site::all();
         return $data;
     }
 
-
+   
 
     /**
      * Show the form for creating a new resource.
@@ -39,7 +39,7 @@ class SiteController extends Controller
      */
     public function store(Request $request)
     {
-        Site::updateOrCreate(
+        tbl_site::updateOrCreate(
             [
                 'id' => $request->id
             ],
@@ -71,7 +71,7 @@ class SiteController extends Controller
      */
     public function edit($id)
     {
-        Site::find($id);
+     tbl_site::find($id);
       return response()->json(['message' => 'success']);
     }
 

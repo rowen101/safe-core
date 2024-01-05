@@ -417,7 +417,7 @@ const startTaskhandle = async (task) => {
         // Show the SweetAlert2 dialog for confirmation
         const result = await swal.fire({
             title: "Are you sure?",
-            text: "You want to start your task now?",
+            text: "You want to start your todo now?",
             icon: "warning",
             showCancelButton: true,
         });
@@ -828,7 +828,7 @@ onMounted(() => {
 
                                     </div>
                                     <div class="form-group">
-                                        <label for="site">Type</label>
+                                        <label for="site">Task</label>
                                         <Field name="tasktype">
                                             <select v-model="form.tasktype" class="form-control" :required="true">
                                                 <option value="" disabled>
@@ -864,7 +864,7 @@ onMounted(() => {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
-                        My Task of {{ moment(taskdate).format("MM/D/YYYY") }}
+                        My Todo of {{ moment(taskdate).format("MM/D/YYYY") }}
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -873,20 +873,21 @@ onMounted(() => {
 
                 <div class="modal-body">
 
-                    
+
                     <ul class="nav nav-tabs" id="myTabs">
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary active" id="tab1" data-toggle="tab" href="#taskList">Task
-                                List</a>
+                            <a class="nav-link btn btn-primary active" id="tab1" data-toggle="tab" href="#todolist">
+                                Todo List</a>
+
                         </li>
                         <li class="nav-item" v-if="!startdate">
                             <a class="nav-link btn btn-primary " id="tab2" data-toggle="tab" href="#formTask">
-                                Task</a>
+                                Todo</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <!-- Tab 1: Task List -->
-                        <div class="tab-pane fade show active" id="taskList">
+                        <div class="tab-pane fade show active" id="todolist">
                             <div class="mt-2" v-if="listasks.length > 0" style="max-height: 300px; overflow-y: auto;">
                                 <!-- Separate List for incomplete tasks -->
 
@@ -956,7 +957,7 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div class="mt-2 text-center" v-else>
-                                <span>No Task</span>
+                                <span>No Todo</span>
                                 <!-- <img :src="imageUrl" alt="No Task" /> -->
                             </div>
                         </div>

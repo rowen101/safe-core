@@ -2,7 +2,7 @@
 
 return [
     'default' => [
-        'app_name' => 'SLIVSC',
+        'app_name' => 'SLIM',
         'date_format' => 'm/d/Y',
         'pagination_limit' => 10,
     ],

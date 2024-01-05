@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('immediate_hid');
-            $table->integer('site');
+            $table->string('site');
             $table->timestamp('taskdate');
             $table->integer('tasktype');
-            $table->timestamp('plandate')->useCurrent();
-            $table->timestamp('planenddate')->useCurrent();
+            $table->timestamp('plandate');
+            $table->timestamp('planenddate');
             $table->string('project')->nullable();
             $table->timestamp('startdate')->nullable();
             $table->timestamp('enddate')->nullable();

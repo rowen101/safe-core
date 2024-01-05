@@ -49,7 +49,7 @@ export default [
     },
 
     {
-        path: '/admin/users',
+        path: '/admin/user',
         name: 'admin.users',
         component: UserList,
     },

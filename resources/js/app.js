@@ -21,28 +21,14 @@ const router = createRouter({
     history: createWebHistory(),
 });
 
-router.beforeEach(async (to, from,next) => {
+router.beforeEach(async (to, from) => {
     const authUserStore = useAuthUserStore();
-    const settingStore = useSettingStore();
     if (authUserStore.user.name === '' && to.name !== 'admin.login') {
-
+        const settingStore = useSettingStore();
         await Promise.all([
             authUserStore.getAuthUser(),
             settingStore.getSetting(),
         ]);
-
-        // Assuming you have a token property in your authUserStore
-        if (authUserStore.token === true) {
-            // Redirect to the dashboard route
-            next({ name: 'dashboard' });
-        } else {
-            // Continue with the regular navigation
-            next();
-        }
-    }
-    else{
-        // Continue with the regular navigation
-        next();
     }
 });
 
@@ -50,6 +36,12 @@ app.use(pinia);
 app.use(router);
 app.use(VueSweetalert2);
 
-
+// if (window.location.pathname === '/login') {
+//     const currentApp = createApp({});
+//     currentApp.component('Login', Login);
+//     currentApp.mount('#login');
+// } else {
+//     app.mount('#app');
+// }
 
 app.mount('#app');

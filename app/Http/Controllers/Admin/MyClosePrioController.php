@@ -36,7 +36,7 @@ class MyClosePrioController extends Controller
             'site' => $dailytask->site,
             'user_id' => $dailytask->user_id,
             'taskname' => $dailytask->taskname,
-            'taskdate' => $dailytask->taskdate,
+            'taskdate' => $dailytask->taskdate->format('m-d-Y'),
             'project' => $dailytask->project,
             'plandate' => $dailytask->plandate->format('m-d-Y'),
             'planenddate' => $dailytask->planenddate->format('m-d-Y'),

@@ -132,8 +132,7 @@ onMounted(() => {
                                         <td>{{ appointment.start_time }}</td>
                                         <td>{{ appointment.end_time }}</td>
                                         <td>
-                                            <span class="badge" :class="`badge-${appointment.status.color}`">{{
-                                                appointment.status.name }}</span>
+                                           
                                         </td>
                                         <td>
                                             <router-link :to="`/admin/appointments/${appointment.id}/edit`">

@@ -15,16 +15,15 @@ const props = defineProps({
 </script>
 <template>
     <tr>
-
-        <td>{{ item.taskname}}</td>
-        <td>{{ item.plandate }}</td>
-        <td>{{ item.planenddate }}</td>
+         <td>{{ index + 1 }}</td>
+        <td>{{ item.taskdate }}</td>
         <td>{{ item.startdate }}</td>
         <td>{{ item.enddate }}</td>
         <td>{{ item.tasktype.listtask }}</td>
-        <td>{{ item.tasktype.prodject }}</td>
         <td>{{ item.status }}</td>
-        <td>{{ item.remarks }}</td>
+        <td class="text-center"><span :class="[ 'badge', item.remarks === 'HIT' ? 'bg-primary' : 'bg-danger' ]">
+    {{ item.remarks }}</span></td>
+
     </tr>
 </template>
 

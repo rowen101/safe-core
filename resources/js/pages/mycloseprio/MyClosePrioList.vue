@@ -157,11 +157,11 @@ onMounted(() => {
                                             <tr>
                                                 <th>Task</th>
                                                 <th>Planned Date</th>
-                                                <th>Planned Date End</th>
+                                         
                                                 <th>Start Date</th>
                                                 <th>End Date</th>
-                                                <th>Task Type</th>
-                                                <th>Project</th>
+                                                <th>Task</th>
+
                                                 <th>Status</th>
                                                 <th>Remark</th>
                                             </tr>

@@ -34,7 +34,7 @@ const toggleSelection = () => {
             </select>
         </td> -->
         <td class="text-center">
-            <a v-if="user.name != 'admin'" href="#" @click.prevent="$emit('editUser', user)"><i class="fa fa-edit"></i></a>
+            <a href="#" @click.prevent="$emit('editUser', user)"><i class="fa fa-edit"></i></a>
 
         </td>
     </tr>

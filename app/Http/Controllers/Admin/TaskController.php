@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Site;
+use App\Models\tbl_site;
 use App\Models\Task;
 use App\Enums\TaskType;
 use App\Models\ListTask;
@@ -135,10 +135,10 @@ class TaskController extends Controller
     public function getSite()
     {
         try {
-            $data = Site::where('is_active', 1)->get();
+            $data = tbl_site::where('is_active', 1)->get();
             return response()->json($data);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while fetching data.']);
+            return response()->json(['error' => 'An error occurred while fetching data.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
