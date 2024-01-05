@@ -35,7 +35,7 @@ class VirtualASController extends Controller
         ])
             ->where('user_id', $userId)
             ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-            ->orderBy('id', 'asc')
+            ->orderBy('dailytask_id', 'asc')
             ->get();
 
         // Calculate the percentage of completed tasks
