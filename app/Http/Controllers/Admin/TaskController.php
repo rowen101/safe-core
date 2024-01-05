@@ -116,7 +116,7 @@ class TaskController extends Controller
         if (!$task) {
             return response()->json(['message' => 'Task not found.']);
         }
-        
+
         if (empty($request->input('startdate'))) {
             $task->startdate = now(); // Set the start date to the current date and time
             $task->status = "On Going";
@@ -135,13 +135,13 @@ class TaskController extends Controller
 
     public function getSite()
     {
-        $data = Site::all();
+       // $data = Site::all();
 
-        // $sites = tbl_site::where('is_active', 1)
-        //     ->get();
+        $sites = Site::where('is_active', 1)
+            ->get();
 
-        //return response()->json(['message' => 'success', 'data' => $sites]);
-        return response()->json($data);
+        return response()->json(['message' => 'success', 'sites' => $sites]);
+        //return response()->json($sites);
     }
 
     public function getTask($id)

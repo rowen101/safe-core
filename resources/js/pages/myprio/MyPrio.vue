@@ -156,7 +156,7 @@ const getSite = () => {
         .get(`/api/getsite`)
         .then((response) => {
 
-            listsite.value = response.data;
+            listsite.value = response.data.sites;
         })
         .catch((error) => {
             console.log(error);
