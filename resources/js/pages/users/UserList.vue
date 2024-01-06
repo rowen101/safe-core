@@ -209,9 +209,9 @@ onMounted(() => {
         <div class="container-fluid">
             <div class="d-flex justify-content-between">
                 <div class="d-flex">
-                    <button @click="addUser" type="button" class="mb-2 btn btn-primary">
+                    <button @click="addUser" type="button" class="mb-2 btn btn-primary btn-sm">
                         <i class="fa fa-plus-circle mr-1"></i>
-                        Add New User
+                        New User
                     </button>
                     <div v-if="selectedUsers.length > 0">
                         <button @click="bulkDelete" type="button" class="ml-2 mb-2 btn btn-danger">
@@ -227,7 +227,8 @@ onMounted(() => {
             </div>
             <div class="card">
                 <div class="card-body">
-                    <table class="table table-bordered table-sm">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-sm">
                         <thead>
                             <tr>
                                 <th><input type="checkbox" v-model="selectAll" @change="selectAllUsers" /></th>
@@ -254,6 +255,8 @@ onMounted(() => {
                             </tr>
                         </tbody>
                     </table>
+                    </div>
+
                 </div>
             </div>
             <Bootstrap4Pagination :data="users" @pagination-change-page="getUsers" />

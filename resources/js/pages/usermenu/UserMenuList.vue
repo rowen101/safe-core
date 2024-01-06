@@ -184,7 +184,8 @@ User Menu
 
                 <div class="card-body">
 
-                    <table class="table table-bordered table-sm">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-sm">
                         <thead>
                             <tr>
                                 <th>
@@ -222,6 +223,7 @@ User Menu
                             </tr>
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
             <Bootstrap4Pagination
