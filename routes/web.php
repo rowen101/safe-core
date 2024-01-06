@@ -29,9 +29,9 @@ use App\Http\Controllers\Admin\UserMenuController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 // Route::get('/admin/dashboard', function () {
 //     return view('dashboard');
