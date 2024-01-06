@@ -269,13 +269,15 @@ onMounted(() => {
                                     </div>
 
                                 </div>
-                                <table class="table table-bordered table-sm">
+                                <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-sm">
+
                                     <thead>
                                         <tr>
                                             <th>Planed Date</th>
                                             <th>Total Task</th>
                                             <th>Complete</th>
-                                            <th>Reason</th>
+                                            <th>Status</th>
                                             <th>Remarks</th>
                                             <th>Percentage Task</th>
 
@@ -286,6 +288,7 @@ onMounted(() => {
                                         <ListItem v-for="item in listscount" :key="item.id" :item="item" />
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
                         </div>
                     </div>
