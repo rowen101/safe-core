@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import moment from "moment";
 import ListItem from "./ListItem.vue";
@@ -9,8 +9,9 @@ import Datepicker from 'vue3-datepicker'
 const authUserStore = useAuthUserStore();
 
 
-const fromDate = ref('');
-const toDate = ref('');
+
+
+
 const isloading = ref(false);
 //format date
 const getFormattedDate = () => {
@@ -67,28 +68,62 @@ const onFilterDate = () => {
     $("#FormModalfilterDate").modal("show");
 }
 
-const applyFilter =() => {
-    isloading.value = true;
-    // Make an API request using Axios
-      axios.get('/api/filter-vsc', {
-        start_date: fromDate.value,
-        end_date: toDate.value,
-      })
-      .then(response => {
-         isloading.value = false;
-        lists.value = response.data.dailyTasks;
-        listscount.value = response.data.TaskList;
-        console.log(response.data);
-      })
-      .catch(error => {
-        // Handle errors
-        console.error(error);
-      })
-      .finally(() => {
-        // Close the modal or perform any other actions
-        $('#FormModalfilterDate').modal('hide');
-      });
-}
+
+// Create a reactive form object
+
+
+const form = ref({
+  start_date: '',
+  end_date: ''
+});
+
+const fromDate = ref('');
+const toDate = ref('');
+
+// Watch for changes in Sdate and StrHours and update plandate
+watch([fromDate], () => {
+  const originalDate = new Date(fromDate.value);
+  const year = originalDate.getFullYear();
+  const month = String(originalDate.getMonth() + 1).padStart(2, '0');
+  const day = String(originalDate.getDate()).padStart(2, '0');
+  form.value.start_date = `${year}-${month}-${day}`;
+});
+
+// Watch for changes in Edate and EndHours and update planenddate
+watch([toDate], () => {
+  const originalDate = new Date(toDate.value);
+  const year = originalDate.getFullYear();
+  const month = String(originalDate.getMonth() + 1).padStart(2, '0');
+  const day = String(originalDate.getDate()).padStart(2, '0');
+  form.value.end_date = `${year}-${month}-${day}`;
+});
+
+const applyFilter = () => {
+//   alert(`${form.value.start_date} ${form.value.end_date}`);
+
+
+  isloading.value = true;
+
+
+  axios.get('/api/filter-vsc', {
+    start_date: form.value.start_date,
+    end_date: form.value.end_date
+  })
+    .then(response => {
+      isloading.value = false;
+      lists.value = response.data.dailyTasks;
+      listscount.value = response.data.TaskList;
+      console.log(response.data);
+    })
+    .catch(error => {
+      // Handle errors
+      console.error(error);
+    })
+    .finally(() => {
+      // Close the modal or perform any other actions
+      $('#FormModalfilterDate').modal('hide');
+    });
+};
 
 onMounted(() => {
     getItems();
@@ -168,7 +203,7 @@ onMounted(() => {
                                                 </div>
 
 
-                                              
+
                                                 <div>
                                                     <div v-if="task.task_lists &&
                                                             task.task_lists

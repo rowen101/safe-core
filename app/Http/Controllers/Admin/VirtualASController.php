@@ -25,7 +25,7 @@ class VirtualASController extends Controller
         ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
         ->with('taskLists')
         ->where('user_id', $userId)
-        ->whereBetween('tbl_dailytask.created_at', [$startOfWeek, $endOfWeek])
+        ->whereBetween('tbl_dailytask.taskdate', [$startOfWeek, $endOfWeek])
         ->select('tbl_dailytask.*', 'tbl_sites.site_name') // Corrected the select statement
         ->get();
 
@@ -122,35 +122,37 @@ class VirtualASController extends Controller
     {
         $userId = auth()->user()->id;
 
-        // Retrieve start and end dates from the request
-        $startDate = Carbon::parse($request->start_date);
-        $endDate = Carbon::parse($request->end_date)->endOfDay();
+    // Retrieve start and end dates from the request
+    $startDate = Carbon::parse($request->start_date);
+    $endDate = Carbon::parse($request->end_date)->endOfDay(); // Ensure it's the end of the day
 
-        $dailyTasks = Task::orderBy('taskdate', 'asc')
-            ->with('taskLists')
-            ->where('user_id', $userId)
-            ->whereBetween('taskdate', [$startDate, $endDate])
-            ->get();
+    $dailyTasks = Task::orderBy('tbl_dailytask.taskdate', 'asc')
+        ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
+        ->with('taskLists')
+        ->where('user_id', $userId)
+        ->whereBetween('tbl_dailytask.taskdate', [$startDate, $endDate])
+        ->select('tbl_dailytask.*', 'tbl_sites.site_name')
+        ->get();
 
-        $tasksList = Task::withCount([
-            'taskLists',
-            'taskLists as completed_task_count' => function ($query) {
-                $query->where('iscompleted', 1);
-            }
-        ])
-            ->where('user_id', $userId)
-            ->whereBetween('taskdate', [$startDate, $endDate])
-            ->orderBy('id', 'asc')
-            ->get();
+    $tasksList = Task::withCount([
+        'taskLists',
+        'taskLists as completed_task_count' => function ($query) {
+            $query->where('iscompleted', 1);
+        }
+    ])
+        ->where('user_id', $userId)
+        ->whereBetween('taskdate', [$startDate, $endDate])
+        ->orderBy('dailytask_id', 'asc')
+        ->get();
 
-        // Calculate the percentage of completed tasks
-        $tasksList->transform(function ($task) {
-            $task->percentage_completed = ($task->task_lists_count > 0)
-                ? ($task->completed_task_count / $task->task_lists_count) * 100
-                : 0;
-            return $task;
-        });
+    // Calculate the percentage of completed tasks
+    $tasksList->transform(function ($task) {
+        $task->percentage_completed = ($task->task_lists_count > 0)
+            ? ($task->completed_task_count / $task->task_lists_count) * 100
+            : 0;
+        return $task;
+    });
 
-        return response()->json(['dailyTasks' => $dailyTasks, 'TaskList' => $tasksList]);
+    return response()->json(['dailyTasks' => $dailyTasks, 'TaskList' => $tasksList]);
     }
 }

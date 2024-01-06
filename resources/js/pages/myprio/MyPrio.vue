@@ -184,7 +184,7 @@ const drop = async (id) => {
     // Show the SweetAlert2 dialog
     const result = await swal({
         title: "Are you sure?",
-        text: "You wanna Drop this task?",
+        text: "You wanna Drop this Todo?",
         icon: "warning",
         showCancelButton: true,
     });
@@ -320,7 +320,7 @@ const delTask = (item) => {
                 .get(`/api/dailytask/${item.dailytask_id}/tasks`)
                 .then((response) => {
                     listasks.value = response.data;
-                    toastr.success('Task successfull Deleted');
+                    toastr.success('Todo successfull Deleted');
                 })
                 .catch((error) => {
                     console.error("Error fetching tasks:", error);
@@ -393,7 +393,7 @@ const startTaskhandle = async (task) => {
             // Show a warning message using SweetAlert2
             swal.fire({
                 title: "Warning!",
-                text: "No tasks found. Please add tasks before starting your priority.",
+                text: "No todos found. Please add todo before starting your task.",
                 icon: "warning"
             });
             return; // Exit the function early
@@ -705,7 +705,7 @@ onMounted(() => {
 
                                         <div style="margin: 0.5%">
                                             <button :disabled="task.startdate !== null
-                                                " @click="drop(task.id)" type="button"
+                                                " @click="drop(task.dailytask_id)" type="button"
                                                 class="btn btn btn-danger float-right fa fa-trash" style="
                                                     margin-left: 10px;
                                                     margin-bottom: 5px;
