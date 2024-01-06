@@ -585,13 +585,13 @@ onMounted(() => {
                             </div>
                         </div>
                         <div v-else>
-                            <div class="card card-primary" v-for="task in lists" :key="task.dailytask_id">
+                            <div class="card card-primary" v-for="task in lists" :key="task.id">
                                 <div class="card-header bg-white">
                                     <h4 class="card-title">
                                         <a style="
                                                 color: #2b2b2b;
                                                 text-decoration: none;
-                                            " data-toggle="collapse" :href="'#collapse' + task.id">
+                                            " data-toggle="collapse" :href="'#collapse' + task.dailytask_id">
                                             <i class="fas fa-calendar-alt"></i>&nbsp;<b>{{
                                                 moment(task.taskdate).format(
                                                     "MMMM D, YYYY"
