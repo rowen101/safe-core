@@ -585,7 +585,7 @@ onMounted(() => {
                             </div>
                         </div>
                         <div v-else>
-                            <div class="card card-primary" v-for="task in lists" :key="task.id">
+                            <div class="card card-primary" v-for="task in lists" :key="task.dailytask_id">
                                 <div class="card-header bg-white">
                                     <h4 class="card-title">
                                         <a style="
@@ -621,7 +621,7 @@ onMounted(() => {
                                     </div>
                                 </div>
 
-                                <div :id="'collapse' + task.id" class="collapse" data-parent="#accordion">
+                                <div :id="'collapse' + task.dailytask_id" class="collapse" data-parent="#accordion">
                                     <div class="card-body">
                                         <div class="col-md-12">
                                             <div class="row">
