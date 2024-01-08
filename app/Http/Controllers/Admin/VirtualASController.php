@@ -37,7 +37,7 @@ class VirtualASController extends Controller
             }
         ])
             ->where('user_id', $userId)
-            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->whereBetween('taskdate', [$startOfWeek, $endOfWeek])
             ->orderBy('dailytask_id', 'asc')
             ->get();
 
@@ -124,7 +124,7 @@ class VirtualASController extends Controller
 
     // Retrieve start and end dates from the request
     $startDate = Carbon::parse($request->start_date);
-    $endDate = Carbon::parse($request->end_date)->endOfDay(); // Ensure it's the end of the day
+    $endDate = Carbon::parse($request->end_date); // Ensure it's the end of the day
 
     $dailyTasks = Task::orderBy('tbl_dailytask.taskdate', 'asc')
         ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')

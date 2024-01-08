@@ -19,7 +19,25 @@ const currentThemeMode = computed(() => {
     <div v-if="authUserStore.user.name !== ''" class="wrapper" :class="currentThemeMode">
         <AppNavbar />
         <SidebarLeft/>
+
         <div class="content-wrapper" style="min-height: 471.667px;">
+             <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">{{ $route.name }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">
+                            {{ $route.name }}
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
             <router-view></router-view>
         </div>
         <SidebarRight />

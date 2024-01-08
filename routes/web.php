@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\TaskController;
@@ -10,13 +11,14 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\UserMenuController;
 use App\Http\Controllers\Admin\VirtualASController;
+
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\MyClosePrioController;
-
 use App\Http\Controllers\Admin\DashboardStatController;
 use App\Http\Controllers\Admin\AppointmentStatusController;
-use App\Http\Controllers\Admin\UserMenuController;
+use App\Http\Controllers\Admin\MenuListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +98,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('/api/site', SiteController::class);
 
     //menu controller
+    Route::resource('/api/menulist',MenuListController::class);
+    Route::get('/api/GetParentId',[MenuListController::class,'GetParentId']);
+
     Route::resource('/api/menu', MenuController::class);
 
     //menu username

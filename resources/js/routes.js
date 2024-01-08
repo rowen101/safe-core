@@ -12,7 +12,7 @@ import MyPrio from './pages/myprio/MyPrio.vue';
 import MyVsc from './pages/myvsc/MyVsc.vue';
 import MyClosedPrio from './pages/mycloseprio/MyClosePrioList.vue';
 import UserMenu from './pages/usermenu/UserMenuList.vue';
-
+import Menu from './pages/menu/MenuList.vue';
 export default [
     {
         path: '/login',
@@ -26,55 +26,55 @@ export default [
     // },
     {
         path: '/admin/dashboard',
-        name: 'dashboard',
+        name: 'Dashboard',
         component: Dashboard,
     },
 
     {
         path: '/admin/appointments',
-        name: 'admin.appointments',
+        name: 'Appointments',
         component: ListAppointments,
     },
 
     {
         path: '/admin/appointments/create',
-        name: 'admin.appointments.create',
+        name: 'Appointments',
         component: AppointmentForm,
     },
 
     {
         path: '/admin/appointments/:id/edit',
-        name: 'admin.appointments.edit',
+        name: 'Appointments',
         component: AppointmentForm,
     },
 
     {
         path: '/admin/user',
-        name: 'admin.users',
+        name: 'User',
         component: UserList,
     },
 
     {
         path: '/admin/settings',
-        name: 'admin.settings',
+        name: 'Setting',
         component: UpdateSetting,
     },
 
     {
         path: '/admin/profile',
-        name: 'admin.profile',
+        name: 'Profile',
         component: UpdateProfile,
     },
 
     {
         path: '/admin/client',
-        name: 'admin.client',
+        name: 'Client',
         component: ClientList,
     },
 
     {
         path: '/admin/tech-recommendation',
-        name: 'admin.tech',
+        name: 'Tech Recomm',
         component: TechList,
     },
     {
@@ -97,6 +97,11 @@ export default [
         path: '/admin/usermenu',
         name: 'User Menu',
         component: UserMenu,
+    },
+    {
+        path: '/admin/menu',
+        name: 'Menu',
+        component: Menu,
     }
 
 ]

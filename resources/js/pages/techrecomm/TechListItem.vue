@@ -65,7 +65,7 @@ const getStatusHtml = (status) => {
         <td v-if="authUserStore.user.role === 'USER'">
 
 
-            <a href="#" @click.prevent="$emit('editUser', item)"
+        <a href="#" @click.prevent="$emit('editUser', item)"
                 ><i class="fa fa-eye"></i
             ></a>
 

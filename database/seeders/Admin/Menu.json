@@ -131,5 +131,17 @@
         "createdBy": 1,
         "created_at": null,
         "updated_at": null
+    },
+    {
+        "menu_id": 12,
+        "parent_id": 10,
+        "menuTitle": "Menu",
+        "menuIcon": "fas fas fa-bars",
+        "menuRoute": "/admin/menu",
+        "sortOrder": 210,
+        "isActive": 1,
+        "createdBy": 1,
+        "created_at": null,
+        "updated_at": null
     }
 ]

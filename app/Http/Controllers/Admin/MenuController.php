@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 
 class MenuController extends Controller
 {
@@ -60,11 +61,16 @@ class MenuController extends Controller
             return $menu;
         }
 
-
         public function usermenu()
         {
+            $data = Menu::query()
+            ->when(request('query'), function ($query, $searchQuery) {
+                $query->where('menu_title', 'like', "%{$searchQuery}%");
+            })
+            ->latest()
+            ->paginate(setting('pagination_limit'));
 
-
+            return $data;
         }
     /**
      * Show the form for creating a new resource.

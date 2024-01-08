@@ -9,8 +9,8 @@ class Menu extends Model
 {
     protected $guarded = [];
     protected $table = 'menus';
-
-    protected $fillable = ['id', 'menu_code', 'menu_title', 'description','parent_id','menu_icon','menu_route','sort_order','is_active'];
+    protected $primaryKey = 'menu_id';
+    protected $fillable = ['menu_id', 'menu_code', 'menu_title', 'description','parent_id','menu_icon','menu_route','sort_order','is_active'];
 
     public function submenus()
     {
@@ -26,6 +26,10 @@ class Menu extends Model
     {
         return $this->hasMany(UserMenu::class, 'menu_id', 'id');
     }
+
+    protected $casts = [
+        'created_at' => 'datetime'
+    ];
 
 
 }

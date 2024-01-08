@@ -528,31 +528,21 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="content-header">
+ <div class="content">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h5>
-                        {{
+   <div class="card">
+    <div class="card-header">
+        <div class="card-title">
+              {{
                             authUserStore.user.first_name +
                             " " +
                             authUserStore.user.last_name
                         }}
                         - My Prio
-                    </h5>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">My Prio</li>
-                    </ol>
-                </div>
-            </div>
         </div>
     </div>
+    <div class="card-body">
 
-    <div class="content">
-        <div class="container-fluid">
             <div class="col-md-12">
                 <div class="d-flex justify-content-between">
                     <div class="d-flex">
@@ -731,7 +721,11 @@ onMounted(() => {
                 </div>
             </div>
         </div>
+
+   </div>
+ </div>
     </div>
+
 
     <div class="modal fade" id="FormModal" data-backdrop="static" tabindex="-1" role="dialog"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">

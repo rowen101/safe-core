@@ -132,7 +132,7 @@ onMounted(() => {
 <template>
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2"></div>
+
             <div class="col-12">
                 <div class="card" id="captureVSCContainer">
                     <div class="card-header">
@@ -152,8 +152,7 @@ onMounted(() => {
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="content">
-                            <div class="container-fluid">
+
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
                                         <button @click="capturevsc" type="button" class="mb-2 btn btn-sm btn-success">
@@ -246,8 +245,7 @@ onMounted(() => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                  
                             </div>
                         </div>
                     </div>

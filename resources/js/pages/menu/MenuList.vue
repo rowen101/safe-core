@@ -4,7 +4,7 @@ import { ref, onMounted, reactive, watch } from "vue";
 import { Form, Field, useResetForm } from "vee-validate";
 import * as yup from "yup";
 import { useToastr } from "../../toastr.js";
-import UserListItem from "./TechListItem.vue";
+import MenuItemList from "./MenuItemList.vue";
 import { debounce } from "lodash";
 import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
@@ -12,20 +12,8 @@ import { ContentLoader } from 'vue-content-loader'
 
 const toastr = useToastr();
 const lists = ref({ data: [] });
-const tecstatus = ref([
-    {
-        name: 'PENDING',
-        value: 1
-    },
-    {
-        name: 'APPROVED',
-        value: 2,
-    },
-    {
-         name: 'CANCELLED',
-        value: 3,
-    }
-]);
+const menuOptionlist = ref({ data: [] });
+
 
 const isloading = ref(false);
 const editing = ref(false);
@@ -33,10 +21,12 @@ const formValues = ref();
 const form = ref(null);
 const authUserStore = useAuthUserStore();
 const selectedStatus = ref(null);
+const selectedParentID = ref();
+
 const getItems = (page = 1) => {
     isloading.value = true
     axios
-        .get(`/api/tech-recommendations?page=${page}`, {
+        .get(`/api/menulist?page=${page}`, {
             params: {
                 query: searchQuery.value,
             },
@@ -50,32 +40,42 @@ const getItems = (page = 1) => {
         });
 };
 
+const parentMenus =() =>{
+    axios
+        .get(`/api/GetParentId`)
+        .then((response) => {
+            menuOptionlist.value = response.data;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+}
 const createUserSchema = yup.object({
-    branch: yup.string().required(),
-    department: yup.string().required(),
-    user: yup.string().required(),
-    problem: yup.string().required(),
-    assconducted: yup.string().required(),
-    brand:yup.string().required(),
+    menu_title: yup.string().required(),
+    parent_id: yup.string().required(),
+    sort_order: yup.string().required(),
+    menu_icon: yup.string().required(),
+    menu_route: yup.string().required(),
+
 });
 
 const editUserSchema = yup.object({
-    branch: yup.string().required(),
-    department: yup.string().required(),
-    user: yup.string().required(),
-    problem: yup.string().required(),
-    assconducted: yup.string().required(),
-    brand: yup.string().required(),
+    menu_title: yup.string().required(),
+    parent_id: yup.string().required(),
+    sort_order: yup.string().required(),
+    menu_icon: yup.string().required(),
+    menu_route: yup.string().required(),
 });
 
 const createData = (values, { resetForm, setErrors }) => {
     axios
-        .post("/api/tech-recommendations", values)
+        .post("/api/menulist", values)
         .then((response) => {
             lists.value.data.unshift(response.data);
             $("#FormModal").modal("hide");
             resetForm();
-            toastr.success("Data created successfully!");
+            toastr.success("User created successfully!");
         })
         .catch((error) => {
             if (error.response.data.errors) {
@@ -84,66 +84,52 @@ const createData = (values, { resetForm, setErrors }) => {
         });
 };
 
+
 const addUser = () => {
     editing.value = false;
     $("#FormModal").modal("show");
 };
 
-const editData = (item) => {
+const editUser = (item) => {
+
     editing.value = true;
     form.value.resetForm();
     $("#FormModal").modal("show");
-    formValues.value = {
-        id: item.id,
-        recommnum: item.recommnum,
-        company: item.company,
-        branch: item.branch,
-        department: item.department,
-        warehouse: item.warehouse,
-        user: item.user,
-        problem: item.problem,
-        brand:item.brand,
-        model: item.model,
-        assettag: item.assettag,
-        serialnum: item.serialnum,
-        assconducted: item.assconducted,
-        recommendation: item.recommendation,
-        ceated_by: item.created_by,
+     formValues.value = {
+        menu_id: item.menu_id,
+        menu_title: item.menu_title,
+        menu_icon: item.menu_icon,
+        parent_id: item.parent_id,
+        menu_route: item.menu_route,
+        sort_order: item.sort_order,
+        is_active: item.is_active,
     };
+    selectedParentID.value = item.parent_id;
+
 };
 
 const viewItem = (item) => {
-    // editing.value = true;
-    // form.value.resetForm();
+    editing.value = true;
+    form.value.resetForm();
     $("#FormModalView").modal("show");
     formValues.value = {
-        id: item.id,
-        recommnum: item.recommnum,
-        company: item.company,
-        branch: item.branch,
-        department: item.department,
-        warehouse: item.warehouse,
-        user: item.user,
-        status: item.status.name,
-        problem: item.problem,
-        brand: item.brand,
-        model: item.model,
-        assettag: item.assettag,
-        serialnum: item.serialnum,
-        assconducted: item.assconducted,
-        recommendation: item.recommendation,
-        ceated_by: item.created_by,
+        menu_id: item.menu_id,
+        menu_title: item.menu_title,
+        menu_icon: item.menu_icon,
+        parent_id: item.parent_id,
+        menu_route: item.menu_route,
+        sort_order: item.sort_order,
+        is_active: item.is_active,
+
     };
 };
 
 const updateData = (values, { setErrors }) => {
     axios
-        .put("/api/tech-recommendations/" + formValues.value.id, values)
+        .post("/api/menulist", values)
         .then((response) => {
-            const index = lists.value.data.findIndex(
-                (item) => item.id === response.data.id
-            );
-            lists.value.data[index] = response.data;
+
+          getItems();
             $("#FormModal").modal("hide");
             toastr.success("successfully Updated!");
         })
@@ -184,7 +170,7 @@ const confirmItemDeletion = (id) => {
 
 const deleteUser = () => {
     axios
-        .delete(`/api/tech-recommendations/${userIdBeingDeleted.value}`)
+        .delete(`menulist/${userIdBeingDeleted.value}`)
         .then(() => {
             $("#deleteClientModal").modal("hide");
             toastr.success("Client deleted successfully!");
@@ -196,7 +182,7 @@ const deleteUser = () => {
 
 const bulkDelete = () => {
     axios
-        .delete("/api/tech-recommendations", {
+        .delete("menulist", {
             data: {
                 ids: selectedItems.value,
             },
@@ -234,6 +220,7 @@ watch(
 
 onMounted(() => {
     getItems();
+    parentMenus();
 });
 </script>
 
@@ -250,7 +237,7 @@ onMounted(() => {
                         class="mb-2 btn btn-primary"
                     >
                         <i class="fa fa-plus-circle mr-1"></i>
-                        Add TechRecom
+                        Add Menu
                     </button>
                     <div v-if="selectedItems.length > 0">
                         <button
@@ -289,31 +276,31 @@ onMounted(() => {
                     <table class="table table-bordered table-sm">
                         <thead>
                             <tr>
-                                <!-- <th>
+                                <th>
                                     <input
                                         type="checkbox"
                                         v-model="selectAll"
                                         @change="selectAllUsers"
                                     />
-                                </th> -->
+                                </th>
                                 <th style="width: 10px">#</th>
-                                <th>Technom</th>
-                                <th>User</th>
-                                <th>Branch</th>
-                                <th>Department</th>
-                                <th>Created</th>
-                                <th>Status</th>
-                                <th>Created Date</th>
+                                <th>Title</th>
+                                <th>Parent Menu</th>
+                                <th>Route</th>
+                                <th>Icon</th>
+                                <th>Sort</th>
+                                <th>Active</th>
+                                <th>Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody v-if="lists.data.length > 0">
-                            <UserListItem
+                            <MenuItemList
                                 v-for="(item, index) in lists.data"
                                 :key="item.id"
                                 :item="item"
                                 :index="index"
-                                @edit-user="editData"
+                                @edit-user="editUser"
                                 @show-item="viewItem"
                                 @confirm-user-deletion="confirmItemDeletion"
                                 @toggle-selection="toggleSelection"
@@ -338,7 +325,7 @@ onMounted(() => {
         </div>
     </div>
 
-   
+
 
     <div
         class="modal fade"
@@ -349,12 +336,12 @@ onMounted(() => {
         aria-labelledby="staticBackdropLabel"
         aria-hidden="true"
     >
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
-                        <span v-if="editing">Edit Tech Recom.</span>
-                        <span v-else>Add New Tech Recom.</span>
+                        <span v-if="editing">Edit Menu</span>
+                        <span v-else>Add Menu</span>
                     </h5>
                     <button
                         type="button"
@@ -377,213 +364,93 @@ onMounted(() => {
                     <div class="modal-body">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-12">
                                     <Field
                                         type="hidden"
                                         name="created_by"
                                         id="created_by"
                                         v-model="authUserStore.user.id"
                                     />
+
+
                                     <div class="form-group">
-                                        <label for="user">Branch</label>
+                                        <label for="user">Menu Title</label>
                                         <Field
-                                            name="branch"
+                                            name="menu_title"
                                             type="text"
                                             class="form-control"
                                             :class="{
-                                                'is-invalid': errors.branch,
+                                                'is-invalid': errors.menu_title,
                                             }"
-                                            id="branch"
+                                            id="menu_title"
                                             aria-describedby="nameHelp"
-                                            placeholder="Enter branch"
+                                            placeholder="Enter Menu title"
                                         />
                                         <span class="invalid-feedback">{{
-                                            errors.branch
+                                            errors.menu_title
                                         }}</span>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="department"
-                                            >Department</label
+                                            >Parent Menu</label
                                         >
-                                        <Field
-                                            name="department"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.department,
-                                            }"
-                                            id="department"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Department"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.department
-                                        }}</span>
+                                        <select  class="form-control" id="parentMenu" v-model="selectedParentID">
+                                                        <option value=0>None</option>
+                                                        <option v-for="parent in menuOptionlist" :key="parent.menu_id" :value="parent.menu_id">
+                                                            {{ parent.menu_title }}
+                                                        </option>
+                                                    </select>
+
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="warehouse">warehouse</label>
+                                        <label for="warehouse">Icon</label>
                                         <Field
-                                            name="warehouse"
+                                            name="menu_icon"
                                             type="text"
                                             class="form-control"
                                             :class="{
-                                                'is-invalid': errors.warehouse,
+                                                'is-invalid': errors.menu_icon,
                                             }"
-                                            id="email"
+                                            id="menu_icon"
                                             aria-describedby="nameHelp"
-                                            placeholder="Enter Warehouse"
+                                            placeholder="Enter Menu Icon"
                                         />
                                         <span class="invalid-feedback">{{
-                                            errors.warehouse
+                                            errors.menu_icon
                                         }}</span>
                                     </div>
                                     <div class="form-group">
-                                        <label for="user">User</label>
+                                        <label for="user">Sort</label>
                                         <Field
-                                            name="user"
+                                            name="sort_order"
                                             type="text"
                                             class="form-control"
                                             :class="{
-                                                'is-invalid': errors.user,
+                                                'is-invalid': errors.sort_order,
                                             }"
-                                            id="user"
+                                            id="sort_order"
                                             aria-describedby="nameHelp"
-                                            placeholder="Enter User"
+                                            placeholder="Enter Sort Order"
                                         />
                                         <span class="invalid-feedback">{{
-                                            errors.user
+                                            errors.sort_order
                                         }}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user">Active</label>
+                                        <Field
+
+                                            name="is_active"
+                                            type="checkbox"
+
+
+                                        />
+
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="brand">Brand</label>
-                                        <Field
-                                            name="brand"
-                                            type="text"
-                                            class="form-control"
-                                            id="brand"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter brand"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="model">Model</label>
-                                        <Field
-                                            name="model"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.model,
-                                            }"
-                                            id="model"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Model"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.model
-                                        }}</span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="assettag">Asset tag</label>
-                                        <Field
-                                            name="assettag"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.assettag,
-                                            }"
-                                            id="assettag"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Asset Tag"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.assettag
-                                        }}</span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="serialnum"
-                                            >Serial number</label
-                                        >
-                                        <Field
-                                            name="serialnum"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.serialnum,
-                                            }"
-                                            id="serialnum"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Serial Number"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.serialnum
-                                        }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label for="problem"
-                                            >Report Problem</label
-                                        >
-                                        <Field
-                                            name="problem"
-                                            as="textarea"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': errors.problem,
-                                            }"
-                                            id="problem"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Report problem"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.problem
-                                        }}</span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="assconducted"
-                                            >Assessment conducted</label
-                                        >
-                                        <Field
-                                            name="assconducted"
-                                            as="textarea"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid':
-                                                    errors.assconducted,
-                                            }"
-                                            id="assconducted"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Assessment conducted"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.assconducted
-                                        }}</span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="recommendation"
-                                            >Recommendation</label
-                                        >
-                                        <Field
-                                            name="recommendation"
-                                            as="textarea"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid':
-                                                    errors.recommendation,
-                                            }"
-                                            id="recommendation"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter Recommendation"
-                                        />
-                                        <span class="invalid-feedback">{{
-                                            errors.recommendation
-                                        }}</span>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>

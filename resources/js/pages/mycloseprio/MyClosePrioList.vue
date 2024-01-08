@@ -86,25 +86,13 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6"></div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">My Closed Prio</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <div class="content">
         <div class="container-fluid">
             <div class="card" id="capturePrioContainer">
                 <div class="card-header">
-                    <div class="card-title">
+
                         <div class="card-title">
                             <h5>
                                 {{
@@ -115,7 +103,7 @@ onMounted(() => {
                                 - My Closed Prio
                             </h5>
                         </div>
-                    </div>
+
                 </div>
                 <div class="card-body">
                         <ContentLoader

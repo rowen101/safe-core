@@ -14,7 +14,7 @@ const getmenu = () => {
         .get("/api/menu")
         .then((response) => {
             menulist.value = response.data;
-         
+
         })
         .catch((error) => {
             console.log(error);
