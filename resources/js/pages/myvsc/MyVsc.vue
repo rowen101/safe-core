@@ -5,12 +5,8 @@ import moment from "moment";
 import ListItem from "./ListItem.vue";
 import html2canvas from "html2canvas";
 import { ContentLoader } from "vue-content-loader";
-import Datepicker from 'vue3-datepicker'
+import Datepicker from "vue3-datepicker";
 const authUserStore = useAuthUserStore();
-
-
-
-
 
 const isloading = ref(false);
 //format date
@@ -66,63 +62,60 @@ const getItems = () => {
 
 const onFilterDate = () => {
     $("#FormModalfilterDate").modal("show");
-}
-
+};
 
 // Create a reactive form object
 
-
 const form = ref({
-  start_date: '',
-  end_date: ''
+    start_date: "",
+    end_date: "",
 });
 
-const fromDate = ref('');
-const toDate = ref('');
+const fromDate = ref("");
+const toDate = ref("");
 
 // Watch for changes in Sdate and StrHours and update plandate
 watch([fromDate], () => {
-  const originalDate = new Date(fromDate.value);
-  const year = originalDate.getFullYear();
-  const month = String(originalDate.getMonth() + 1).padStart(2, '0');
-  const day = String(originalDate.getDate()).padStart(2, '0');
-  form.value.start_date = `${year}-${month}-${day}`;
+    const originalDate = new Date(fromDate.value);
+    const year = originalDate.getFullYear();
+    const month = String(originalDate.getMonth() + 1).padStart(2, "0");
+    const day = String(originalDate.getDate()).padStart(2, "0");
+    form.value.start_date = `${year}-${month}-${day}`;
 });
 
 // Watch for changes in Edate and EndHours and update planenddate
 watch([toDate], () => {
-  const originalDate = new Date(toDate.value);
-  const year = originalDate.getFullYear();
-  const month = String(originalDate.getMonth() + 1).padStart(2, '0');
-  const day = String(originalDate.getDate()).padStart(2, '0');
-  form.value.end_date = `${year}-${month}-${day}`;
+    const originalDate = new Date(toDate.value);
+    const year = originalDate.getFullYear();
+    const month = String(originalDate.getMonth() + 1).padStart(2, "0");
+    const day = String(originalDate.getDate()).padStart(2, "0");
+    form.value.end_date = `${year}-${month}-${day}`;
 });
 
 const applyFilter = () => {
-//   alert(`${form.value.start_date} ${form.value.end_date}`);
+    //   alert(`${form.value.start_date} ${form.value.end_date}`);
 
+    isloading.value = true;
 
-  isloading.value = true;
-
-
-  axios.get('/api/filter-vsc', {
-    start_date: form.value.start_date,
-    end_date: form.value.end_date
-  })
-    .then(response => {
-      isloading.value = false;
-      lists.value = response.data.dailyTasks;
-      listscount.value = response.data.TaskList;
-      console.log(response.data);
-    })
-    .catch(error => {
-      // Handle errors
-      console.error(error);
-    })
-    .finally(() => {
-      // Close the modal or perform any other actions
-      $('#FormModalfilterDate').modal('hide');
-    });
+    axios
+        .get("/api/filter-vsc", {
+            start_date: form.value.start_date,
+            end_date: form.value.end_date,
+        })
+        .then((response) => {
+            isloading.value = false;
+            lists.value = response.data.dailyTasks;
+            listscount.value = response.data.TaskList;
+            console.log(response.data);
+        })
+        .catch((error) => {
+            // Handle errors
+            console.error(error);
+        })
+        .finally(() => {
+            // Close the modal or perform any other actions
+            $("#FormModalfilterDate").modal("hide");
+        });
 };
 
 onMounted(() => {
@@ -132,7 +125,6 @@ onMounted(() => {
 <template>
     <div class="content-header">
         <div class="container-fluid">
-
             <div class="col-12">
                 <div class="card" id="captureVSCContainer">
                     <div class="card-header">
@@ -152,30 +144,64 @@ onMounted(() => {
                         </div>
                     </div>
                     <div class="card-body">
-
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex">
-                                        <button @click="capturevsc" type="button" class="mb-2 btn btn-sm btn-success">
-                                            <i class="fa fa-camera"></i>
-                                        </button>
-                                    </div>
-                                    <div class="d-flex">
-                                        <i class="fa fa-filter mr-1" @click="onFilterDate"></i>
-                                    </div>
-                                </div>
-                                <ContentLoader v-if="isloading" viewBox="0 0 250 110">
-                                    <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
-                                    <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
-                                    <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
-                                    <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
-                                </ContentLoader>
-                                <div v-else class="row">
-
-
-                                    <div class="col-lg-3 col-6" v-for="task in lists" :key="task.id">
-
-
-<!-- <div :class="'small-box ' +
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex">
+                                <button
+                                    @click="capturevsc"
+                                    type="button"
+                                    class="mb-2 btn btn-sm btn-success"
+                                >
+                                    <i class="fa fa-camera"></i>
+                                </button>
+                            </div>
+                            <div class="d-flex">
+                                <i
+                                    class="fa fa-filter mr-1"
+                                    @click="onFilterDate"
+                                ></i>
+                            </div>
+                        </div>
+                        <ContentLoader v-if="isloading" viewBox="0 0 250 110">
+                            <rect
+                                x="0"
+                                y="0"
+                                rx="3"
+                                ry="3"
+                                width="250"
+                                height="10"
+                            />
+                            <rect
+                                x="0"
+                                y="20"
+                                rx="3"
+                                ry="3"
+                                width="250"
+                                height="10"
+                            />
+                            <rect
+                                x="0"
+                                y="40"
+                                rx="3"
+                                ry="3"
+                                width="250"
+                                height="10"
+                            />
+                            <rect
+                                x="0"
+                                y="60"
+                                rx="3"
+                                ry="3"
+                                width="250"
+                                height="10"
+                            />
+                        </ContentLoader>
+                        <div v-else class="row">
+                            <div
+                                class="col-lg-3 col-6"
+                                v-for="task in lists"
+                                :key="task.id"
+                            >
+                                <!-- <div :class="'small-box ' +
         (moment(task.taskdate).format(
             'MMMM D, YYYY'
         ) === formattedDate
@@ -187,65 +213,79 @@ onMounted(() => {
             15<em>March</em>
         </div>
     </div> -->
-                                        <div :class="'small-box ' +
-                                            (moment(task.taskdate).format(
-                                                'MMMM D, YYYY'
-                                            ) === formattedDate
-                                                ? 'bg-primary'
-                                                : 'bg-info')
-                                            ">
-                                            <div class="inner">
-                                                <div class="card text-center text-dark">
-                                                    <p class="mt-1 header-title">
-                                                        {{
-                                                            moment(
-                                                                task.taskdate
-                                                            ).format("dddd")
-                                                        }}
-                                                        <i class="far fa-calendar-alt"></i><br>
-                                                         {{
-                                                        moment(
-                                                            task.taskdate
-                                                        ).format("MMMM D, YYYY")
-                                                    }}<br>
-
-                                                    </p>
-                                                    <div class="border text-bold">  {{
-                                                       task.site_name
-                                                    }}</div>
-                                                </div>
-
-
-
-                                                <div>
-                                                    <div v-if="task.task_lists &&
-                                                            task.task_lists
-                                                                .length > 0
-                                                            ">
-                                                        <span class="badge">task</span>
-                                                        <ul class="list-group text-dark">
-                                                            <li class="list-group-item" v-for="taskList in task.task_lists"
-                                                                :key="taskList.id
-                                                                    ">
-                                                                <i :class="taskList.iscompleted ==
-                                                                        1
-                                                                        ? 'fa fa-check-circle'
-                                                                        : 'fa fa-circle'
-                                                                    " style="
-                                                                            font-size: 15px;
-                                                                        "></i>
-                                                                &nbsp;{{
-                                                                    taskList.task_name
-                                                                }}
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-
-                                                    <span v-else class="text-center">No task</span>
-                                                </div>
+                                <div
+                                    :class="
+                                        'small-box ' +
+                                        (moment(task.taskdate).format(
+                                            'MMMM D, YYYY'
+                                        ) === formattedDate
+                                            ? 'bg-primary'
+                                            : 'bg-info')
+                                    "
+                                >
+                                    <div class="inner">
+                                        <div class="card text-center text-dark">
+                                            <p class="mt-1 header-title">
+                                                {{
+                                                    moment(
+                                                        task.taskdate
+                                                    ).format("dddd")
+                                                }}
+                                                <i
+                                                    class="far fa-calendar-alt"
+                                                ></i
+                                                ><br />
+                                                {{
+                                                    moment(
+                                                        task.taskdate
+                                                    ).format("MMMM D, YYYY")
+                                                }}<br />
+                                            </p>
+                                            <div class="border text-bold">
+                                                {{ task.site_name }}
                                             </div>
                                         </div>
 
+                                        <div>
+                                            <div
+                                                v-if="
+                                                    task.task_lists &&
+                                                    task.task_lists.length > 0
+                                                "
+                                            >
+                                                <span >Todos</span>
+                                                <ul
+                                                    class="list-group text-dark"
+                                                >
+                                                    <li
+                                                        class="list-group-item"
+                                                        v-for="taskList in task.task_lists"
+                                                        :key="taskList.id"
+                                                    >
+                                                        <i
+                                                            :class="
+                                                                taskList.iscompleted ==
+                                                                1
+                                                                    ? 'fa fa-check-circle'
+                                                                    : 'fa fa-circle'
+                                                            "
+                                                            style="
+                                                                font-size: 15px;
+                                                            "
+                                                        ></i>
+                                                        &nbsp;{{
+                                                            taskList.task_name
+                                                        }}
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <span v-else class="text-center"
+                                                >No Todos</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -275,98 +315,144 @@ onMounted(() => {
                             <div class="container-fluid">
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex">
-                                        <button @click="capturehitrate" type="button" class="mb-2 btn btn-sm btn-success">
+                                        <button
+                                            @click="capturehitrate"
+                                            type="button"
+                                            class="mb-2 btn btn-sm btn-success"
+                                        >
                                             <i class="fa fa-camera"></i>
                                         </button>
                                     </div>
-
                                 </div>
                                 <div class="dispatch-table">
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-bordered table-hover table-sm"
+                                        >
+                                            <thead>
+                                                <tr>
+                                                    <th>Planed Date</th>
+                                                    <th>Total Task</th>
+                                                    <th>Complete</th>
+                                                    <th>Status</th>
+                                                    <th>Remarks</th>
+                                                    <th>Percentage Task</th>
+                                                </tr>
+                                            </thead>
 
-
-                                <div class="table-responsive">
-                        <table class="table table-bordered table-hover table-sm">
-
-                                    <thead>
-                                        <tr>
-                                            <th>Planed Date</th>
-                                            <th>Total Task</th>
-                                            <th>Complete</th>
-                                            <th>Status</th>
-                                            <th>Remarks</th>
-                                            <th>Percentage Task</th>
-
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <ListItem v-for="item in listscount" :key="item.id" :item="item" />
-                                    </tbody>
-                                </table>
+                                            <tbody>
+                                                <ListItem
+                                                    v-for="item in listscount"
+                                                    :key="item.id"
+                                                    :item="item"
+                                                />
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                                </div>
-                                 <div class="dispatch-list" v-for="item in listscount" :key="item.id" :item="item">
-
-                                   <div :class="[ { 'callout callout-success': item.remarks === 'HIT', 'callout callout-danger': item.remarks === 'MISS','callout': item.remarks === null }]">
-                                          <div class="list-field">
-                                                <span class="mb-1 dis"
-                                                    >Planed Date: </span
-                                                >
-                                                <span>{{moment(item.taskdate).format('MMMM D, YYYY')}}</span>
-                                            </div>
-                                             <div class="list-field">
-                                                <span class="mb-1 dis"
-                                                    >Total Task: </span
-                                                >
-                                                <span>{{ item.task_lists_count }}</span>
-                                            </div>
-                                            <div class="list-field">
-                                                <span class="mb-1 dis"
-                                                    >Completed Task: </span
-                                                >
-                                                <span>{{ item.completed_task_count }}</span>
-                                            </div>
-                                             <div class="list-field">
-                                                <span class="mb-1 dis"
-                                                    >Status: </span
-                                                >
-                                                <span><b>{{  item.status }}</b></span>
-                                            </div>
-                                             <div class="list-field">
-                                                <span class="mb-1 dis"
-                                                    >Remark: </span
-                                                >
-                                                <span
-                                                    :class="[
-                                                        'badge',
-                                                        item.remarks === 'HIT'
-                                                            ? 'bg-success'
-                                                            : 'bg-danger',
-                                                    ]"
-                                                >
-                                                    {{ item.remarks }}</span
-                                                >
-                                            </div>
-                                             <div class="list-field">
-                                                <span class="mb-1 dis"
-                                                    >Percentage Task: </span
-                                                >
-                                                <span :class="[
-        'badge',
-        {'bg-danger': item.percentage_completed >= 0 && item.percentage_completed <= 59},
-        {'bg-orange': item.percentage_completed > 60 && item.percentage_completed <= 90},
-        {'bg-success': item.percentage_completed === 100},
-        {'text-center': true}
-    ]">
-    {{ item.percentage_completed + '%' }}
-</span>
-                                            </div>
+                                <div
+                                    class="dispatch-list"
+                                    v-for="item in listscount"
+                                    :key="item.id"
+                                    :item="item"
+                                >
+                                    <div
+                                        :class="[
+                                            {
+                                                'callout callout-success':
+                                                    item.remarks === 'HIT',
+                                                'callout callout-danger':
+                                                    item.remarks === 'MISS',
+                                                callout: item.remarks === null,
+                                            },
+                                        ]"
+                                    >
+                                        <div class="list-field">
+                                            <span class="mb-1 dis"
+                                                >Planed Date:
+                                            </span>
+                                            <span>{{
+                                                moment(item.taskdate).format(
+                                                    "MMMM D, YYYY"
+                                                )
+                                            }}</span>
                                         </div>
-
-
-
-
-                                 </div>
+                                        <div class="list-field">
+                                            <span class="mb-1 dis"
+                                                >Total Task:
+                                            </span>
+                                            <span>{{
+                                                item.task_lists_count
+                                            }}</span>
+                                        </div>
+                                        <div class="list-field">
+                                            <span class="mb-1 dis"
+                                                >Completed Task:
+                                            </span>
+                                            <span>{{
+                                                item.completed_task_count
+                                            }}</span>
+                                        </div>
+                                        <div class="list-field">
+                                            <span class="mb-1 dis"
+                                                >Status:
+                                            </span>
+                                            <span
+                                                ><b>{{ item.status }}</b></span
+                                            >
+                                        </div>
+                                        <div class="list-field">
+                                            <span class="mb-1 dis"
+                                                >Remark:
+                                            </span>
+                                            <span
+                                                :class="[
+                                                    'badge',
+                                                    item.remarks === 'HIT'
+                                                        ? 'bg-success'
+                                                        : 'bg-danger',
+                                                ]"
+                                            >
+                                                {{ item.remarks }}</span
+                                            >
+                                        </div>
+                                        <div class="list-field">
+                                            <span class="mb-1 dis"
+                                                >Percentage Task:
+                                            </span>
+                                            <span
+                                                :class="[
+                                                    'badge',
+                                                    {
+                                                        'bg-danger':
+                                                            item.percentage_completed >=
+                                                                0 &&
+                                                            item.percentage_completed <=
+                                                                59,
+                                                    },
+                                                    {
+                                                        'bg-orange':
+                                                            item.percentage_completed >
+                                                                60 &&
+                                                            item.percentage_completed <=
+                                                                90,
+                                                    },
+                                                    {
+                                                        'bg-success':
+                                                            item.percentage_completed ===
+                                                            100,
+                                                    },
+                                                    { 'text-center': true },
+                                                ]"
+                                            >
+                                                {{
+                                                    item.percentage_completed +
+                                                    "%"
+                                                }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -374,15 +460,27 @@ onMounted(() => {
             </div>
         </div>
     </div>
-    <div class="modal fade" id="FormModalfilterDate" data-backdrop="static" tabindex="-1" role="dialog"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div
+        class="modal fade"
+        id="FormModalfilterDate"
+        data-backdrop="static"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+    >
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
                         <span>My VSC Summary Report</span>
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -398,14 +496,20 @@ onMounted(() => {
                             <datepicker v-model="toDate"></datepicker>
                         </div>
                     </div>
-
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
                         Cancel
                     </button>
-                    <button @click="applyFilter" type="button" class="btn btn-primary">
+                    <button
+                        @click="applyFilter"
+                        type="button"
+                        class="btn btn-primary"
+                    >
                         Generate
                     </button>
                 </div>
@@ -415,111 +519,129 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
-.header-title{
-    font:bold 15px Arial Black,Arial,Helvetica,sans-serif;
-text-align:center;
-color:#343A6B;
+.header-title {
+    font: bold 15px Arial Black, Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #343a6b;
 }
-    .fromtocenter {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        /* Optional: Add additional styling if needed */
-        margin-top: 5px; /* Adjust as needed */
-    }
+.fromtocenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Optional: Add additional styling if needed */
+    margin-top: 5px; /* Adjust as needed */
+}
 
-
-    /*
+/*
 calendar css
 Ref: http://codepen.io/chelovekov/pen/ayKAn
 */
 
 .calendar {
-margin:.25em 10px 10px 0;
-padding-top:5px;
-float:left;
-width:200px;
-background:#ededef;
-background:-webkit-gradient(linear,left top,left bottom,from(#ededef),to(#ccc));
-background:-moz-linear-gradient(top,#ededef,#ccc);
-font:bold 30px/60px Arial Black,Arial,Helvetica,sans-serif;
-text-align:center;
-color:#000;
-text-shadow:#fff 0 1px 0;
--moz-border-radius:3px;
--webkit-border-radius:3px;
-border-radius:3px;
-position:relative;
--moz-box-shadow:0 2px 2px #888;
--webkit-box-shadow:0 2px 2px #888;
-box-shadow:0 2px 2px #888
+    margin: 0.25em 10px 10px 0;
+    padding-top: 5px;
+    float: left;
+    width: 100px;
+    background: #ededef;
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(#ededef),
+        to(#ccc)
+    );
+    background: -moz-linear-gradient(top, #ededef, #ccc);
+    font: bold 30px/60px Arial Black, Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #000;
+    text-shadow: #fff 0 1px 0;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    position: relative;
+    -moz-box-shadow: 0 2px 2px #888;
+    -webkit-box-shadow: 0 2px 2px #888;
+    box-shadow: 0 2px 2px #888;
 }
 
 .calendar em {
-display:block;
-font:normal bold 11px/30px Arial,Helvetica,sans-serif;
-color:#fff;
-text-shadow:#00365a 0 -1px 0;
-background:#04599a;
-background:-webkit-gradient(linear,left top,left bottom,from(#04599a),to(#00365a));
-background:-moz-linear-gradient(top,#04599a,#00365a);
--moz-border-radius-bottomright:3px;
--webkit-border-bottom-right-radius:3px;
-border-bottom-right-radius:3px;
--moz-border-radius-bottomleft:3px;
--webkit-border-bottom-left-radius:3px;
-border-bottom-left-radius:3px;
-border-top:1px solid #00365a
+    display: block;
+    font: normal bold 11px/30px Arial, Helvetica, sans-serif;
+    color: #fff;
+    text-shadow: #00365a 0 -1px 0;
+    background: #04599a;
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(#04599a),
+        to(#00365a)
+    );
+    background: -moz-linear-gradient(top, #04599a, #00365a);
+    -moz-border-radius-bottomright: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top: 1px solid #00365a;
 }
 
-.calendar:before,.calendar:after {
-content:'';
-float:left;
-position:absolute;
-top:5px;
-width:8px;
-height:8px;
-background:#111;
-z-index:1;
--moz-border-radius:10px;
--webkit-border-radius:10px;
-border-radius:10px;
--moz-box-shadow:0 1px 1px #fff;
--webkit-box-shadow:0 1px 1px #fff;
-box-shadow:0 1px 1px #fff
+.calendar:before,
+.calendar:after {
+    content: "";
+    float: left;
+    position: absolute;
+    top: 5px;
+    width: 8px;
+    height: 8px;
+    background: #111;
+    z-index: 1;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    -moz-box-shadow: 0 1px 1px #fff;
+    -webkit-box-shadow: 0 1px 1px #fff;
+    box-shadow: 0 1px 1px #fff;
 }
 
 .calendar:before {
-left:11px
+    left: 11px;
 }
 
 .calendar:after {
-right:11px
+    right: 11px;
 }
 
-.calendar em:before,.calendar em:after {
-content:'';
-float:left;
-position:absolute;
-top:-5px;
-width:4px;
-height:14px;
-background:#dadada;
-background:-webkit-gradient(linear,left top,left bottom,from(#f1f1f1),to(#aaa));
-background:-moz-linear-gradient(top,#f1f1f1,#aaa);
-z-index:2;
--moz-border-radius:2px;
--webkit-border-radius:2px;
-border-radius:2px
+.calendar em:before,
+.calendar em:after {
+    content: "";
+    float: left;
+    position: absolute;
+    top: -5px;
+    width: 4px;
+    height: 14px;
+    background: #dadada;
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(#f1f1f1),
+        to(#aaa)
+    );
+    background: -moz-linear-gradient(top, #f1f1f1, #aaa);
+    z-index: 2;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
 }
 
 .calendar em:before {
-left:13px
+    left: 13px;
 }
 
 .calendar em:after {
-right:13px
+    right: 13px;
 }
 </style>

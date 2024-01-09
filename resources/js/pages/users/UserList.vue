@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { ref, onMounted, reactive, watch } from 'vue';
 import { Form, Field, useResetForm } from 'vee-validate';
-
+import { useAuthUserStore } from "../../stores/AuthUserStore";
 
 import * as yup from 'yup';
 import { useToastr } from '../../toastr.js';
@@ -10,6 +10,9 @@ import UserListItem from './UserListItem.vue';
 import { debounce } from 'lodash';
 import { Bootstrap4Pagination } from 'laravel-vue-pagination';
 
+
+
+const authUserStore = useAuthUserStore();
 const toastr = useToastr();
 const users = ref({'data': []});
 const editing = ref(false);
@@ -64,7 +67,26 @@ const editUserSchema = yup.object({
     }),
     gender: yup.string().required()
 });
+const listofuser = ref([]);
 
+const getOptionUsers = () => {
+    axios.get(`/api/users/userlist` )
+    .then((response) => {
+        listofuser.value = response.data;
+
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+}
+const Sitehead = (user, item) => {
+    axios.patch(`/api/users/${user.id}/change-sitehead`, {
+        sitehead_user_id: item,
+    })
+    .then(() => {
+        toastr.success('Sitehead changed successfully!');
+    })
+};
 const createUser = (values, { resetForm, setErrors }) => {
     axios.post('/api/users', values)
         .then((response) => {
@@ -184,6 +206,7 @@ watch(searchQuery, debounce(() => {
 
 onMounted(() => {
     getUsers();
+     getOptionUsers();
 });
 </script>
 
@@ -212,7 +235,9 @@ onMounted(() => {
             </div>
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive">
+
+                    <div class="dispatch-table">
+                        <div class="table-responsive">
                         <table class="table table-bordered table-hover table-sm">
                         <thead>
                             <tr>
@@ -241,6 +266,87 @@ onMounted(() => {
                         </tbody>
                     </table>
                     </div>
+                    </div>
+                    <div class="dispatch-list" v-for="(item, index) in users.data"
+                                :key="item.id" :index=index>
+                        <div class="card">
+                            <div class="card-body">
+ <div class="list-field">
+                                    <span class="mb-1 dis">Name:</span>
+                                    <span>{{
+                                       item.first_name +' '+ item.last_name
+                                    }}</span>
+                                </div>
+                                <div class="list-field">
+                                    <span class="mb-1 dis">Email:</span>
+                                    <span>{{
+                                       item.email
+                                    }}</span>
+                                </div>
+                                <div class="list-field">
+                                    <span class="mb-1 dis">Registered Date:</span>
+                                    <span>{{
+                                      item.formatted_created_at
+                                    }}</span>
+                                </div>
+                                <div class="list-field">
+                                    <span class="mb-1 dis">Site Head:</span>
+                                    <span> <select v-if="item.name != 'admin'" class="form-control" @change="Sitehead(item, $event.target.value)">
+                <option v-for="item in listofuser"  :value="item.id"  :selected="(item.sitehead_user_id === item.id)">{{ item.first_name +' '+ item.last_name }}</option>
+            </select></span>
+                                </div>
+                                <hr>
+                                 <div class="row">
+
+                                    <div class="col" v-if="authUserStore.user.role === 'ADMIN'">
+                                        <button
+                                            variant="primary"
+                                            class="btn btnsm btn-primary btn-block"
+                                            @click="
+                                                editUser(
+                                                    item
+                                                )
+                                            "
+                                        >
+                                            <i
+                                                class="fa fa-pencil-square-o"
+                                            ></i>
+                                            Edit
+                                        </button>
+                                        <button
+                                            class="btn btnsm btn-danger btn-block"
+                                            @click="confirmUserDeletion(item.id)"
+                                        >
+                                            <span class="text-light">
+                                                <i class="fa fa-trash-o"></i>
+                                                Remove
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                      <div class="col" v-if="authUserStore.user.role === 'USER'">
+                                        <button
+                                            variant="primary"
+                                            class="btn btnsm btn-primary btn-block"
+                                            @click="
+                                                editUser(
+                                                    item
+                                                )
+                                            "
+                                        >
+                                            <i
+                                                class="fa fa-pencil-square-o"
+                                            ></i>
+                                            Edit
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
 
                 </div>
             </div>

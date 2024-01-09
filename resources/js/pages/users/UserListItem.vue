@@ -51,7 +51,7 @@ const changeSitehead = (user, item) => {
         sitehead_user_id: item,
     })
     .then(() => {
-        toastr.success('Role changed successfully!');
+        toastr.success('Sitehead changed successfully!');
     })
 };
 const toggleSelection = () => {

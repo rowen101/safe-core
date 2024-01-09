@@ -8,23 +8,23 @@ import UserListItem from "./TechListItem.vue";
 import { debounce } from "lodash";
 import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
-import { ContentLoader } from 'vue-content-loader'
+import { ContentLoader } from "vue-content-loader";
 
 const toastr = useToastr();
 const lists = ref({ data: [] });
 const tecstatus = ref([
     {
-        name: 'PENDING',
-        value: 1
+        name: "PENDING",
+        value: 1,
     },
     {
-        name: 'APPROVED',
+        name: "APPROVED",
         value: 2,
     },
     {
-         name: 'CANCELLED',
+        name: "CANCELLED",
         value: 3,
-    }
+    },
 ]);
 
 const isloading = ref(false);
@@ -34,7 +34,7 @@ const form = ref(null);
 const authUserStore = useAuthUserStore();
 const selectedStatus = ref(null);
 const getItems = (page = 1) => {
-    isloading.value = true
+    isloading.value = true;
     axios
         .get(`/api/tech-recommendations?page=${page}`, {
             params: {
@@ -42,11 +42,10 @@ const getItems = (page = 1) => {
             },
         })
         .then((response) => {
-            isloading.value = false
+            isloading.value = false;
             lists.value = response.data;
             selectedItems.value = [];
             selectAll.value = false;
-
         });
 };
 
@@ -56,7 +55,7 @@ const createUserSchema = yup.object({
     user: yup.string().required(),
     problem: yup.string().required(),
     assconducted: yup.string().required(),
-    brand:yup.string().required(),
+    brand: yup.string().required(),
 });
 
 const editUserSchema = yup.object({
@@ -102,7 +101,7 @@ const editData = (item) => {
         warehouse: item.warehouse,
         user: item.user,
         problem: item.problem,
-        brand:item.brand,
+        brand: item.brand,
         model: item.model,
         assettag: item.assettag,
         serialnum: item.serialnum,
@@ -238,8 +237,6 @@ onMounted(() => {
 </script>
 
 <template>
-
-
     <div class="content">
         <div class="container-fluid">
             <div class="d-flex justify-content-between">
@@ -278,57 +275,189 @@ onMounted(() => {
             </div>
             <div class="card">
                 <div class="card-body">
-
                     <ContentLoader v-if="isloading" viewBox="0 0 250 110">
-                    <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
-                    <rect x="0" y="20" rx="3" ry="3" width="250" height="10" />
-                    <rect x="0" y="40" rx="3" ry="3" width="250" height="10" />
-                    <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />
+                        <rect
+                            x="0"
+                            y="0"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="10"
+                        />
+                        <rect
+                            x="0"
+                            y="20"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="10"
+                        />
+                        <rect
+                            x="0"
+                            y="40"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="10"
+                        />
+                        <rect
+                            x="0"
+                            y="60"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="10"
+                        />
                     </ContentLoader>
-                   <div class="table-responsive">
-                    <table class="table table-bordered table-sm">
-                        <thead>
-                            <tr>
-                                <!-- <th>
+                    <div class="dispatch-table">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <!-- <th>
                                     <input
                                         type="checkbox"
                                         v-model="selectAll"
                                         @change="selectAllUsers"
                                     />
                                 </th> -->
-                                <th style="width: 10px">#</th>
-                                <th>Technom</th>
-                                <th>User</th>
-                                <th>Branch</th>
-                                <th>Department</th>
-                                <th>Created</th>
-                                <th>Status</th>
-                                <th>Created Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="lists.data.length > 0">
-                            <UserListItem
-                                v-for="(item, index) in lists.data"
-                                :key="item.id"
-                                :item="item"
-                                :index="index"
-                                @edit-user="editData"
-                                @show-item="viewItem"
-                                @confirm-user-deletion="confirmItemDeletion"
-                                @toggle-selection="toggleSelection"
-                                :select-all="selectAll"
-                            />
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td colspan="9" class="text-center">
-                                    No results found...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                   </div>
+                                        <th style="width: 10px">#</th>
+                                        <th>Technom</th>
+                                        <th>User</th>
+                                        <th>Branch</th>
+                                        <th>Department</th>
+                                        <th>Created by</th>
+                                        <th>Status</th>
+                                        <th>Created Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="lists.data.length > 0">
+                                    <UserListItem
+                                        v-for="(item, index) in lists.data"
+                                        :key="item.id"
+                                        :item="item"
+                                        :index="index"
+                                        @edit-user="editData"
+                                        @show-item="viewItem"
+                                        @confirm-user-deletion="
+                                            confirmItemDeletion
+                                        "
+                                        @toggle-selection="toggleSelection"
+                                        :select-all="selectAll"
+                                    />
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td colspan="9" class="text-center">
+                                            No results found...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div
+                        class="dispatch-list"
+                        v-for="(item, index) in lists.data"
+                        :key="item.id"
+                        :item="item"
+                        :index="index"
+                    >
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="list-field">
+                                    <span class="mb-1 dis">Tech #:</span>
+                                    <span><b>{{
+                                       item.recommnum
+                                    }}</b></span>
+                                </div>
+                                <div class="list-field">
+                                    <span class="mb-1 dis">User:</span>
+                                    <span>{{
+                                     item.user
+                                    }}</span>
+                                </div>
+                                <div class="list-field">
+                                    <span class="mb-1 dis">Branch:</span>
+                                    <span>{{
+                                      item.branch
+                                    }}</span>
+                                </div>
+                                <div class="list-field">
+                                    <span class="mb-1 dis">Department:</span>
+                                    <span>{{
+                                       item.department
+                                    }}</span>
+                                </div>
+                                <div class="list-field">
+                                    <span class="mb-1 dis">Created:</span>
+                                    <span>{{
+                                        item.created_by
+                                    }}</span>
+                                </div>
+                                <div class="list-field">
+                                    <span class="mb-1 dis">Status:</span>
+                                   <span class="badge" :class="`badge-${item.status.color}`" >{{
+                                        item.status.name
+                                    }} </span>
+                                </div>
+                                <div class="list-field">
+                                    <span class="mb-1 dis">Created Date:</span>
+                                    <span>{{
+                                       item.created_at
+                                    }}</span>
+                                </div>
+                                <hr />
+                                <div class="row">
+
+                                    <div class="col" v-if="authUserStore.user.role === 'ADMIN'">
+                                        <button
+                                            variant="primary"
+                                            class="btn btnsm btn-primary btn-block"
+                                            @click="
+                                                editData(
+                                                    item
+                                                )
+                                            "
+                                        >
+                                            <i
+                                                class="fa fa-pencil-square-o"
+                                            ></i>
+                                            Edit
+                                        </button>
+                                        <button
+                                            class="btn btnsm btn-danger btn-block"
+                                            @click="confirmItemDeletion(item.id)"
+                                        >
+                                            <span class="text-light">
+                                                <i class="fa fa-trash-o"></i>
+                                                Remove
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                      <div class="col" v-if="authUserStore.user.role === 'USER'">
+                                        <button
+                                            variant="primary"
+                                            class="btn btnsm btn-primary btn-block"
+                                            @click="
+                                                editData(
+                                                    item
+                                                )
+                                            "
+                                        >
+                                            <i
+                                                class="fa fa-pencil-square-o"
+                                            ></i>
+                                            Edit
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <Bootstrap4Pagination
@@ -337,8 +466,6 @@ onMounted(() => {
             />
         </div>
     </div>
-
-
 
     <div
         class="modal fade"
@@ -644,7 +771,7 @@ onMounted(() => {
                         type="button"
                         class="btn btn-primary"
                     >
-                        Delete User
+                        Delete Record
                     </button>
                 </div>
             </div>

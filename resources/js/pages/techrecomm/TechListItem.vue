@@ -43,7 +43,7 @@ const getStatusHtml = (status) => {
                 item.status.name
             }} </span>
 
-            &nbsp;<span v-if="item.status.name === 'APPROVED'" class="badge" :class="`badge-${item.status.color}`" v-html="getStatusHtml(item.status)"></span>
+            <!-- &nbsp;<span v-if="item.status.name === 'APPROVED'" class="badge" :class="`badge-${item.status.color}`" v-html="getStatusHtml(item.status)"></span> -->
 
         </td>
 
