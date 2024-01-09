@@ -214,8 +214,8 @@ onMounted(() => {
 
 
     <div class="content">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between">
+        <div class="container-fluid ">
+            <div class="d-flex justify-content-between mb-2">
                 <div class="d-flex">
                     <button @click="addUser" type="button" class="mb-2 btn btn-primary btn-sm">
                         <i class="fa fa-plus-circle mr-1"></i>
