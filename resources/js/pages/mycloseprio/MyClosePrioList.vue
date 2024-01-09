@@ -10,17 +10,17 @@ import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import html2canvas from "html2canvas";
 import { ContentLoader } from "vue-content-loader";
-import Datepicker from 'vue3-datepicker'
-
+import Datepicker from "vue3-datepicker";
+import moment from 'moment';
 const isloading = ref(false);
 const toastr = useToastr();
 const lists = ref({ data: [] });
-const fromDate = ref('');
-const toDate = ref('');
+const fromDate = ref("");
+const toDate = ref("");
 const authUserStore = useAuthUserStore();
 
 const getItems = (page = 1) => {
-  isloading.value = true;
+    isloading.value = true;
     axios
         .get(`/api/mycloseprio?page=${page}`, {
             params: {
@@ -28,10 +28,8 @@ const getItems = (page = 1) => {
             },
         })
         .then((response) => {
-isloading.value = false;
+            isloading.value = false;
             lists.value = response.data;
-
-
         });
 };
 
@@ -49,28 +47,28 @@ const capturemycloseprio = () => {
 //filter datae
 const onFilterDate = () => {
     $("#FormModalfilterDate").modal("show");
-}
-const applyFilter =() => {
+};
+const applyFilter = () => {
     isloading.value = true;
     // Make an API request using Axios
-      axios.get('/api/filter-closeprio', {
-        start_date: fromDate.value,
-        end_date: toDate.value,
-      })
-      .then(response => {
-         isloading.value = false;
-        lists.value = response.data.dailyTasks;
-
-      })
-      .catch(error => {
-        // Handle errors
-        console.error(error);
-      })
-      .finally(() => {
-        // Close the modal or perform any other actions
-        $('#FormModalfilterDate').modal('hide');
-      });
-}
+    axios
+        .get("/api/filter-closeprio", {
+            start_date: fromDate.value,
+            end_date: toDate.value,
+        })
+        .then((response) => {
+            isloading.value = false;
+            lists.value = response.data.dailyTasks;
+        })
+        .catch((error) => {
+            // Handle errors
+            console.error(error);
+        })
+        .finally(() => {
+            // Close the modal or perform any other actions
+            $("#FormModalfilterDate").modal("hide");
+        });
+};
 const searchQuery = ref(null);
 
 watch(
@@ -86,66 +84,58 @@ onMounted(() => {
 </script>
 
 <template>
-
-
     <div class="content">
         <div class="container-fluid">
             <div class="card" id="capturePrioContainer">
                 <div class="card-header">
-
-                        <div class="card-title">
-                            <h5>
-                                {{
-                                    authUserStore.user.first_name +
-                                    " " +
-                                    authUserStore.user.last_name
-                                }}
-                                - My Closed Prio
-                            </h5>
-                        </div>
-
+                    <div class="card-title">
+                        <h5>
+                            {{
+                                authUserStore.user.first_name +
+                                " " +
+                                authUserStore.user.last_name
+                            }}
+                            - My Closed Prio
+                        </h5>
+                    </div>
                 </div>
                 <div class="card-body">
-                        <ContentLoader
-                                v-if="isloading"
-                                viewBox="0 0 250 110"
-                            >
-                                <rect
-                                    x="0"
-                                    y="0"
-                                    rx="3"
-                                    ry="3"
-                                    width="250"
-                                    height="10"
-                                />
-                                <rect
-                                    x="0"
-                                    y="20"
-                                    rx="3"
-                                    ry="3"
-                                    width="250"
-                                    height="10"
-                                />
-                                <rect
-                                    x="0"
-                                    y="40"
-                                    rx="3"
-                                    ry="3"
-                                    width="250"
-                                    height="10"
-                                />
-                                <rect
-                                    x="0"
-                                    y="60"
-                                    rx="3"
-                                    ry="3"
-                                    width="250"
-                                    height="10"
-                                />
-                            </ContentLoader>
+                    <ContentLoader v-if="isloading" viewBox="0 0 250 110">
+                        <rect
+                            x="0"
+                            y="0"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="10"
+                        />
+                        <rect
+                            x="0"
+                            y="20"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="10"
+                        />
+                        <rect
+                            x="0"
+                            y="40"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="10"
+                        />
+                        <rect
+                            x="0"
+                            y="60"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="10"
+                        />
+                    </ContentLoader>
                     <div v-else class="content">
                         <div class="container-fluid">
-
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex">
                                     <button
@@ -157,49 +147,115 @@ onMounted(() => {
                                     </button>
                                 </div>
                                 <div class="d-flex">
-                                    <i  @click="onFilterDate" class="fa fa-filter mr-1"></i>
+                                    <i
+                                        @click="onFilterDate"
+                                        class="fa fa-filter mr-1"
+                                    ></i>
                                 </div>
                             </div>
 
                             <div>
-                                <div class="table-responsive">
-                                    <table
-                                        class="table table-bordered table-sm table-striped table-hover"
-                                    >
-                                        <thead>
-                                            <tr>
-                                                <th>Task</th>
-                                                <th>Planned Date</th>
+                                <div class="dispatch-table">
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-bordered table-sm table-striped table-hover"
+                                        >
+                                            <thead>
+                                                <tr>
+                                                    <th>Task</th>
+                                                    <th>Planned Date</th>
 
-                                                <th>Start Date</th>
-                                                <th>End Date</th>
-                                                <th>Task</th>
+                                                    <th>Start Date</th>
+                                                    <th>End Date</th>
+                                                    <th>Task</th>
 
-                                                <th>Status</th>
-                                                <th>Remark</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody v-if="lists.data.length > 0">
-                                            <MyClosePrioListItem
-                                                v-for="(
-                                                    item, index
-                                                ) in lists.data"
-                                                :key="item.id"
-                                                :item="item"
-                                                :index="index"
-                                            />
-                                        </tbody>
-                                        <tbody v-else>
-                                            <tr>
-                                                <td
-                                                    colspan="9"
-                                                    class="text-center"
+                                                    <th>Status</th>
+                                                    <th>Remark</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody v-if="lists.data.length > 0">
+                                                <MyClosePrioListItem
+                                                    v-for="(
+                                                        item, index
+                                                    ) in lists.data"
+                                                    :key="item.id"
+                                                    :item="item"
+                                                    :index="index"
+                                                />
+                                            </tbody>
+                                            <tbody v-else>
+                                                <tr>
+                                                    <td
+                                                        colspan="9"
+                                                        class="text-center"
+                                                    >
+                                                        No results found...
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="dispatch-list first-letter:shadow"
+                                    v-for="(item, index) in lists.data"
+                                    :key="item.id"
+                                    :item="item"
+                                    :index="index"
+                                >
+                                    <div class="card">
+                                        <div class="card-body">
+
+                                            <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Task Date:</span
                                                 >
-                                                    No results found...
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                <span>{{
+                                                    moment(
+                                                        item.taskdate
+                                                    ).format("MMMM D, YYYY")
+                                                }}</span>
+                                            </div>
+                                            <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Start Date:</span
+                                                >
+                                                <span>{{
+                                                    item.startdate
+                                                }}</span>
+                                            </div>
+                                            <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >End Date:</span
+                                                >
+                                                <span>{{ item.enddate }}</span>
+                                            </div>
+                                            <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Task Type:</span
+                                                >
+                                                <span>{{
+                                                    item.tasktype.listtask
+                                                }}</span>
+                                            </div>
+                                            <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Status:</span
+                                                >
+                                                <span
+                                                    :class="[
+                                                        'badge',
+                                                        item.remarks === 'HIT'
+                                                            ? 'bg-success'
+                                                            : 'bg-danger',
+                                                    ]"
+                                                >
+                                                    {{ item.remarks }}</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -213,17 +269,27 @@ onMounted(() => {
         </div>
     </div>
 
-
-
-<div class="modal fade" id="FormModalfilterDate" data-backdrop="static" tabindex="-1" role="dialog"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div
+        class="modal fade"
+        id="FormModalfilterDate"
+        data-backdrop="static"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+    >
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
                         <span>My Close Prio</span>
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -239,30 +305,35 @@ onMounted(() => {
                             <datepicker v-model="toDate"></datepicker>
                         </div>
                     </div>
-
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
                         Cancel
                     </button>
-                    <button @click="applyFilter" type="button" class="btn btn-primary">
+                    <button
+                        @click="applyFilter"
+                        type="button"
+                        class="btn btn-primary"
+                    >
                         Generate
                     </button>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped>
-    .fromtocenter {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        /* Optional: Add additional styling if needed */
-        margin-top: 5px; /* Adjust as needed */
-    }
+.fromtocenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Optional: Add additional styling if needed */
+    margin-top: 5px; /* Adjust as needed */
+}
 </style>

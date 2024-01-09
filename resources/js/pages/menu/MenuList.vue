@@ -237,7 +237,7 @@ onMounted(() => {
                         class="mb-2 btn btn-primary"
                     >
                         <i class="fa fa-plus-circle mr-1"></i>
-                        Add Menu
+                        Menu
                     </button>
                     <div v-if="selectedItems.length > 0">
                         <button

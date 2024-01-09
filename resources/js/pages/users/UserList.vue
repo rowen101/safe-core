@@ -188,7 +188,7 @@ onMounted(() => {
 </script>
 
 <template>
-   
+
 
     <div class="content">
         <div class="container-fluid">
@@ -196,7 +196,7 @@ onMounted(() => {
                 <div class="d-flex">
                     <button @click="addUser" type="button" class="mb-2 btn btn-primary btn-sm">
                         <i class="fa fa-plus-circle mr-1"></i>
-                        New User
+                        User
                     </button>
                     <div v-if="selectedUsers.length > 0">
                         <button @click="bulkDelete" type="button" class="ml-2 mb-2 btn btn-danger">

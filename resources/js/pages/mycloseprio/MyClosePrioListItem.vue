@@ -5,6 +5,7 @@ import { useToastr } from "../../toastr.js";
 import axios from "axios";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import DOMPurify from 'dompurify';
+import moment from 'moment';
 const toastr = useToastr();
 const authUserStore = useAuthUserStore();
 const props = defineProps({
@@ -16,7 +17,7 @@ const props = defineProps({
 <template>
     <tr>
          <td>{{ index + 1 }}</td>
-        <td>{{ item.taskdate }}</td>
+        <td>{{moment(item.taskdate).format('MMMM D, YYYY')}}</td>
         <td>{{ item.startdate }}</td>
         <td>{{ item.enddate }}</td>
         <td>{{ item.tasktype.listtask }}</td>

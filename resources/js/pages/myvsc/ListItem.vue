@@ -41,7 +41,7 @@ const props = defineProps({
         'bg-success': item.percentage_completed === 100,
         'text-center': true
         }">
-        {{ item.percentage_completed}} %
+        {{ item.percentage_completed + '%'}} 
         </td>
     </tr>
 </template>

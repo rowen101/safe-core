@@ -548,7 +548,7 @@ onMounted(() => {
                     <div class="d-flex">
                         <button @click="addUser" type="button" class="mb-2 btn btn-primary">
                             <i class="fa fa-plus-circle mr-1"></i>
-                            New Task
+                            Task
                         </button>
                     </div>
                     <div class="d-flex">
@@ -876,7 +876,9 @@ onMounted(() => {
                                     <rect x="0" y="0" rx="3" ry="3" width="250" height="50" />
                                 </ContentLoader>
                                 <ul class="list-group" v-for="item in listasks" :key="item.id">
-                                    <li v-if="item.iscompleted !== 1" class="list-group-item mt-2 ">
+                                    <li v-if="item.iscompleted !== 1" class="list-group-item mt-2">
+
+
                                         <div class="d-flex justify-content-between">
                                             <div class="d-flex">
                                                 <i @click="handleCompleteTask(item)" v-if="startdate" :class="{
@@ -914,8 +916,10 @@ onMounted(() => {
                                     </button>
                                 </li>
                                 <div v-if="showList">
+
                                     <ul class="list-group" v-for="item in listasks" :key="item.id">
                                         <li v-if="item.iscompleted === 1" class="list-group-item mt-2">
+
                                             <i :class="{
                                                 'cursor-pointer mr-2': true,
                                                 'fa fa-check-circle':
@@ -1020,18 +1024,18 @@ a {
 .nav-tabs .nav-link {
     border: 1px solid transparent;
     border-radius: 0;
-    color: #2196F3;
+    color: #fff;
     transition: background-color 0.3s;
 }
 
 .nav-tabs .nav-link.active {
-    background-color: #2196F3;
+  background-color: #0069D9;
     color: #fff;
     border-color: #2196F3;
 }
 
 .nav-tabs .nav-link:hover {
-    background-color: #0069D9;
+     background-color: #0069D9;
     border-color: #0069D9;
 }
 .image-container {

@@ -53,7 +53,7 @@ onMounted(() => {
             }}</span>
         </a>
 
-        <div class="sidebar">
+        <div class="sidebar" style="overflow-y: auto; margin: 0px -8px; width: 249px; height: 527px;">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <!-- <div v-if="authUserStore.user.avatar" class="image">
                     <img

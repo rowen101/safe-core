@@ -15,7 +15,6 @@ const formValues = ref();
 const form = ref(null);
 const modalname = ref(null);
 
-
 const selectedMenus = ref([]);
 const getUsers = (page = 1) => {
     axios
@@ -30,8 +29,6 @@ const getUsers = (page = 1) => {
             selectAll.value = false;
         });
 };
-
-
 
 const createUser = (values, { resetForm, setErrors }) => {
     axios
@@ -55,8 +52,8 @@ const addUser = () => {
 };
 
 const editUser = (user) => {
-   axios
-        .get("/api/usermenu",{
+    axios
+        .get("/api/usermenu", {
             params: {
                 user_id: user.id, // replace with the actual user ID
             },
@@ -82,26 +79,24 @@ const editUser = (user) => {
         formValues.value.first_name + " " + formValues.value.last_name;
 };
 
-
-
 const handleSubmit = () => {
-   // Prepare the data to be sent to your API
-        const postData = {
-            user_id : formValues.value.id,
-            menu_id: selectedMenus.value,
-            // other data properties
-        };
+    // Prepare the data to be sent to your API
+    const postData = {
+        user_id: formValues.value.id,
+        menu_id: selectedMenus.value,
+        // other data properties
+    };
 
-        // Make the API call using your preferred method (Axios, fetch, etc.)
-        // Example using Axios:
-        axios.post('/api/usermenu', postData)
-            .then(response => {
-                toastr.success("User Menu Save successfully!");
-            })
-            .catch(error => {
-                setErrors(error.response.data.errors);
-            });
-
+    // Make the API call using your preferred method (Axios, fetch, etc.)
+    // Example using Axios:
+    axios
+        .post("/api/usermenu", postData)
+        .then((response) => {
+            toastr.success("User Menu Save successfully!");
+        })
+        .catch((error) => {
+            setErrors(error.response.data.errors);
+        });
 };
 
 const searchQuery = ref(null);
@@ -123,12 +118,7 @@ const confirmUserDeletion = (id) => {
     $("#deleteUserModal").modal("show");
 };
 
-
-
-
-
 const menulist = ref({ data: [] });
-
 
 watch(
     searchQuery,
@@ -143,71 +133,66 @@ onMounted(() => {
 </script>
 
 <template>
-    
     <div class="content">
         <div class="container-fluid">
-
             <div class="card">
                 <div class="card-header">
-                        <div class="card-title">
-                            <h5>
-User Menu
-                            </h5>
-                        </div>
-
-                        <div class="card-tools">
-
-                    <input
-                        type="text"
-                        v-model="searchQuery"
-                        class="form-control"
-                        placeholder="Search..."
-                    />
-
-                        </div>
+                    <div class="card-title">
+                        <h5>User Menu</h5>
                     </div>
 
+                    <div class="card-tools">
+                        <input
+                            type="text"
+                            v-model="searchQuery"
+                            class="form-control"
+                            placeholder="Search..."
+                        />
+                    </div>
+                </div>
+
                 <div class="card-body">
-
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover table-sm">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input
-                                        type="checkbox"
-                                        v-model="selectAll"
-                                        @change="selectAllUsers"
-                                    />
-                                </th>
-                                <th style="width: 10px">#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Registered Date</th>
+                        <table
+                            class="table table-bordered table-hover table-sm"
+                        >
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input
+                                            type="checkbox"
+                                            v-model="selectAll"
+                                            @change="selectAllUsers"
+                                        />
+                                    </th>
+                                    <th style="width: 10px">#</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Registered Date</th>
 
-                                <th>Options</th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="users.data.length > 0">
-                            <UserMenuListItem
-                                v-for="(user, index) in users.data"
-                                :key="user.id"
-                                :user="user"
-                                :index="index"
-                                @edit-user="editUser"
-                                @confirm-user-deletion="confirmUserDeletion"
-                                @toggle-selection="toggleSelection"
-                                :select-all="selectAll"
-                            />
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td colspan="7" class="text-center">
-                                    No results found...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody v-if="users.data.length > 0">
+                                <UserMenuListItem
+                                    v-for="(user, index) in users.data"
+                                    :key="user.id"
+                                    :user="user"
+                                    :index="index"
+                                    @edit-user="editUser"
+                                    @confirm-user-deletion="confirmUserDeletion"
+                                    @toggle-selection="toggleSelection"
+                                    :select-all="selectAll"
+                                />
+                            </tbody>
+                            <tbody v-else>
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        No results found...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -247,64 +232,72 @@ User Menu
                 <Form
                     ref="form"
                     @submit="handleSubmit"
-
                     :initial-values="formValues"
                 >
                     <div class="modal-body">
-                     <table class="table table-sm">
-    <tr>
-        <td class="text-bold">Menu Name</td>
-    </tr>
-    <tr v-for="item in menulist" :key="item.menu_id">
-        <td colspan="5">
-            <div class="custom-control custom-checkbox">
-                <input
-                    class="custom-control-input"
-                    type="checkbox"
-                    v-model="selectedMenus"
-                    :value="item.menu_id"
-                    :id="'menu_id_' + item.menu_id"
-                    :checked="item.hasAccess"
-
-                />
-                <label
-                    :for="'menu_id_' + item.menu_id"
-                    class="custom-control-label"
-
-                >
-                    {{ item.menu_title }}
-                </label>
-            </div>
-            <table
-                class="table table-sm"
-                v-if="item.submenus && item.submenus.length > 0"
-            >
-                <tr v-for="submenu in item.submenus" :key="submenu.id">
-                    <td class="text-danger">
-                        <div class="custom-control custom-checkbox">
-                            <input
-                                class="custom-control-input"
-                                type="checkbox"
-                                v-model="selectedMenus"
-                                :value="submenu.menu_id"
-                                :id="'menu_id_' + submenu.menu_id"
-
-
-                            />
-                            <label
-                                :for="'menu_id_' + submenu.menu_id"
-                                class="custom-control-label"
-
-                            >
-                                {{ submenu.menu_title }}
-                            </label>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+                        <table class="table table-sm">
+                            <tr>
+                                <td class="text-bold">Menu Name</td>
+                            </tr>
+                            <tr v-for="item in menulist" :key="item.menu_id">
+                                <td colspan="5">
+                                    <div class="custom-control custom-checkbox">
+                                        <input
+                                            class="custom-control-input"
+                                            type="checkbox"
+                                            v-model="selectedMenus"
+                                            :value="item.menu_id"
+                                            :id="'menu_id_' + item.menu_id"
+                                            :checked="item.hasAccess"
+                                        />
+                                        <label
+                                            :for="'menu_id_' + item.menu_id"
+                                            class="custom-control-label"
+                                        >
+                                            {{ item.menu_title }}
+                                        </label>
+                                    </div>
+                                    <table
+                                        class="table table-sm"
+                                        v-if="
+                                            item.submenus &&
+                                            item.submenus.length > 0
+                                        "
+                                    >
+                                        <tr
+                                            v-for="submenu in item.submenus"
+                                            :key="submenu.id"
+                                        >
+                                            <td class="text-danger">
+                                                <div
+                                                    class="custom-control custom-checkbox"
+                                                >
+                                                    <input
+                                                        class="custom-control-input"
+                                                        type="checkbox"
+                                                        v-model="selectedMenus"
+                                                        :value="submenu.menu_id"
+                                                        :id="
+                                                            'menu_id_' +
+                                                            submenu.menu_id
+                                                        "
+                                                    />
+                                                    <label
+                                                        :for="
+                                                            'menu_id_' +
+                                                            submenu.menu_id
+                                                        "
+                                                        class="custom-control-label"
+                                                    >
+                                                        {{ submenu.menu_title }}
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <div class="modal-footer">
                         <button

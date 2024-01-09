@@ -196,7 +196,7 @@ onMounted(() => {
                                             ">
                                             <div class="inner">
                                                 <div class="card text-center text-dark">
-                                                    <p class="mt-1">
+                                                    <p class="mt-1 header-title">
                                                         {{
                                                             moment(
                                                                 task.taskdate
@@ -245,7 +245,7 @@ onMounted(() => {
                                                 </div>
                                             </div>
                                         </div>
-                                  
+
                             </div>
                         </div>
                     </div>
@@ -281,6 +281,9 @@ onMounted(() => {
                                     </div>
 
                                 </div>
+                                <div class="dispatch-table">
+
+
                                 <div class="table-responsive">
                         <table class="table table-bordered table-hover table-sm">
 
@@ -301,6 +304,69 @@ onMounted(() => {
                                     </tbody>
                                 </table>
                                 </div>
+                                </div>
+                                 <div class="dispatch-list" v-for="item in listscount" :key="item.id" :item="item">
+
+                                   <div :class="[ { 'callout callout-success': item.remarks === 'HIT', 'callout callout-danger': item.remarks === 'MISS','callout': item.remarks === null }]">
+                                          <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Planed Date: </span
+                                                >
+                                                <span>{{moment(item.taskdate).format('MMMM D, YYYY')}}</span>
+                                            </div>
+                                             <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Total Task: </span
+                                                >
+                                                <span>{{ item.task_lists_count }}</span>
+                                            </div>
+                                            <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Completed Task: </span
+                                                >
+                                                <span>{{ item.completed_task_count }}</span>
+                                            </div>
+                                             <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Status: </span
+                                                >
+                                                <span><b>{{  item.status }}</b></span>
+                                            </div>
+                                             <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Remark: </span
+                                                >
+                                                <span
+                                                    :class="[
+                                                        'badge',
+                                                        item.remarks === 'HIT'
+                                                            ? 'bg-success'
+                                                            : 'bg-danger',
+                                                    ]"
+                                                >
+                                                    {{ item.remarks }}</span
+                                                >
+                                            </div>
+                                             <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Percentage Task: </span
+                                                >
+                                                <span :class="[
+        'badge',
+        {'bg-danger': item.percentage_completed >= 0 && item.percentage_completed <= 59},
+        {'bg-orange': item.percentage_completed > 60 && item.percentage_completed <= 90},
+        {'bg-success': item.percentage_completed === 100},
+        {'text-center': true}
+    ]">
+    {{ item.percentage_completed + '%' }}
+</span>
+                                            </div>
+                                        </div>
+
+
+
+
+                                 </div>
                             </div>
                         </div>
                     </div>
@@ -349,6 +415,12 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
+.header-title{
+    font:bold 15px Arial Black,Arial,Helvetica,sans-serif;
+text-align:center;
+color:#343A6B;
+}
     .fromtocenter {
         display: flex;
         flex-direction: column;

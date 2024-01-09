@@ -250,7 +250,7 @@ onMounted(() => {
                         class="mb-2 btn btn-primary"
                     >
                         <i class="fa fa-plus-circle mr-1"></i>
-                        Add TechRecom
+                        TechRecom
                     </button>
                     <div v-if="selectedItems.length > 0">
                         <button
@@ -338,7 +338,7 @@ onMounted(() => {
         </div>
     </div>
 
-   
+
 
     <div
         class="modal fade"
