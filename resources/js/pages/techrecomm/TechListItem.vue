@@ -37,7 +37,7 @@ const getStatusHtml = (status) => {
         <td>{{ item.user }}</td>
         <td>{{ item.branch }}</td>
         <td>{{ item.department }}</td>
-        <td>{{ item.created_by }}</td>
+        <td>{{ item.created_user }}</td>
         <td>
             <span class="badge" :class="`badge-${item.status.color}`" >{{
                 item.status.name

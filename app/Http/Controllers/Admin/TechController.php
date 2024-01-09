@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\TechRecomStatus;
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\TechRecomm;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Enums\TechRecomStatus;
+use App\Http\Controllers\Controller;
+
 class TechController extends Controller
 {
     /**
@@ -23,26 +25,31 @@ class TechController extends Controller
         })
         ->latest()
         ->paginate(setting('pagination_limit'))
-        ->through(fn ($techRecomStatus)=>[
-            'id' => $techRecomStatus->id,
-            'recommnum'=> $techRecomStatus->recommnum,
-            'user' => $techRecomStatus->user,
-            'model' => $techRecomStatus->model,
-            'assettag' => $techRecomStatus->assettag,
-            'serialnum'=> $techRecomStatus->serialnum,
-            'problem' => $techRecomStatus->problem,
-            'assconducted' => $techRecomStatus->assconducted,
-            'recommendation' => $techRecomStatus->recommendation,
-            'branch' => $techRecomStatus->branch,
-            'department' => $techRecomStatus->department,
-            'created_by' => $techRecomStatus->created_by,
-            'created_at' => $techRecomStatus->created_at->format('Y-m-d h:i A'),
+        ->through(function ($item){
+            $user = User::find($item->created_by);
+        return [
+            'id' => $item->id,
+            'recommnum'=> $item->recommnum,
+            'user' => $item->user,
+            'created_user' => $user ? $user->first_name . ' ' . $user->last_name : null,
+            'model' => $item->model,
+            'assettag' => $item->assettag,
+            'serialnum'=> $item->serialnum,
+            'problem' => $item->problem,
+            'assconducted' => $item->assconducted,
+            'recommendation' => $item->recommendation,
+            'branch' => $item->branch,
+            'department' => $item->department,
+            'created_by' => $item->created_by,
+            'created_at' => $item->created_at->format('Y-m-d h:i A'),
             'status' => [
-                'name' => $techRecomStatus->status->name,
-                'color' => $techRecomStatus->status->color(),
-            ],
+                'name' => $item->status->name,
+                'color' => $item->status->color(),
+        ]
+    ];
 
-        ]);
+    });
+
 
          return $data;
     }

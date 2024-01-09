@@ -25,14 +25,14 @@ class MenuListController extends Controller
                 $parentTitle = null;
 
                 // Check if the parent_id exists and is not the same as the current item's id
-                if ($item->parent_id && $item->parent_id !== $item->id) {
-                    $parent = Menu::find($item->parent_id);
+                    if ($item->parent_id && $item->parent_id !== $item->id) {
+                        $parent = Menu::find($item->parent_id);
 
-                    // Check if the parent item exists
-                    if ($parent) {
-                        $parentTitle = $parent->menu_title;
+                        // Check if the parent item exists
+                        if ($parent) {
+                            $parentTitle = $parent->menu_title;
+                        }
                     }
-                }
 
                 // Check if created_at is not null before formatting
                 $createdAtFormatted = $item->created_at ? $item->created_at->format('Y-m-d h:i A') : null;

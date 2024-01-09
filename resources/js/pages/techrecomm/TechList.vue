@@ -391,9 +391,9 @@ onMounted(() => {
                                     }}</span>
                                 </div>
                                 <div class="list-field">
-                                    <span class="mb-1 dis">Created:</span>
+                                    <span class="mb-1 dis">Created by:</span>
                                     <span>{{
-                                        item.created_by
+                                        item.created_user
                                     }}</span>
                                 </div>
                                 <div class="list-field">
