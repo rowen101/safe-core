@@ -836,7 +836,8 @@ onMounted(() => {
                                                                 "
                                                             >
                                                                 &nbsp;&nbsp;Edit</button
-                                                            ><button
+                                                            >
+                                                            <!-- <button
                                                                 type="button"
                                                                 class="btn btn float-left fa fa-file btn-primary"
                                                                 style="
@@ -845,7 +846,7 @@ onMounted(() => {
                                                                 "
                                                             >
                                                                 &nbsp;&nbsp;Attachment
-                                                            </button>
+                                                            </button> -->
                                                         </div>
                                                     </div>
                                                     <div class="dispatch-list">
@@ -958,14 +959,14 @@ onMounted(() => {
                                                         <hr>
                                                          <div class="row">
                 <div class="col">
-  <button
+  <!-- <button
                     variant="primary"
                      class="btn btn-sm btn-primary btn-block"
                     @click="OnClinkUpdateChecklist(task)"
                   >
                     <i class="fas fa-file"></i>
                       Attachment
-                  </button>
+                  </button> -->
                 <button
                     variant="primary"
                      class="btn btn-sm btn-primary btn-block"
