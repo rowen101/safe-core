@@ -224,29 +224,25 @@ onMounted(() => {
                                     "
                                 >
                                     <div class="inner">
-                                        <div class="card text-center text-dark">
-                                            <p class="mt-1 header-title">
-                                                {{
+
+                                        <div style="background:white; color:#000000;margin-bottom:2px">{{
                                                     moment(
                                                         task.taskdate
                                                     ).format("dddd")
                                                 }}
                                                 <i
                                                     class="far fa-calendar-alt"
-                                                ></i
-                                                ><br />
-                                                {{
+                                                ></i></div>
+                                        <div style="background:white;color:#000000; margin-bottom:2px;">  {{
                                                     moment(
                                                         task.taskdate
                                                     ).format("MMMM D, YYYY")
-                                                }}<br />
-                                            </p>
-                                            <div class="border text-bold">
-                                                {{ task.site_name }}
-                                            </div>
-                                        </div>
+                                                }}</div>
 
-                                        <div>
+                                            <div>
+                                                 {{ task.site_name }}
+                                            </div>
+                                        <!-- <div>
                                             <div
                                                 v-if="
                                                     task.task_lists &&
@@ -280,10 +276,10 @@ onMounted(() => {
                                                 </ul>
                                             </div>
 
-                                            <span v-else class="text-center"
+                                            <span v-else
                                                 >No Todos</span
                                             >
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -442,7 +438,7 @@ onMounted(() => {
                                                             item.percentage_completed ===
                                                             100,
                                                     },
-                                                    { 'text-center': true },
+
                                                 ]"
                                             >
                                                 {{
