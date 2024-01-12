@@ -213,46 +213,47 @@ onMounted(() => {
             15<em>March</em>
         </div>
     </div> -->
-                                <div
-                                    :class="
-                                        'small-box ' +
-                                        (moment(task.taskdate).format(
+                                <div class="small-box" :style="'background-color: '+(moment(task.taskdate).format(
                                             'MMMM D, YYYY'
                                         ) === formattedDate
-                                            ? 'bg-primary'
-                                            : 'bg-info')
-                                    "
+                                            ? '#72461f'
+                                            : '#b98d65') +';'"
                                 >
                                     <div class="inner">
 
-                                        <div style="background:white; color:#000000;margin-bottom:2px">{{
+                                        <div style="font-size:20px; font-family:tahoma; text-align:center;background:white; color:#000000;margin-bottom:2px">{{
                                                     moment(
                                                         task.taskdate
                                                     ).format("dddd")
                                                 }}
-                                                <i
+                                            <img :src="'/img/calindar_logo.png'"
+                                                    alt=""
+                                                    class="brand-image"
+                                                    style="opacity: 0.8"
+                                                    draggable="false" width="40">
+                                                <!-- <i
                                                     class="far fa-calendar-alt"
-                                                ></i></div>
-                                        <div style="background:white;color:#000000; margin-bottom:2px;">  {{
+                                                ></i> -->
+                                                </div>
+                                        <div style="text-align:center; background:white;color:#000000; margin-bottom:2px;">  {{
                                                     moment(
                                                         task.taskdate
                                                     ).format("MMMM D, YYYY")
                                                 }}</div>
 
-                                            <div>
-                                                 {{ task.site_name }}
+
+                                            <div class="m-2" style="color:#F3F5F8; text-align:left;">
+                                                {{ task.site_name }}
                                             </div>
-                                        <!-- <div>
+                                        <div class="m-2" style="text-align:left;">
                                             <div
                                                 v-if="
                                                     task.task_lists &&
                                                     task.task_lists.length > 0
                                                 "
                                             >
-                                                <span >Todos</span>
-                                                <ul
-                                                    class="list-group text-dark"
-                                                >
+                                                <span class="text-light badge">Todos</span>
+                                              <ul class="list-group list-group-sm">
                                                     <li
                                                         class="list-group-item"
                                                         v-for="taskList in task.task_lists"
@@ -277,9 +278,9 @@ onMounted(() => {
                                             </div>
 
                                             <span v-else
-                                                >No Todos</span
+                                                ></span
                                             >
-                                        </div> -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -328,11 +329,11 @@ onMounted(() => {
                                             <thead>
                                                 <tr>
                                                     <th>Planed Date</th>
-                                                    <th>Total Task</th>
+                                                    <th>Total Todos</th>
                                                     <th>Complete</th>
                                                     <th>Status</th>
                                                     <th>Remarks</th>
-                                                    <th>Percentage Task</th>
+                                                    <th>Percentage Todos</th>
                                                 </tr>
                                             </thead>
 
@@ -515,129 +516,5 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.header-title {
-    font: bold 15px Arial Black, Arial, Helvetica, sans-serif;
-    text-align: center;
-    color: #343a6b;
-}
-.fromtocenter {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    /* Optional: Add additional styling if needed */
-    margin-top: 5px; /* Adjust as needed */
-}
 
-/*
-calendar css
-Ref: http://codepen.io/chelovekov/pen/ayKAn
-*/
-
-.calendar {
-    margin: 0.25em 10px 10px 0;
-    padding-top: 5px;
-    float: left;
-    width: 100px;
-    background: #ededef;
-    background: -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        from(#ededef),
-        to(#ccc)
-    );
-    background: -moz-linear-gradient(top, #ededef, #ccc);
-    font: bold 30px/60px Arial Black, Arial, Helvetica, sans-serif;
-    text-align: center;
-    color: #000;
-    text-shadow: #fff 0 1px 0;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    position: relative;
-    -moz-box-shadow: 0 2px 2px #888;
-    -webkit-box-shadow: 0 2px 2px #888;
-    box-shadow: 0 2px 2px #888;
-}
-
-.calendar em {
-    display: block;
-    font: normal bold 11px/30px Arial, Helvetica, sans-serif;
-    color: #fff;
-    text-shadow: #00365a 0 -1px 0;
-    background: #04599a;
-    background: -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        from(#04599a),
-        to(#00365a)
-    );
-    background: -moz-linear-gradient(top, #04599a, #00365a);
-    -moz-border-radius-bottomright: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    -moz-border-radius-bottomleft: 3px;
-    -webkit-border-bottom-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    border-top: 1px solid #00365a;
-}
-
-.calendar:before,
-.calendar:after {
-    content: "";
-    float: left;
-    position: absolute;
-    top: 5px;
-    width: 8px;
-    height: 8px;
-    background: #111;
-    z-index: 1;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    -moz-box-shadow: 0 1px 1px #fff;
-    -webkit-box-shadow: 0 1px 1px #fff;
-    box-shadow: 0 1px 1px #fff;
-}
-
-.calendar:before {
-    left: 11px;
-}
-
-.calendar:after {
-    right: 11px;
-}
-
-.calendar em:before,
-.calendar em:after {
-    content: "";
-    float: left;
-    position: absolute;
-    top: -5px;
-    width: 4px;
-    height: 14px;
-    background: #dadada;
-    background: -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        from(#f1f1f1),
-        to(#aaa)
-    );
-    background: -moz-linear-gradient(top, #f1f1f1, #aaa);
-    z-index: 2;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
-}
-
-.calendar em:before {
-    left: 13px;
-}
-
-.calendar em:after {
-    right: 13px;
-}
 </style>

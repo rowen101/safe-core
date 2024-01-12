@@ -26,7 +26,8 @@ class VirtualASController extends Controller
         ->with('taskLists')
         ->where('user_id', $userId)
         ->whereBetween('tbl_dailytask.taskdate', [$startOfWeek, $endOfWeek])
-        ->select('tbl_dailytask.*', 'tbl_sites.site_name') // Corrected the select statement
+        ->select('tbl_dailytask.*', 'tbl_sites.site_name')
+        ->orderBy('taskdate', 'asc')
         ->get();
 
 
@@ -38,7 +39,7 @@ class VirtualASController extends Controller
         ])
             ->where('user_id', $userId)
             ->whereBetween('taskdate', [$startOfWeek, $endOfWeek])
-            ->orderBy('dailytask_id', 'asc')
+            ->orderBy('taskdate', 'asc')
             ->get();
 
         // Calculate the percentage of completed tasks
