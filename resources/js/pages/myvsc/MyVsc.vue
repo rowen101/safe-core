@@ -245,7 +245,7 @@ onMounted(() => {
                                             <div class="m-2" style="color:#F3F5F8; text-align:left;">
                                                 {{ task.site_name }}
                                             </div>
-                                        <div class="m-2" style="text-align:left;">
+                                        <div  style="text-align:left;">
                                             <div
                                                 v-if="
                                                     task.task_lists &&
@@ -253,7 +253,7 @@ onMounted(() => {
                                                 "
                                             >
                                                 <span class="text-light badge">Todos</span>
-                                              <ul class="list-group list-group-sm">
+                                              <ul class="list-group list-group-flush">
                                                     <li
                                                         class="list-group-item"
                                                         v-for="taskList in task.task_lists"
