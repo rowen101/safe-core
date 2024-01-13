@@ -43,8 +43,19 @@ const currentThemeMode = computed(() => {
         <SidebarRight />
         <AppFooter />
 </div>
-<div v-else class="login-page" :class="currentThemeMode">
+<div v-else class="login-page slibg" :class="currentThemeMode">
     <router-view></router-view>
 </div>
 </template>
+<style scoped>
+.slibg{
+     /* Default background image for larger screens */
+     background-image: url('/img/bg.jpg');
+     background-size: 100% 100%;
+     background-position: center;
+     background-repeat: no-repeat;
+     margin: 0; /* Remove default body margin */
+     height: 100vh; /* Set body height to 100% of viewport height */
+}
+</style>
 

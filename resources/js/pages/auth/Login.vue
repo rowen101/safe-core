@@ -28,6 +28,8 @@ const handleSubmit = () => {
             loading.value = false;
         });
 };
+
+
 </script>
 
 <template>
@@ -35,10 +37,10 @@ const handleSubmit = () => {
 
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="#" class="h1">Login</a>
+                <a href="#" class="h5">Sign in</a>
             </div>
             <div class="card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
+
                 <div v-if="errorMessage" class="alert alert-danger" role="alert">
                     {{ errorMessage }}
                 </div>
@@ -60,16 +62,9 @@ const handleSubmit = () => {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember">
-                                <label for="remember">
-                                    Remember Me
-                                </label>
-                            </div>
-                        </div>
 
-                        <div class="col-4">
+
+                        <div class="col-12 mb-2">
                             <button type="submit" class="btn btn-primary btn-block" :disabled="loading">
                                 <div v-if="loading" class="spinner-border spinner-border-sm" role="status">
                                     <span class="sr-only">Loading...</span>
@@ -80,10 +75,16 @@ const handleSubmit = () => {
 
                     </div>
                 </form>
+<div class="row">
+    <div class="col-12">
 
-                <p class="mb-1">
-                    <a href="forgot-password.html">I forgot my password</a>
-                </p>
+        <a  class="btn btn-success btn-block" href="#" target="_blank">
+<span ><b>Request Account</b></span>
+</a>
+
+    </div>
+</div>
+
             </div>
 
         </div>
