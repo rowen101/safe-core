@@ -18,19 +18,36 @@ class VirtualASController extends Controller
     {
         $userId = auth()->user()->id;
 
+        // Get the start and end of the current week
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
 
-        $dailyTasks = Task::orderBy('tbl_dailytask.taskdate', 'asc')
-        ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
-        ->with('taskLists')
-        ->where('user_id', $userId)
-        ->whereBetween('tbl_dailytask.taskdate', [$startOfWeek, $endOfWeek])
-        ->whereBetween('tbl_dailytask.created_at', [$startOfWeek, $endOfWeek]) // Add this line
-        ->select('tbl_dailytask.*', 'tbl_sites.site_name')
-        ->orderBy('taskdate', 'asc')
-        ->get();
+        // Get the start and end of the next week
+        $startOfNextWeek = Carbon::now()->startOfWeek()->addWeek();
+        $endOfNextWeek = Carbon::now()->endOfWeek()->addWeek();
 
+        // Get tasks for the current week
+        $dailyTasks = Task::orderBy('tbl_dailytask.taskdate', 'asc')
+            ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
+            ->with('taskLists')
+            ->where('user_id', $userId)
+            ->whereBetween('tbl_dailytask.taskdate', [$startOfWeek, $endOfWeek])
+            ->select('tbl_dailytask.*', 'tbl_sites.site_name')
+            ->orderBy('taskdate', 'asc')
+            ->get();
+
+        // Get tasks for the next week
+        $nextWeekTasks = Task::orderBy('tbl_dailytask.taskdate', 'asc')
+            ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
+            ->with('taskLists')
+            ->where('user_id', $userId)
+            ->whereBetween('tbl_dailytask.taskdate', [$startOfNextWeek, $endOfNextWeek])
+            ->select('tbl_dailytask.*', 'tbl_sites.site_name')
+            ->orderBy('taskdate', 'asc')
+            ->get();
+
+        // Combine tasks for both weeks
+        $allTasks = $dailyTasks->merge($nextWeekTasks);
 
         $tasksList = Task::withCount([
             'taskLists',
@@ -39,8 +56,7 @@ class VirtualASController extends Controller
             }
         ])
             ->where('user_id', $userId)
-            ->whereBetween('taskdate', [$startOfWeek, $endOfWeek])
-            ->whereBetween('created_at', [$startOfWeek, $endOfWeek]) // Add this line
+            ->whereIn('taskdate', $allTasks->pluck('taskdate')->unique())
             ->orderBy('taskdate', 'asc')
             ->get();
 
@@ -52,8 +68,9 @@ class VirtualASController extends Controller
             return $task;
         });
 
-        return response()->json(['dailyTasks' => $dailyTasks, 'TaskList' => $tasksList]);
+        return response()->json(['dailyTasks' => $allTasks, 'TaskList' => $tasksList]);
     }
+
 
     /**
      * Show the form for creating a new resource.
