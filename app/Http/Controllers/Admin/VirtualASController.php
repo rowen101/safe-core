@@ -26,6 +26,7 @@ class VirtualASController extends Controller
         ->with('taskLists')
         ->where('user_id', $userId)
         ->whereBetween('tbl_dailytask.taskdate', [$startOfWeek, $endOfWeek])
+        ->whereBetween('tbl_dailytask.created_at', [$startOfWeek, $endOfWeek]) // Add this line
         ->select('tbl_dailytask.*', 'tbl_sites.site_name')
         ->orderBy('taskdate', 'asc')
         ->get();
@@ -39,6 +40,7 @@ class VirtualASController extends Controller
         ])
             ->where('user_id', $userId)
             ->whereBetween('taskdate', [$startOfWeek, $endOfWeek])
+            ->whereBetween('created_at', [$startOfWeek, $endOfWeek]) // Add this line
             ->orderBy('taskdate', 'asc')
             ->get();
 

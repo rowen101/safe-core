@@ -55,21 +55,35 @@ onMounted(() => {
 
         <div class="sidebar" style="overflow-y: auto; margin: 0px -8px; width: 249px; height: 527px;">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-               <!-- <div v-if="authUserStore.user.avatar !== null" class="image">
+               <!-- <div v-if="authUserStore.user.avatar === ''" class="image">
                     <img
                         :src="authUserStore.user.avatar"
                         class="img-circle elevation-1"
                         alt="User Image"
                     />
                 </div>
-                <div v-else class="image">
+                <div v-else-if="authUserStore.user.avatar !== ''" class="image">
                     <img v-if="authUserStore.user.gender === 'Male'" :src="'/img/boy.png'" class="img-circle elevation-1" alt="Profile" draggable="false"/>
                     <img v-else-if="authUserStore.user.gender === 'Female'" :src="'/img/girl.png'" class="img-circle elevation-1" alt="Profile" draggable="false"/>
+
                 </div> -->
 
-                 <div class="image">
-                     <img v-if="authUserStore.user.gender =='Male'" :src="'/img/boy.png'" class="img-circle elevation-1" alt="Profile"  draggable="false"/>
-                     <img v-else-if="authUserStore.user.gender =='Female'" :src="'/img/girl.png'" class="img-circle elevation-1" alt="Profile"  draggable="false"/>
+                <div class="image">
+                    <img
+                        v-if="authUserStore.user.avatar !== null && authUserStore.user.avatar !== ''"
+                        :src="authUserStore.user.avatar"
+                        class="img-circle elevation-1"
+                        alt="User Image"
+                    />
+
+                    <img
+                        v-else
+                        :src="authUserStore.user.gender === 'Female' ? '/img/boy.png' : '/img/girl.png'"
+                        class="img-circle elevation-1"
+                        alt="Profile"
+                        draggable="false"
+                    />
+                    
                 </div>
                 <div class="info">
                     <a href="#" class="d-block">{{
