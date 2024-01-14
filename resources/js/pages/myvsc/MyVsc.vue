@@ -93,20 +93,23 @@ watch([toDate], () => {
 });
 
 const applyFilter = () => {
-    //   alert(`${form.value.start_date} ${form.value.end_date}`);
+    //alert(`${form.value.start_date} ${form.value.end_date}`);
 
     isloading.value = true;
 
     axios
         .get("/api/filter-vsc", {
-            start_date: form.value.start_date,
-            end_date: form.value.end_date,
+             params:{
+                start_date: form.value.start_date,
+                end_date: form.value.end_date,
+            }
+
         })
         .then((response) => {
             isloading.value = false;
             lists.value = response.data.dailyTasks;
             listscount.value = response.data.TaskList;
-            console.log(response.data);
+
         })
         .catch((error) => {
             // Handle errors
