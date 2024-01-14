@@ -519,5 +519,12 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
+.fromtocenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Optional: Add additional styling if needed */
+    margin-top: 5px; /* Adjust as needed */
+}
 </style>
