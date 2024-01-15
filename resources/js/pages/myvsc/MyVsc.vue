@@ -263,7 +263,7 @@ onMounted(() => {
                                                         :key="taskList.id"
                                                     >
                                                     <div style="display: flex; align-items: left;">
-                                                         <div class="m-1">
+                                                         <div class="ml-1">
                                                          <i
                                                             :class="
                                                                 taskList.iscompleted ==
@@ -277,7 +277,7 @@ onMounted(() => {
                                                         ></i>
                                                     </div>
 
-                                                        <div class="m-1">{{
+                                                        <div class="ml-1">{{
                                                             taskList.task_name
                                                         }}</div>
                                                     </div>

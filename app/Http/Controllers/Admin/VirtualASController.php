@@ -65,9 +65,13 @@ class VirtualASController extends Controller
 
         // Calculate the percentage of completed tasks
         $tasksList->transform(function ($task) {
-            $task->percentage_completed = ($task->task_lists_count > 0)
-                ? ($task->completed_task_count / $task->task_lists_count) * 100
-                : 0;
+            $task->percentage_completed = round(
+                ($task->task_lists_count > 0)
+                    ? ($task->completed_task_count / $task->task_lists_count) * 100
+                    : 0,
+                2
+            );
+
             return $task;
         });
 
