@@ -53,8 +53,10 @@ const applyFilter = () => {
     // Make an API request using Axios
     axios
         .get("/api/filter-closeprio", {
-            start_date: fromDate.value,
-            end_date: toDate.value,
+           params:{
+             start_date: fromDate.value,
+             end_date: toDate.value,
+           }
         })
         .then((response) => {
             isloading.value = false;
@@ -146,12 +148,12 @@ onMounted(() => {
                                         <i class="fa fa-camera"></i>
                                     </button>
                                 </div>
-                                <div class="d-flex">
+                                <!-- <div class="d-flex">
                                     <i
                                         @click="onFilterDate"
                                         class="fa fa-filter mr-1"
                                     ></i>
-                                </div>
+                                </div> -->
                             </div>
 
                             <div>

@@ -46,8 +46,11 @@ class VirtualASController extends Controller
             ->orderBy('taskdate', 'asc')
             ->get();
 
-        // Combine tasks for both weeks
-        $allTasks = $dailyTasks->merge($nextWeekTasks);
+        // Determine if there are tasks for the next week
+        $hasNextWeekTasks = !$nextWeekTasks->isEmpty();
+
+        // Use the appropriate set of tasks based on the presence of next week's tasks
+        $allTasks = $hasNextWeekTasks ? $dailyTasks->merge($nextWeekTasks) : $dailyTasks;
 
         $tasksList = Task::withCount([
             'taskLists',
@@ -68,8 +71,9 @@ class VirtualASController extends Controller
             return $task;
         });
 
-        return response()->json(['dailyTasks' => $allTasks, 'TaskList' => $tasksList]);
+        return response()->json(['dailyTasks' => $allTasks, 'TaskList' => $tasksList, 'hasNextWeekTasks' => $hasNextWeekTasks]);
     }
+
 
     public function vscfilter(Request $request)
     {

@@ -27,8 +27,8 @@ const props = defineProps({
 <template>
     <tr>
         <td>{{moment(item.taskdate).format('MMMM D, YYYY')}}</td>
-        <td class="text-center">{{ item.task_lists_count }}</td>
-        <td>{{ item.completed_task_count }}</td>
+        <td class="text-center" ><span v-if="item.task_lists_count !== 0">{{ item.task_lists_count }}</span></td>
+        <td class="text-center"><span v-if="item.completed_task_count !== 0">{{ item.completed_task_count }}</span></td>
         <td class="text-center"><span v-if="item.status !== 'On Going'">{{  item.status }}</span></td>
     <td v-if="item.remarks === 'HIT'" class="bg-success text-center">{{ item.remarks }}</td>
 <td v-else-if="item.remarks === 'MISS'" class="bg-danger text-center">{{ item.remarks }}</td>
@@ -41,7 +41,7 @@ const props = defineProps({
         'bg-success': item.percentage_completed === 100,
         'text-center': true
         }">
-        {{ item.percentage_completed + '%'}} 
+        {{ item.percentage_completed + '%'}}
         </td>
     </tr>
 </template>

@@ -63,7 +63,7 @@ class MyClosePrioController extends Controller
         $userId = auth()->user()->id;
 
         $startDate = Carbon::parse($request->start_date);
-        $endDate = Carbon::parse($request->end_date)->endOfDay();
+        $endDate = Carbon::parse($request->end_date);
 
         $data = Task::query()
         ->when(request('query'), function ($query, $searchQuery) {

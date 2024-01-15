@@ -143,7 +143,7 @@ onMounted(() => {
                         </div>
 
                         <div class="card-tools">
-                            {{ formattedDate }}
+
                         </div>
                     </div>
                     <div class="card-body">
@@ -233,7 +233,7 @@ onMounted(() => {
                                                     alt=""
                                                     class="brand-image"
                                                     style="opacity: 0.8"
-                                                    draggable="false" width="40">
+                                                    draggable="false" width="35">
                                                 <!-- <i
                                                     class="far fa-calendar-alt"
                                                 ></i> -->
@@ -262,7 +262,9 @@ onMounted(() => {
                                                         v-for="taskList in task.task_lists"
                                                         :key="taskList.id"
                                                     >
-                                                        <i
+                                                    <div style="display: flex; align-items: left;">
+                                                         <div class="m-1">
+                                                         <i
                                                             :class="
                                                                 taskList.iscompleted ==
                                                                 1
@@ -273,9 +275,13 @@ onMounted(() => {
                                                                 font-size: 15px;
                                                             "
                                                         ></i>
-                                                        &nbsp;{{
+                                                    </div>
+
+                                                        <div class="m-1">{{
                                                             taskList.task_name
-                                                        }}
+                                                        }}</div>
+                                                    </div>
+
                                                     </li>
                                                 </ul>
                                             </div>
@@ -288,6 +294,7 @@ onMounted(() => {
                                 </div>
                             </div>
                         </div>
+                      <div class="float-right">   {{ formattedDate }}</div>
                     </div>
                 </div>
 
@@ -305,9 +312,7 @@ onMounted(() => {
                             </h5>
                         </div>
 
-                        <div class="card-tools">
-                            {{ formattedDate }}
-                        </div>
+
                     </div>
 
                     <div class="card-body">
@@ -381,17 +386,13 @@ onMounted(() => {
                                             <span class="mb-1 dis"
                                                 >Total Task:
                                             </span>
-                                            <span>{{
-                                                item.task_lists_count
-                                            }}</span>
+                                           <span v-if="item.task_lists_count !== 0">{{ item.task_lists_count }}</span>
                                         </div>
                                         <div class="list-field">
                                             <span class="mb-1 dis"
                                                 >Completed Task:
                                             </span>
-                                            <span>{{
-                                                item.completed_task_count
-                                            }}</span>
+                                            <span v-if="item.completed_task_count !== 0">{{ item.completed_task_count }}</span>
                                         </div>
                                         <div class="list-field">
                                             <span class="mb-1 dis"
@@ -455,6 +456,7 @@ onMounted(() => {
                                 </div>
                             </div>
                         </div>
+                        <div class="float-right">   {{ formattedDate }}</div>
                     </div>
                 </div>
             </div>
