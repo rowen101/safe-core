@@ -1483,12 +1483,12 @@ a {
 .nav-tabs .nav-link {
     border: 1px solid transparent;
     border-radius: 0;
-    color: #fff;
+    color: #2196f3;
     transition: background-color 0.3s;
 }
 
 .nav-tabs .nav-link.active {
-    background-color: #0069d9;
+    background-color: #2196f3;
     color: #fff;
     border-color: #2196f3;
 }
@@ -1497,6 +1497,8 @@ a {
     background-color: #0069d9;
     border-color: #0069d9;
 }
+
+
 .image-container {
     position: relative;
 }

@@ -28,7 +28,8 @@ class User extends Authenticatable
         'avatar',
         'first_name',
         'last_name',
-        'sitehead_user_id'
+        'sitehead_user_id',
+        'gender',
     ];
 
     /**
