@@ -50,7 +50,9 @@ class UserController extends Controller
 
         ThemeVsc::create([
             'userid' => $user->id,
-            
+            'background' => '#B98D65',
+            'active_background' => '#72461F'
+
         ]);
 
         return $user;
