@@ -88,6 +88,8 @@ Route::middleware('auth')->group(function () {
      Route::get('/api/dailytask/filter-taskdate',[TaskController::class,'FilterTaskdate']);
      Route::get('/api/getsite',[TaskController::class,'getSite']);
      //myvsc controller
+
+     Route::post('/api/changethemes',[VirtualASController::class, 'changethemes']);
      Route::get('/api/filter-vsc',[VirtualASController::class,'vscfilter']);
      Route::resource('/api/myvsc', VirtualASController::class);
     //my close prio

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ThemeVsc;
 use App\Models\User;
 
 class UserController extends Controller
@@ -35,18 +36,24 @@ class UserController extends Controller
             'password' => 'required|min:8',
             'first_name' => 'required',
             'last_name' => 'required',
-            'gender' => 'required'
+            'gender' => 'required',
         ]);
 
-        return User::create([
+        $user = User::create([
             'name' => request('name'),
             'email' => request('email'),
             'password' => bcrypt(request('password')),
             'first_name' => request('first_name'),
             'last_name' => request('last_name'),
-            'gender' => request('gender')
-
+            'gender' => request('gender'),
         ]);
+
+        ThemeVsc::create([
+            'userid' => $user->id,
+            
+        ]);
+
+        return $user;
     }
 
     public function update(User $user)

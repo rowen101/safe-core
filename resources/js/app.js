@@ -13,6 +13,7 @@ import { useSettingStore } from './stores/SettingStore';
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css'
 
+
 const pinia = createPinia();
 const app = createApp(App);
 
@@ -31,6 +32,7 @@ router.beforeEach(async (to, from) => {
         ]);
     }
 });
+
 
 app.use(pinia);
 app.use(router);

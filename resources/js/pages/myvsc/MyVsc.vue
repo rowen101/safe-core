@@ -6,9 +6,47 @@ import ListItem from "./ListItem.vue";
 import html2canvas from "html2canvas";
 import { ContentLoader } from "vue-content-loader";
 import Datepicker from "vue3-datepicker";
+
 const authUserStore = useAuthUserStore();
 
 const isloading = ref(false);
+
+
+
+const themcolor = ref([
+    {
+        background: "#B98D65",
+        active_background: "#72461F",
+        font_background: "#F8F9FA",
+    },
+    {
+        background: "#2196F3",
+        active_background: "#1769AA",
+        font_background: "#F8F9FA",
+    },
+     {
+        background: "#FFC400",
+        active_background: "#B28900",
+        font_background: "#F8F9FA",
+    },
+    {
+        background: "#9C27B0",
+        active_background: "#6D1B7B",
+        font_background: "#F8F9FA",
+    },
+
+    {
+        background: "#009688",
+        active_background: "#00695F",
+        font_background: "#F8F9FA",
+    },
+    {
+        background: "#607d8b",
+        active_background: "#37474f",
+        font_background: "#F8F9FA",
+    },
+
+]);
 //format date
 const getFormattedDate = () => {
     const options = { month: "long", day: "numeric", year: "numeric" };
@@ -121,6 +159,38 @@ const applyFilter = () => {
         });
 };
 
+const onPickThemes = () => {
+    $("#FormModalPickerThemes").modal("show");
+}
+
+const handleThemeClick = (item) => {
+  if (item) {
+        const userId = authUserStore.user.id;
+
+        axios.post('/api/changethemes', {
+
+            userid: userId,
+            background: item.background,
+            active_background: item.active_background,
+            font_background: item.font_background
+        })
+        .then(response => {
+            $("#FormModalPickerThemes").modal("hide");
+           isloading.value = true;
+            axios.get(`/api/myvsc`).then((response) => {
+                isloading.value = false;
+                lists.value = response.data.dailyTasks;
+                listscount.value = response.data.TaskList;
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    } else {
+        console.error('Invalid item:', item);
+    }
+}
+
 onMounted(() => {
     getItems();
 });
@@ -143,7 +213,7 @@ onMounted(() => {
                         </div>
 
                         <div class="card-tools">
-                                
+                            <i @click="onPickThemes()" class='fas fa-palette'></i>
                         </div>
                     </div>
                     <div class="card-body">
@@ -204,23 +274,12 @@ onMounted(() => {
                                 v-for="task in lists"
                                 :key="task.id"
                             >
-                                <!-- <div :class="'small-box ' +
-        (moment(task.taskdate).format(
-            'MMMM D, YYYY'
-        ) === formattedDate
-            ? 'bg-primary'
-            : 'bg-info')
-        ">
-        <br>
-        <div class="calendar">
-            15<em>March</em>
-        </div>
-    </div> -->
+
                                 <div class="small-box" :style="'background-color: '+(moment(task.taskdate).format(
                                             'MMMM D, YYYY'
                                         ) === formattedDate
-                                            ? '#72461f'
-                                            : '#b98d65') +';'"
+                                            ? (task.active_background == '' ? '#72461F' : task.active_background)
+                                            : (task.background == '' ? '#B98D65' : task.background)) +';'"
                                 >
                                     <div class="inner">
 
@@ -514,6 +573,59 @@ onMounted(() => {
                     >
                         Generate
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div
+        class="modal fade"
+        id="FormModalPickerThemes"
+        data-backdrop="static"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        <span>Themes Picker</span>
+                    </h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row" >
+                        <div class="col-md-4" v-for="item in themcolor" :key="item.background">
+                            <div class="box" @click="handleThemeClick(item)">
+                             <div class="column" :style="{ 'background-color': item.background }">&nbsp;</div>
+                            <div class="column" :style="{ 'background-color': item.active_background }">&nbsp;</div>
+
+                            </div>
+                        </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
                 </div>
             </div>
         </div>

@@ -7,6 +7,9 @@ import AppFooter from './components/AppFooter.vue';
 import { useAuthUserStore } from './stores/AuthUserStore';
 import { useSettingStore } from './stores/SettingStore';
 
+
+
+
 const authUserStore = useAuthUserStore();
 const settingStore = useSettingStore();
 

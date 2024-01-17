@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Task;
+use App\Models\ThemeVsc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
@@ -29,20 +30,24 @@ class VirtualASController extends Controller
         // Get tasks for the current week
         $dailyTasks = Task::orderBy('tbl_dailytask.taskdate', 'asc')
             ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
+            ->join('theme_vscs', 'theme_vscs.userid', '=', 'tbl_dailytask.user_id')
             ->with('taskLists')
             ->where('user_id', $userId)
             ->whereBetween('tbl_dailytask.taskdate', [$startOfWeek, $endOfWeek])
-            ->select('tbl_dailytask.*', 'tbl_sites.site_name')
+            ->select('tbl_dailytask.*', 'tbl_sites.site_name','theme_vscs.id as theme_id','theme_vscs.background',
+            'theme_vscs.active_background','theme_vscs.font_background')
             ->orderBy('taskdate', 'asc')
             ->get();
 
         // Get tasks for the next week
         $nextWeekTasks = Task::orderBy('tbl_dailytask.taskdate', 'asc')
             ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
+            ->join('theme_vscs', 'theme_vscs.userid', '=', 'tbl_dailytask.user_id')
             ->with('taskLists')
             ->where('user_id', $userId)
             ->whereBetween('tbl_dailytask.taskdate', [$startOfNextWeek, $endOfNextWeek])
-            ->select('tbl_dailytask.*', 'tbl_sites.site_name')
+            ->select('tbl_dailytask.*', 'tbl_sites.site_name','theme_vscs.id as theme_id','theme_vscs.background',
+            'theme_vscs.active_background','theme_vscs.font_background')
             ->orderBy('taskdate', 'asc')
             ->get();
 
@@ -88,10 +93,12 @@ class VirtualASController extends Controller
 
         $dailyTasks = Task::orderBy('tbl_dailytask.taskdate', 'asc')
             ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
+            ->join('theme_vscs', 'theme_vscs.userid', '=', 'tbl_dailytask.user_id')
             ->with('taskLists')
             ->where('user_id', $userId)
             ->whereBetween('tbl_dailytask.taskdate', [$startDate, $endDate])
-            ->select('tbl_dailytask.*', 'tbl_sites.site_name')
+            ->select('tbl_dailytask.*', 'tbl_sites.site_name','theme_vscs.id as theme_id','theme_vscs.background',
+            'theme_vscs.active_background','theme_vscs.font_background')
             ->get();
 
 
@@ -117,5 +124,22 @@ class VirtualASController extends Controller
 
 
         return response()->json(['dailyTasks' => $dailyTasks, 'TaskList' => $tasksList]);
+    }
+
+    public function changethemes(Request $request){
+
+        ThemeVsc::updateOrCreate(
+            [
+                'userid' => $request->userid,
+            ],
+            [
+
+                'background' => $request->background,
+                'active_background' => $request->active_background,
+                'font_background' => $request->font_background
+            ]
+        );
+
+        return response()->json(['message' => 'success']);
     }
 }
