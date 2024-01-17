@@ -591,7 +591,7 @@ onMounted(() => {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">
-                        <span>Themes Picker</span>
+                        <span>Card Themes Picker</span>
                     </h5>
                     <button
                         type="button"

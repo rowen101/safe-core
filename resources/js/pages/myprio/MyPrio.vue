@@ -618,10 +618,17 @@ onMounted(() => {
                                                         task.dailytask_id
                                                     "
                                                 >
-                                                    <i
+                                                    <!-- <i
                                                         class="fas fa-calendar-alt"
                                                     ></i
-                                                    >&nbsp;<b>{{
+
+                                                    >-->
+                                                    <img :src="'/img/calindar_logo.png'"
+                                                    alt=""
+                                                    class="brand-image"
+                                                    style="opacity: 0.8"
+                                                    draggable="false" width="35">
+                                                    &nbsp;<b>{{
                                                         moment(
                                                             task.taskdate
                                                         ).format("MMMM D, YYYY")
@@ -1293,7 +1300,7 @@ onMounted(() => {
                                             </div>
                                             <div class="d-flex">
                                                 <i
-                                                    v-if="!startdate"
+
                                                     class="fa fa-trash text-danger"
                                                     @click="delTask(item)"
                                                 ></i>
@@ -1330,6 +1337,10 @@ onMounted(() => {
                                             v-if="item.iscompleted === 1"
                                             class="list-group-item mt-2"
                                         >
+                                         <div
+                                            class="d-flex justify-content-between"
+                                        >
+                                        <div class="d-flex">
                                             <i
                                                 :class="{
                                                     'cursor-pointer mr-2': true,
@@ -1353,6 +1364,16 @@ onMounted(() => {
                                             >
                                                 <del>{{ item.task_name }}</del>
                                             </span>
+                                        </div>
+                                        <div class="d-flex">
+                                              <i
+
+                                                    class="fa fa-trash text-danger"
+                                                    @click="delTask(item)"
+                                                ></i>
+                                        </div>
+
+                                         </div>
                                         </li>
                                     </ul>
                                 </div>

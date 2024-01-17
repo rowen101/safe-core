@@ -16,7 +16,7 @@ const props = defineProps({
 </script>
 <template>
     <tr>
-         <td>{{ index + 1 }}</td>
+         <td>{{ item.sitename }}</td>
         <td>{{moment(item.taskdate).format('MMMM D, YYYY')}}</td>
         <td>{{ item.startdate }}</td>
         <td>{{ item.enddate }}</td>

@@ -164,7 +164,7 @@ onMounted(() => {
                                         >
                                             <thead>
                                                 <tr>
-                                                    <th>Task</th>
+                                                    <th>Site</th>
                                                     <th>Planned Date</th>
 
                                                     <th>Start Date</th>
@@ -208,7 +208,14 @@ onMounted(() => {
                                 >
                                     <div class="card">
                                         <div class="card-body">
-
+                                            <div class="list-field">
+                                                <span class="mb-1 dis"
+                                                    >Site:</span
+                                                >
+                                                <span>{{
+                                                   item.sitename
+                                                }}</span>
+                                            </div>
                                             <div class="list-field">
                                                 <span class="mb-1 dis"
                                                     >Task Date:</span

@@ -29,6 +29,8 @@ class MyClosePrioController extends Controller
             $query->where('type', TaskType::from(request('type')));
         })
         ->orderBy('taskdate', 'asc')
+        ->join('tbl_sites', 'tbl_sites.id', '=', 'tbl_dailytask.site')
+        ->select('tbl_dailytask.*', 'tbl_sites.site_name')
         ->where('status_task', 1)
         ->where ('user_id', auth()->user()->id)
         ->latest()
@@ -36,6 +38,7 @@ class MyClosePrioController extends Controller
         ->through(fn ($dailytask) => [
             'id' => $dailytask->id,
             'site' => $dailytask->site,
+            'sitename' => $dailytask->site_name,
             'user_id' => $dailytask->user_id,
             'taskname' => $dailytask->taskname,
             'taskdate' => $dailytask->taskdate->format('m-d-Y'),
@@ -70,6 +73,7 @@ class MyClosePrioController extends Controller
             $query->where('site', 'like', "%{$searchQuery}%");
             $query->where('type', TaskType::from(request('type')));
         })
+
         ->where('status_task', 1)
         ->where ('user_id', $userId)
         ->whereBetween('taskdate', [$startDate, $endDate])
