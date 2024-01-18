@@ -32,7 +32,7 @@ const getStatusHtml = (status) => {
 <template>
     <tr>
         <!-- <td><input type="checkbox" :checked="selectAll" @change="toggleSelection" /></td> -->
-        <td>{{ index + 1 }}</td>
+        <td><span v-if="item.statusid == 2" class="badge badge-success">Download </span></td>
         <td>{{ item.recommnum }}</td>
         <td>{{ item.user }}</td>
         <td>{{ item.branch }}</td>

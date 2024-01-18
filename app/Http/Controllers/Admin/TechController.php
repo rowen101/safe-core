@@ -42,6 +42,7 @@ class TechController extends Controller
             'department' => $item->department,
             'created_by' => $item->created_by,
             'created_at' => $item->created_at->format('Y-m-d h:i A'),
+            'statusid' => $item->status,
             'status' => [
                 'name' => $item->status->name,
                 'color' => $item->status->color(),
@@ -113,6 +114,22 @@ class TechController extends Controller
             'updated_by' => 0,
 
         ]);
+    }
+
+    public function getAction(Request $request)
+    {
+        TechRecomm::updateOrCreate(
+            [
+                'id' => $request->id,
+            ],
+            [
+
+                'status' => $request->status,
+
+            ]
+        );
+
+        return response()->json(['message' => 'success']);
     }
 
 

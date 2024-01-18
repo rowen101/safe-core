@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/api/tech-recommendations', TechController::class);
     Route::delete('/api/tech-recommendations', [TechController::class, 'bulkDelete']);
+    Route::post('/api/tech-getaction', [TechController::class, 'getAction']);
 
     //tasks controller
     Route::resource('/api/dailytask', TaskController::class);

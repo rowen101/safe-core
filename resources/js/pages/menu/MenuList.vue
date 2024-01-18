@@ -70,7 +70,14 @@ const editUserSchema = yup.object({
 
 const createData = (values, { resetForm, setErrors }) => {
     axios
-        .post("/api/menulist", values)
+        .post("/api/menulist", {
+            menu_title: values.menu_title,
+            parent_id: selectedParentID.value,
+            menu_icon:values.menu_icon,
+            menu_route: values.menu_route,
+            sort_order: values.sort_order,
+            is_active: values.is_active
+        })
         .then((response) => {
             lists.value.data.unshift(response.data);
             $("#FormModal").modal("hide");
@@ -82,6 +89,8 @@ const createData = (values, { resetForm, setErrors }) => {
                 setErrors(error.response.data.errors);
             }
         });
+
+
 };
 
 
@@ -355,9 +364,7 @@ onMounted(() => {
                 <Form
                     ref="form"
                     @submit="handleSubmit"
-                    :validation-schema="
-                        editing ? editUserSchema : createUserSchema
-                    "
+
                     v-slot="{ errors }"
                     :initial-values="formValues"
                 >
@@ -419,6 +426,23 @@ onMounted(() => {
                                         />
                                         <span class="invalid-feedback">{{
                                             errors.menu_icon
+                                        }}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user">Route</label>
+                                        <Field
+                                            name="menu_route"
+                                            type="text"
+                                            class="form-control"
+                                            :class="{
+                                                'is-invalid': errors.menu_route,
+                                            }"
+                                            id="menu_route"
+                                            aria-describedby="nameHelp"
+                                            placeholder="Enter Route"
+                                        />
+                                        <span class="invalid-feedback">{{
+                                            errors.menu_route
                                         }}</span>
                                     </div>
                                     <div class="form-group">

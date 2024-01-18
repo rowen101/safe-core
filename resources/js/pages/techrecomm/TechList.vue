@@ -10,6 +10,8 @@ import { Bootstrap4Pagination } from "laravel-vue-pagination";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
 import { ContentLoader } from "vue-content-loader";
 
+const statusid = ref();
+
 const toastr = useToastr();
 const lists = ref({ data: [] });
 const tecstatus = ref([
@@ -89,6 +91,7 @@ const addUser = () => {
 };
 
 const editData = (item) => {
+    statusid.value = item.id;
     editing.value = true;
     form.value.resetForm();
     $("#FormModal").modal("show");
@@ -114,6 +117,7 @@ const editData = (item) => {
 const viewItem = (item) => {
     // editing.value = true;
     // form.value.resetForm();
+
     $("#FormModalView").modal("show");
     formValues.value = {
         id: item.id,
@@ -154,6 +158,7 @@ const updateData = (values, { setErrors }) => {
 
 const handleSubmit = (values, actions) => {
     // console.log(actions);
+
     if (editing.value) {
         updateData(values, actions);
     } else {
@@ -207,6 +212,21 @@ const bulkDelete = () => {
             selectedItems.value = [];
             selectAll.value = false;
             toastr.success(response.data.message);
+        });
+};
+
+const handleGetAction = (statusItem) => {
+    axios
+        .post("/api/tech-getaction", {
+            id: statusid.value,
+            status: statusItem,
+        })
+        .then((response) => {
+            $("#FormModal").modal("hide");
+            getItems();
+        })
+        .catch((error) => {
+            console.log(error.message);
         });
 };
 
@@ -321,7 +341,7 @@ onMounted(() => {
                                         @change="selectAllUsers"
                                     />
                                 </th> -->
-                                        <th style="width: 10px">#</th>
+                                        <th style="width: 10px"></th>
                                         <th>Technom</th>
                                         <th>User</th>
                                         <th>Branch</th>
@@ -368,58 +388,50 @@ onMounted(() => {
                             <div class="card-body">
                                 <div class="list-field">
                                     <span class="mb-1 dis">Tech #:</span>
-                                    <span><b>{{
-                                       item.recommnum
-                                    }}</b></span>
+                                    <span
+                                        ><b>{{ item.recommnum }}</b></span
+                                    >
                                 </div>
                                 <div class="list-field">
                                     <span class="mb-1 dis">User:</span>
-                                    <span>{{
-                                     item.user
-                                    }}</span>
+                                    <span>{{ item.user }}</span>
                                 </div>
                                 <div class="list-field">
                                     <span class="mb-1 dis">Branch:</span>
-                                    <span>{{
-                                      item.branch
-                                    }}</span>
+                                    <span>{{ item.branch }}</span>
                                 </div>
                                 <div class="list-field">
                                     <span class="mb-1 dis">Department:</span>
-                                    <span>{{
-                                       item.department
-                                    }}</span>
+                                    <span>{{ item.department }}</span>
                                 </div>
                                 <div class="list-field">
                                     <span class="mb-1 dis">Created by:</span>
-                                    <span>{{
-                                        item.created_user
-                                    }}</span>
+                                    <span>{{ item.created_user }}</span>
                                 </div>
                                 <div class="list-field">
                                     <span class="mb-1 dis">Status:</span>
-                                   <span class="badge" :class="`badge-${item.status.color}`" >{{
-                                        item.status.name
-                                    }} </span>
+                                    <span
+                                        class="badge"
+                                        :class="`badge-${item.status.color}`"
+                                        >{{ item.status.name }}
+                                    </span>
                                 </div>
                                 <div class="list-field">
                                     <span class="mb-1 dis">Created Date:</span>
-                                    <span>{{
-                                       item.created_at
-                                    }}</span>
+                                    <span>{{ item.created_at }}</span>
                                 </div>
                                 <hr />
                                 <div class="row">
-
-                                    <div class="col" v-if="authUserStore.user.role === 'ADMIN'">
+                                    <div
+                                        class="col"
+                                        v-if="
+                                            authUserStore.user.role === 'ADMIN'
+                                        "
+                                    >
                                         <button
                                             variant="primary"
                                             class="btn btnsm btn-primary btn-block"
-                                            @click="
-                                                editData(
-                                                    item
-                                                )
-                                            "
+                                            @click="editData(item)"
                                         >
                                             <i
                                                 class="fa fa-pencil-square-o"
@@ -428,7 +440,9 @@ onMounted(() => {
                                         </button>
                                         <button
                                             class="btn btnsm btn-danger btn-block"
-                                            @click="confirmItemDeletion(item.id)"
+                                            @click="
+                                                confirmItemDeletion(item.id)
+                                            "
                                         >
                                             <span class="text-light">
                                                 <i class="fa fa-trash-o"></i>
@@ -437,22 +451,22 @@ onMounted(() => {
                                         </button>
                                     </div>
 
-                                      <div class="col" v-if="authUserStore.user.role === 'USER'">
+                                    <div
+                                        class="col"
+                                        v-if="
+                                            authUserStore.user.role === 'USER'
+                                        "
+                                    >
                                         <button
                                             variant="primary"
                                             class="btn btnsm btn-primary btn-block"
-                                            @click="
-                                                editData(
-                                                    item
-                                                )
-                                            "
+                                            @click="editData(item)"
                                         >
                                             <i
                                                 class="fa fa-pencil-square-o"
                                             ></i>
                                             Edit
                                         </button>
-
                                     </div>
                                 </div>
                             </div>
@@ -715,6 +729,37 @@ onMounted(() => {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <div
+                            v-if="authUserStore.user.role === 'ADMIN'"
+                            class="btn-group float-l ml-auto"
+                        >
+                            <button
+                                type="button"
+                                @click="handleGetAction(2)"
+                                class="btn btn-info"
+                            >
+                                Approved
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon"
+                                data-toggle="dropdown"
+                            >
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu" role="menu">
+                                <span
+                                    @click="handleGetAction(1)"
+                                    class="dropdown-item"
+                                    >Pending</span
+                                >
+                                <span
+                                    @click="handleGetAction(3)"
+                                    class="dropdown-item"
+                                    >Disapproved</span
+                                >
+                            </div>
+                        </div>
                         <button
                             type="button"
                             class="btn btn-secondary"
