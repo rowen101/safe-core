@@ -3,7 +3,10 @@ import axios from 'axios';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthUserStore } from '../../stores/AuthUserStore';
+import { useToastr } from '../../toastr.js';
 
+
+const toastr = useToastr();
 const authUserStore = useAuthUserStore();
 const router = useRouter();
 const form = reactive({
@@ -20,9 +23,11 @@ const handleSubmit = () => {
     axios.post('/login', form)
         .then(() => {
             router.push('/admin/dashboard');
+            toastr.success("Login Success");
         })
         .catch((error) => {
-            errorMessage.value = error.response.data.message;
+            //errorMessage.value = error.response.data.message;
+            toastr.error(error.response.data.message);
         })
         .finally(() => {
             loading.value = false;
