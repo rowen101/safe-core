@@ -21,45 +21,41 @@ ChartJS.register(
   LinearScale
 );
 
-// const chartData ={
-//   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-//   datasets: [
-//     {
-//       label: "Task",
-//       data: [2, 5, 4, 8, 10, 4, 7],
-//       backgroundColor: "#1CBAB7",
-//     },
-//     {
-//       label: "Open Todos",
-//       data: [2, 5, 4, 8, 10, 4, 7],
-//       backgroundColor: "#72CCFF",
-//     },
-//     {
-//       label: "Close Todos",
-//       data: [2, 5, 4, 8, 10, 4, 7],
-//       backgroundColor: "#008080",
-//     },
-//   ],
-// };
 
 const authUserStore = useAuthUserStore();
-const chartData = ref([]);
+const selectedAppointmentStatus = ref('all');
 const totalAppointmentsCount = ref(0);
 
-const getDailytaskGraph = () => {
-    axios.get('/api/dailytaskgrap')
-    .then((response) => {
-        // Update the chartData ref with the received data
-      console.log(response.data);
 
-        // Assuming you have a function to update your chart (replace updateChartFunction)
-        //updateChartFunction(chartData.value);
-
-      
-    }).catch((error) => {
-        console.error(error);
+const chartData = ref({
+      labels: [],
+      datasets: [
+        {
+          data: [],
+        },
+        {
+          data: [],
+        },
+        {
+          data: [],
+        },
+      ],
     });
-};
+
+const getChart = () => {
+      axios.get('/api/chart')
+        .then((response) => {
+        const data = response.data;
+        chartData.value = response.data;
+
+        })
+        .catch((error) => {
+          console.error('Error fetching chart data:', error);
+        });
+    };
+
+
+
 
 const selectedDateRange = ref('today');
 const totalUsersCount = ref(0);
@@ -76,7 +72,7 @@ const getUsersCount = () => {
 };
 
 onMounted(() => {
-    getDailytaskGraph();
+    getChart();
     getUsersCount();
 });
 </script>
@@ -85,18 +81,23 @@ onMounted(() => {
 
     <div class="content">
         <div class="container-fluid">
-             <div class="card">
-                    <Bar :data="chartData" />
+
+            <div class="card">
+                <div class="card-header">
+                    Yearly Progress
+                </div>
+                <div class="card-body">
+            <Bar :data="chartData" />
+                </div>
+
                  </div>
             <div class="row">
-
-
                 <!-- <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <div class="d-flex justify-content-between">
                                 <h3>{{ totalAppointmentsCount }}</h3>
-                                <select v-model="selectedAppointmentStatus" @change="getDailytaskGraph()" style="height: 2rem; outline: 2px solid transparent;" class="px-1 rounded border-0">
+                                <select v-model="selectedAppointmentStatus" @change="getChart()" style="height: 2rem; outline: 2px solid transparent;" class="px-1 rounded border-0">
                                     <option value="all">All</option>
                                     <option value="scheduled">Scheduled</option>
                                     <option value="confirmed">Confirmed</option>
@@ -115,7 +116,7 @@ onMounted(() => {
                     </div>
                 </div> -->
 
-                <div v-if="authUserStore.user.name == 'admin'" class="col-lg-3 col-6">
+                <!-- <div v-if="authUserStore.user.name == 'admin'" class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <div class="d-flex justify-content-between">
@@ -139,7 +140,7 @@ onMounted(() => {
                             <i class="fas fa-arrow-circle-right"></i>
                         </router-link>
                     </div>
-                </div>
+                </div> -->
             </div>
 
         </div>

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\AppointmentStatus;
-use App\Http\Controllers\Controller;
-use App\Models\Appointment;
-use App\Models\User;
 use App\Models\Task;
-use Carbon\Carbon;
+use App\Models\User;
+use App\Models\ListTask;
+use App\Models\Appointment;
+use App\Enums\AppointmentStatus;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+
 class DashboardStatController extends Controller
 {
     public function appointments()
@@ -56,50 +58,73 @@ class DashboardStatController extends Controller
             'totalUsersCount' => $totalUsersCount,
         ]);
     }
-    public function getStatusTaskByMonth()
+
+
+
+    public function getChartData()
     {
-        $months = [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        ];
-
-        $datasets = [
-            [
-                'label' => 'Task',
-                'data' => [],
-                'backgroundColor' => '#1CBAB7',
-            ],
-            [
-                'label' => 'Open Todos',
-                'data' => [],
-                'backgroundColor' => '#72CCFF',
-            ],
-            [
-                'label' => 'Close Todos',
-                'data' => [],
-                'backgroundColor' => '#008080',
-            ],
-        ];
-
-        // Fetch data from the database grouped by month
-        $monthlyData = Task::selectRaw('MONTH(taskdate) as month, COUNT(*) as total')
+        // Get the authenticated user's ID
+        $userId = auth()->user()->id;
+        $currentYear = date('Y');
+        // Fetch data from tbl_dailytask and join with tbl_tasklist
+        $tasks = DB::table('tbl_dailytask')
+            ->selectRaw('DATE_FORMAT(taskdate, "%Y-%m") as month, COUNT(*) as total_tasks')
+            ->where('user_id', $userId)
+            ->where('status_task','=', 1)
+            ->whereYear('taskdate', '=', $currentYear) // Filter for the current year
             ->groupBy('month')
+            ->orderBy('month')
             ->get();
 
-        // Fill datasets with the corresponding data
-        foreach ($months as $index => $month) {
-            $foundData = $monthlyData->where('month', $index + 1)->first();
+        // Fetch data from tbl_tasklist where iscompleted = 1
+        $completedTasks = DB::table('tbl_tasklist')
+            ->selectRaw('DATE_FORMAT(tbl_tasklist.created_at, "%Y-%m") as month, COUNT(*) as completed_todos')
+            ->join('tbl_dailytask', 'tbl_dailytask.dailytask_id', '=', 'tbl_tasklist.dailytask_id')
+            ->where('tbl_tasklist.iscompleted', 1)
+            ->where('tbl_dailytask.user_id', $userId)
+            ->whereYear('tbl_dailytask.taskdate', '=', $currentYear) // Filter for the current year
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
 
-            foreach ($datasets as &$dataset) {
-                $dataset['data'][] = $foundData ? $foundData->total : 0;
-            }
-        }
+        // Fetch data from tbl_tasklist where iscompleted = 0
+        $incompleteTasks = DB::table('tbl_tasklist')
+            ->selectRaw('DATE_FORMAT(tbl_tasklist.created_at, "%Y-%m") as month, COUNT(*) as incomplete_todos')
+            ->join('tbl_dailytask', 'tbl_dailytask.dailytask_id', '=', 'tbl_tasklist.dailytask_id')
+            ->where('tbl_tasklist.iscompleted', 0)
+            ->where('tbl_dailytask.user_id', $userId)
+            ->whereYear('tbl_dailytask.taskdate', '=', $currentYear) // Filter for the current year
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
 
-        // Prepare the final JSON structure
+            $monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+
         $chartData = [
-            'labels' => $months,
-            'datasets' => $datasets,
+            'labels' => $monthNames,
+            'datasets' => [
+                [
+                    'label' => 'Total Close Tasks',
+                    'data' => $tasks->pluck('total_tasks'),
+                    'backgroundColor' => '#1976D2',
+                ],
+                [
+                    'label' => 'Completed Todos',
+                    'data' => $completedTasks->pluck('completed_todos'),
+                    'backgroundColor' => '#00B489',
+                ],
+                [
+                    'label' => 'Incomplete Todos',
+                    'data' => $incompleteTasks->pluck('incomplete_todos'),
+                    'backgroundColor' => '#CD201F',
+                ],
+            ],
         ];
 
         return response()->json($chartData);
     }
+
 }
