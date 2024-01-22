@@ -59,57 +59,7 @@ class DashboardStatController extends Controller
         ]);
     }
 
-    public function getStatusTaskByMonth()
-    {
 
-        $userId = auth()->user()->id;
-
-        $months = [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        ];
-
-        $datasets = [
-            [
-                'label' => 'Task',
-                'data' => [],
-                'backgroundColor' => '#1CBAB7',
-            ],
-            [
-                'label' => 'Open Todos',
-                'data' => [],
-                'backgroundColor' => '#72CCFF',
-            ],
-            [
-                'label' => 'Close Todos',
-                'data' => [],
-                'backgroundColor' => '#008080',
-            ],
-        ];
-
-        // Fetch data from the database grouped by month
-        $monthlyData = Task::selectRaw('MONTH(taskdate) as month, COUNT(*) as total')
-            ->where('user_id', $userId)
-            ->with('taskLists')
-            ->groupBy('month')
-            ->get();
-
-        // Fill datasets with the corresponding data
-        foreach ($months as $index => $month) {
-            $foundData = $monthlyData->where('month', $index + 1)->first();
-
-            foreach ($datasets as &$dataset) {
-                $dataset['data'][] = $foundData ? $foundData->total : 0;
-            }
-        }
-
-        // Prepare the final JSON structure
-        $chartData = [
-            'labels' => $months,
-            'datasets' => $datasets,
-        ];
-
-        return response()->json($chartData);
-    }
 
     public function getChartData()
     {
