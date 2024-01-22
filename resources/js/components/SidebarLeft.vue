@@ -33,7 +33,7 @@ const logout = () => {
 };
 
 onMounted(() => {
-    $('[data-widget="treeview"]').Treeview("init");
+    // $('[data-widget="treeview"]').Treeview("init");
     getmenu();
 });
 </script>
@@ -53,7 +53,7 @@ onMounted(() => {
             }}</span>
         </a>
 
-        <div class="sidebar" style="overflow-y: auto; margin: 0px -8px; width: 249px; height: 527px;">
+        <div class="sidebar" >
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                <div v-if="authUserStore.user.avatar === ''" class="image">
                     <img
@@ -91,7 +91,7 @@ onMounted(() => {
                     }}</a>
                 </div>
             </div>
-
+    <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul
                     class="nav nav-pills nav-sidebar flex-column"
@@ -119,7 +119,7 @@ onMounted(() => {
                             <p>{{ item.menu_title }}</p>
                             <i
                                 v-if="item.submenus && item.submenus.length > 0"
-                                class="fas fa-angle-left right"
+                                class="right fas fa-angle-left"
                             ></i>
                         </router-link>
 
