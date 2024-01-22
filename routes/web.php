@@ -109,6 +109,8 @@ Route::middleware('auth')->group(function () {
     //menu username
     Route::resource('/api/usermenu', UserMenuController::class);
     Route::get('/api/usermenu/retrieve/{id}', [UserMenuController::class, 'retrieveUserMenu']);
+
+    Route::get('/api/chart',[DashboardStatController::class, 'getChartData']);
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');

@@ -1,21 +1,61 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useAuthUserStore } from "../stores/AuthUserStore";
+import { Bar } from "vue-chartjs"
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+);
+
 
 const authUserStore = useAuthUserStore();
 const selectedAppointmentStatus = ref('all');
 const totalAppointmentsCount = ref(0);
 
-const getAppointmentsCount = () => {
-    axios.get('/api/stats/appointments', {
-        params: {
-            status: selectedAppointmentStatus.value,
-        }
-    })
-    .then((response) => {
-        totalAppointmentsCount.value = response.data.totalAppointmentsCount;
-    })
-};
+
+const chartData = ref({
+      labels: [],
+      datasets: [
+        {
+          data: [],
+        },
+        {
+          data: [],
+        },
+        {
+          data: [],
+        },
+      ],
+    });
+
+const getChart = () => {
+      axios.get('/api/chart')
+        .then((response) => {
+        const data = response.data;
+        chartData.value = response.data;
+
+        })
+        .catch((error) => {
+          console.error('Error fetching chart data:', error);
+        });
+    };
+
+
+
 
 const selectedDateRange = ref('today');
 const totalUsersCount = ref(0);
@@ -32,22 +72,32 @@ const getUsersCount = () => {
 };
 
 onMounted(() => {
-    getAppointmentsCount();
+    getChart();
     getUsersCount();
 });
 </script>
 <template>
-   
+
 
     <div class="content">
         <div class="container-fluid">
+
+            <div class="card">
+                <div class="card-header">
+                    Yearly Progress
+                </div>
+                <div class="card-body">
+            <Bar :data="chartData" />
+                </div>
+
+                 </div>
             <div class="row">
                 <!-- <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <div class="d-flex justify-content-between">
                                 <h3>{{ totalAppointmentsCount }}</h3>
-                                <select v-model="selectedAppointmentStatus" @change="getAppointmentsCount()" style="height: 2rem; outline: 2px solid transparent;" class="px-1 rounded border-0">
+                                <select v-model="selectedAppointmentStatus" @change="getChart()" style="height: 2rem; outline: 2px solid transparent;" class="px-1 rounded border-0">
                                     <option value="all">All</option>
                                     <option value="scheduled">Scheduled</option>
                                     <option value="confirmed">Confirmed</option>
@@ -66,7 +116,7 @@ onMounted(() => {
                     </div>
                 </div> -->
 
-                <div v-if="authUserStore.user.name == 'admin'" class="col-lg-3 col-6">
+                <!-- <div v-if="authUserStore.user.name == 'admin'" class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <div class="d-flex justify-content-between">
@@ -90,7 +140,7 @@ onMounted(() => {
                             <i class="fas fa-arrow-circle-right"></i>
                         </router-link>
                     </div>
-                </div>
+                </div> -->
             </div>
 
         </div>
