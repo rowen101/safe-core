@@ -11,14 +11,15 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\MenuListController;
 use App\Http\Controllers\Admin\UserMenuController;
-use App\Http\Controllers\Admin\VirtualASController;
 
+use App\Http\Controllers\Admin\VirtualASController;
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\MyClosePrioController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\DashboardStatController;
 use App\Http\Controllers\Admin\AppointmentStatusController;
-use App\Http\Controllers\Admin\MenuListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +113,10 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/api/chart',[DashboardStatController::class, 'getChartData']);
+
+    Route::resource('/api/notifications', NotificationController::class);
+    Route::put('/api/notifications/{id}/markAsRead',[NotificationController::class, 'markAsRead']);
+
 
 
 });

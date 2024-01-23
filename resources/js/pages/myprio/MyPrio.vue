@@ -335,9 +335,29 @@ const createData = (values, actions) => {
     axios
         .post("/api/dailytask", form)
         .then((response) => {
+            console.log(response.data);
             getItems();
             $("#FormModal").modal("hide");
             toastr.success("data created successfully!");
+            // Now, create a notification
+            // const notificationData = {
+            //     user_id: form.user_id,
+            //     type: 'task_created', // Adjust the type based on your notification structure
+            //     notifiable_type: 'App\\Models\\DailyTask', // Adjust the notifiable type based on your model
+            //     notifiable_id: response.data.dailytask_id, // Assuming the API response contains the ID of the created daily task
+            //     data: {
+            //         message: 'A new task has been created from ' + form.plandate +' to ' + form.planenddate,
+            //         // Add other data as needed
+            //     },
+            // };
+
+            // axios.post("/api/notifications", notificationData)
+            //     .then((notificationResponse) => {
+            //         console.log('Notification created successfully:', notificationResponse.data);
+            //     })
+            //     .catch((notificationError) => {
+            //         console.error('Error creating notification:', notificationError);
+            //     });
         })
         .catch((error) => {
             actions.setErrors(error.response.data.errors);

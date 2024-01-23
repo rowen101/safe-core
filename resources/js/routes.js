@@ -14,7 +14,7 @@ import MyClosedPrio from './pages/mycloseprio/MyClosePrioList.vue';
 import UserMenu from './pages/usermenu/UserMenuList.vue';
 import Menu from './pages/menu/MenuList.vue';
 import page404 from "./pages/404.vue";
-
+import Notifications from './pages/notification/index.vue';
 export default [
     {
         path: '/login',
@@ -110,6 +110,11 @@ export default [
         path: '/:catchAll(.*)',
         name: '404 Error Page',
         component: page404, // Replace with your actual 404 component
+    },
+    {
+        path: '/admin/notifications',
+        name: 'Notifications',
+        component: Notifications, // Replace with your actual 404 component
     },
 
 
