@@ -20,6 +20,8 @@ use App\Http\Controllers\Admin\MyClosePrioController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\DashboardStatController;
 use App\Http\Controllers\Admin\AppointmentStatusController;
+use App\Http\Controllers\Safexpres\PageController;
+use App\Http\Controllers\SafexpressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,3 +124,5 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');
+Route::get('{view}', SafexpressController::class)->where('view', '(.*)');
+
