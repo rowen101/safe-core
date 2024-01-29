@@ -5,18 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Branch extends Model
 {
-    use HasFactory;
+    protected $table = "branches";
 
-    protected $table = "clients";
     protected $fillable = [
         'id',
-        'filename',
+        'region',
+        'site',
+        'sitehead',
+        'location',
+        'email',
+        'phone',
+        'geomap',
         'image',
         'is_active',
         'created_by',
-        'updated_by',
+        'updated_by'
 
     ];
 }
+

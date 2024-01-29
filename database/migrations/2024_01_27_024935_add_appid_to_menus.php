@@ -13,18 +13,6 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('app', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('app_code', 20); // application code
-            $table->string('app_name', 150); // name of the application
-            $table->text('description'); //Describe the product
-            $table->string('app_icon', 150)->nullable(); //application icon
-            $table->boolean('is_active')->default(true)->nullable(); //ACTIVE,INACTIVE,MAINTENANCE
-            $table->string('status_message',150)->nullable();
-            $table->integer('created_by');
-            $table->integer('updated_by')->nullable();
-            $table->timestamps();
-        });
 
         Schema::table('menus', function (Blueprint $table) {
             $table->integer('app_id')->unsigned()->after('menu_id');
@@ -40,7 +28,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('app');
+
         Schema::dropIfExists('menus');
     }
 };

@@ -2,9 +2,13 @@
 
 namespace Database\Seeders;
 
+
 use Illuminate\Database\Seeder;
+use Database\Seeders\Admin\AppSeeder;
 use Database\Seeders\Admin\MenuSeeder;
 use Database\Seeders\Admin\UserSeeder;
+use Database\Seeders\Admin\CommingSeeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,9 +21,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             MenuSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            AppSeeder::class,
+            CommingSeeder::class
         ]);
 
-       
+
     }
 }

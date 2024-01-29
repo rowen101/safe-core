@@ -19,6 +19,8 @@ class MenuSeeder extends Seeder
         foreach ($json as $value) {
             $rowdata = new Menu();
             $rowdata->menu_id = $value["menu_id"];
+            $rowdata->app_id = $value["app_id"];
+            $rowdata->menu_code = $value["menu_code"];
             $rowdata->menu_title = $value["menuTitle"];
             $rowdata->parent_id = $value["parent_id"];
             $rowdata->menu_icon = $value["menuIcon"];

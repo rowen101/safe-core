@@ -5,18 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Comimgprofile extends Model
 {
     use HasFactory;
-
-    protected $table = "clients";
+    protected $table = "comimgprofiles";
     protected $fillable = [
         'id',
-        'filename',
-        'image',
+        'company_img',
         'is_active',
-        'created_by',
-        'updated_by',
-
     ];
 }

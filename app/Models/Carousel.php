@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Carousel extends Model
 {
-    use HasFactory;
+    protected $table = "carousels";
 
-    protected $table = "clients";
     protected $fillable = [
         'id',
-        'filename',
         'image',
+        'caption',
+        'detail',
         'is_active',
         'created_by',
-        'updated_by',
-
+        'updated_by'
     ];
 }

@@ -35,8 +35,20 @@ use App\Http\Controllers\SafexpressController;
 */
 
 // Route::get('/', function () {
-//     return view('welcome');
+//     return view('safexpress.layouts.app');
 // });
+Route::get('/', [App\Http\Controllers\PagesController::class, 'index'])->name('pages.index');
+Route::get('/about', [App\Http\Controllers\PagesController::class, 'about'])->name('about');
+Route::get('/services', [App\Http\Controllers\PagesController::class, 'services'])->name('services');
+Route::get('/teams', [App\Http\Controllers\PagesController::class, 'teams'])->name('teams');
+Route::get('/contact', [App\Http\Controllers\PagesController::class, 'contact'])->name('contact');
+Route::get('/branch', [App\Http\Controllers\PagesController::class, 'branch'])->name('branch');
+Route::post('/filter-branches', [App\Http\Controllers\PagesController::class, 'filterBranches'])->name('pages.filtered');
+Route::get('/blog', [App\Http\Controllers\PagesController::class, 'blog'])->name('blog');
+Route::get('/blog-details/{id}', [App\Http\Controllers\PagesController::class, 'blogid'])->name('blog-select');
+Route::get('/warehouse-management', [App\Http\Controllers\PagesController::class, 'warehouse']);
+Route::get('/transport-services', [App\Http\Controllers\PagesController::class, 'transport']);
+Route::get('/other-services', [App\Http\Controllers\PagesController::class, 'other']);
 
 // Route::get('/admin/dashboard', function () {
 //     return view('dashboard');
@@ -121,8 +133,9 @@ Route::middleware('auth')->group(function () {
 
 
 
-});
 
+});
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');
-Route::get('{view}', SafexpressController::class)->where('view', '(.*)');
+// Route::get('{view}', SafexpressController::class)->where('view', '(.*)');
+
 

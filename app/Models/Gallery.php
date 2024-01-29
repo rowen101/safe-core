@@ -5,18 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Gallery extends Model
 {
-    use HasFactory;
+    protected $table = 'galleries';
 
-    protected $table = "clients";
     protected $fillable = [
         'id',
-        'filename',
-        'image',
+        'gurec',
+        'foldername',
         'is_active',
-        'created_by',
-        'updated_by',
+        'filename',
+        'parent_id',
+        'caption',
+        'image'
 
     ];
+
 }

@@ -29,6 +29,7 @@ const logout = () => {
     axios.post("/logout").then((response) => {
         authUserStore.user.name = "";
         router.push("/login");
+          window.location.href = "/";
     });
 };
 

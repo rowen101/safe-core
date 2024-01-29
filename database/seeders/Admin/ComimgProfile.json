@@ -1,0 +1,103 @@
+[
+    {
+        "id": 1,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0001.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 2,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0002.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 3,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0003.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 4,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0004.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 5,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0005.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 6,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0006.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 7,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0007.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 8,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0008.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 9,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0009.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 10,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0010.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 11,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0011.jpg",
+        "is_active": 1
+
+    },
+    {
+        "id": 12,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0012.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 13,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0013.jpg",
+        "is_active": 1 
+    },
+    {
+        "id": 14,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0014.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 15,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0015.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 16,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0016.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 17,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0017.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 18,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0018.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 19,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0019.jpg",
+        "is_active": 1
+    },
+    {
+        "id": 20,
+        "company_img": "/img/comprofile/SLI Company Profile 2024 copy_page-0020.jpg",
+        "is_active": 1
+    }
+]
