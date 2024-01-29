@@ -27,43 +27,43 @@ export default [
     //     component: Register,
     // },
     {
-        path: '/admin/dashboard',
+        path: '/app/admin/dashboard',
         name: 'Dashboard',
         component: Dashboard,
     },
 
     {
-        path: '/admin/appointments',
+        path: '/app/admin/appointments',
         name: 'Appointments',
         component: ListAppointments,
     },
 
     {
-        path: '/admin/appointments/create',
+        path: '/app/admin/appointments/create',
         name: 'Appointments',
         component: AppointmentForm,
     },
 
     {
-        path: '/admin/appointments/:id/edit',
+        path: '/app/admin/appointments/:id/edit',
         name: 'Appointments',
         component: AppointmentForm,
     },
 
     {
-        path: '/admin/user',
+        path: '/app/admin/user',
         name: 'User',
         component: UserList,
     },
 
     {
-        path: '/admin/settings',
+        path: '/app/admin/settings',
         name: 'Setting',
         component: UpdateSetting,
     },
 
     {
-        path: '/admin/profile',
+        path: '/app/admin/profile',
         name: 'Profile',
         component: UpdateProfile,
     },
@@ -75,33 +75,33 @@ export default [
     },
 
     {
-        path: '/admin/tech-recommendation',
+        path: '/app/admin/tech-recommendation',
         name: 'Tech Recomm',
         component: TechList,
     },
     {
-        path: '/admin/weekly-task-schedule/myprio',
+        path: '/app/admin/weekly-task-schedule/myprio',
         name: 'My Prio',
         component: MyPrio,
     },
 
     {
-        path: '/admin/weekly-task-schedule/my-closed-prio',
+        path: '/app/admin/weekly-task-schedule/my-closed-prio',
         name: 'My Closed Prio',
         component: MyClosedPrio,
     },
     {
-        path: '/admin/weekly-task-schedule/myvsc',
+        path: '/app/admin/weekly-task-schedule/myvsc',
         name: 'My VSC',
         component: MyVsc,
     },
     {
-        path: '/admin/usermenu',
+        path: '/app/admin/usermenu',
         name: 'User Menu',
         component: UserMenu,
     },
     {
-        path: '/admin/menu',
+        path: '/app/admin/menu',
         name: 'Menu',
         component: Menu,
     },
@@ -112,7 +112,7 @@ export default [
         component: page404, // Replace with your actual 404 component
     },
     {
-        path: '/admin/notifications',
+        path: '/app/admin/notifications',
         name: 'Notifications',
         component: Notifications, // Replace with your actual 404 component
     },

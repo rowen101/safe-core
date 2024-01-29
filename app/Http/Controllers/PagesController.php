@@ -75,11 +75,11 @@ class PagesController extends Controller
     }
     public function contact()
     {
-        $title = Menu::where('menu_code','MENU0015')->pluck('menu_title')->first();
+        $title = Menu::where('menu_code','MENU0021')->pluck('menu_title')->first();
         $app = App::where('id', 2)->select('site_email', 'site_phone', 'site_address')->first();
         $menuItem = $this->getGuestMenu();
 
-        return view('pages.contact',compact('menuItem','app','title','setting'));
+        return view('pages.contact',compact('menuItem','app','title','app'));
     }
     public function teams()
     {

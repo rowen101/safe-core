@@ -37,6 +37,7 @@ use App\Http\Controllers\SafexpressController;
 // Route::get('/', function () {
 //     return view('safexpress.layouts.app');
 // });
+Route::get('/app', [App\Http\Controllers\AppController::class, 'index'])->name('app');
 Route::get('/', [App\Http\Controllers\PagesController::class, 'index'])->name('pages.index');
 Route::get('/about', [App\Http\Controllers\PagesController::class, 'about'])->name('about');
 Route::get('/services', [App\Http\Controllers\PagesController::class, 'services'])->name('services');

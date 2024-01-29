@@ -22,8 +22,9 @@ const handleSubmit = () => {
     errorMessage.value = '';
     axios.post('/login', form)
         .then(() => {
-            router.push('/admin/dashboard');
-            toastr.success("Login Success");
+            // router.push('/admin/dashboard');
+             window.location.href = "/apps";
+            //toastr.success("Login Success");
         })
         .catch((error) => {
             //errorMessage.value = error.response.data.message;
