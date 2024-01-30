@@ -27,9 +27,10 @@ use App\Http\Controllers\Safexpress\GalleryController;
 use App\Http\Controllers\Safexpress\WebUserController;
 use App\Http\Controllers\Admin\DashboardStatController;
 use App\Http\Controllers\Safexpress\CarouselController;
+use App\Http\Controllers\Safexpress\SafeMenuController;
 use App\Http\Controllers\Safexpress\CategorieController;
 use App\Http\Controllers\Admin\AppointmentStatusController;
-
+use App\Http\Controllers\Safexpress\SafeApplicationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -142,44 +143,40 @@ Route::middleware('auth')->group(function () {
 
 
     //Safexpress
-    Route::get('/app/SLI', [App\Http\Controllers\Safexpress\AdminController::class, 'index'])->name('admin.safexpress.index');
-Route::get('/SLI/activity', [App\Http\Controllers\Safexpress\AdminController::class, 'activity'])->name('admin.safexpress.activity');
-Route::get('/SLI/dashboard', [App\Http\Controllers\Safexpress\AdminController::class, 'dashboard'])->name('admin.safexpress.dashboard');
-
-Route::resource('/SLI/user',WebUserController::class);
-Route::resource('/SLI/apps',ApplicationController::class);
-Route::resource('/SLI/menu',MenuController::class);
-Route::resource('/SLI/setting',SettingController::class);
-Route::resource('/SLI/gallery',GalleryController::class);
-Route::resource('/SLI/post',PostController::class);
-Route::put('/SLI/post-publish/{id}',[App\Http\Controllers\Safexpress\PostController::class,'publish']);
+Route::get('/app/SLI', [App\Http\Controllers\Safexpress\AdminController::class, 'index'])->name('admin.safexpress.index');
+Route::get('/app/SLI/activity', [App\Http\Controllers\Safexpress\AdminController::class, 'activity'])->name('admin.safexpress.activity');
+//Route::get('/app/SLI/dashboard', [App\Http\Controllers\Safexpress\AdminController::class, 'dashboard'])->name('admin.safexpress.dashboard');
+Route::resource('/app/SLI/user',WebUserController::class);
+Route::resource('/app/SLI/application',SafeApplicationController::class);
+Route::resource('/app/SLI/menu',SafeMenuController::class);
+Route::resource('/app/SLI/setting',SettingController::class);
+Route::resource('/app/SLI/gallery',GalleryController::class);
+Route::resource('/app/SLI/post',PostController::class);
+Route::put('/app/SLI/post-publish/{id}',[App\Http\Controllers\Safexpress\PostController::class,'publish']);
 Route::resource('/SLI/categorie', CategorieController::class);
 //Route::get('/admin/gallery/{id}/image', [App\Http\Controllers\GalleryController::class, 'viewimage'])->name('admin.gallery.image');
-Route::post('/SLI/gallery/image/{id}', [App\Http\Controllers\Safexpress\GalleryController::class, 'addimage']);
-Route::resource('/SLI/branch', BranchController::class);
+Route::post('/app/SLI/gallery/image/{id}', [App\Http\Controllers\Safexpress\GalleryController::class, 'addimage']);
+Route::resource('/app/SLI/branch', BranchController::class);
 Route::get('/file-resize'   , [App\Http\Controllers\Safexpress\ResizeController::class, 'index']);
 Route::post('/resize-file', [App\Http\Controllers\Safexpress\ResizeController::class, 'resizeImage'])->name('resizeImage');
-
 Route::post('dropzone/upload', [App\Http\Controllers\Safexpress\GalleryController::class,'upload'])->name('dropzone.upload');
-
 Route::get('dropzone/fetch/{id}/image', [App\Http\Controllers\Safexpress\GalleryController::class,'fetch'])->name('dropzone.fetch');
-
 Route::get('dropzone/delete', [App\Http\Controllers\Safexpress\GalleryController::class,'delete'])->name('dropzone.delete');
-Route::get('/SLI/menuapp',[App\Http\Controllers\Safexpress\MenuController::class,'menuapp']);
-Route::resource('/SLI/bdirector',BDController::class);
-Route::resource('/SLI/usermenu',UserMenuController::class);
-Route::resource('/SLI/client',ClientController::class);
-Route::get('SLI/client/fetch',[App\Http\Controllers\Safexpress\ClientController::class,'fetch'])->name('client.fetch');
-Route::post('/SLI/client/filename',[App\Http\Controllers\Safexpress\ClientController::class,'clientfilename'])->name('client.filename');
-Route::resource('SLI/carousel', CarouselController::class);
-Route::post('/SLI/carousel/filename',[App\Http\Controllers\Safexpress\CarouselController::class,'carouselfilename'])->name('carousel.filename');
-
+Route::get('/app/SLI/menuapp',[App\Http\Controllers\Safexpress\SafeMenuController::class,'menuapp']);
+Route::resource('/app/SLI/bdirector',BDController::class);
+Route::resource('/app/SLI/usermenu',UserMenuController::class);
+Route::resource('/app/SLI/client',ClientController::class);
+Route::get('/app/SLI/client/fetch',[App\Http\Controllers\Safexpress\ClientController::class,'fetch'])->name('client.fetch');
+Route::post('/app/SLI/client/filename',[App\Http\Controllers\Safexpress\ClientController::class,'clientfilename'])->name('client.filename');
+Route::resource('/app/SLI/carousel', CarouselController::class);
+Route::post('/app/SLI/carousel/filename',[App\Http\Controllers\Safexpress\CarouselController::class,'carouselfilename'])->name('carousel.filename');
 Route::get('/dropzone',[App\Http\Controllers\Safexpress\DropzoneController::class,'index']);
 Route::get('dropzone/fetch/image', [App\Http\Controllers\Safexpress\DropzoneController::class,'fetch'])->name('dropzones.fetch');
 Route::post('dropzones/upload', [App\Http\Controllers\Safexpress\DropzoneController::class,'upload'])->name('dropzones.upload');
 
 });
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');
-// Route::get('{view}', SafexpressController::class)->where('view', '(.*)');
+
+
 
 

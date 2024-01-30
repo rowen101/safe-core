@@ -21,6 +21,7 @@ class PagesController extends Controller
         return Menu::select('menus.*')
             ->where('is_active', 1)
             ->where('app_id', 2)
+            ->where('menu_tag', "SLI")
             ->where('parent_id', 0)
             ->orderBy('sort_order', 'ASC')
             ->get();

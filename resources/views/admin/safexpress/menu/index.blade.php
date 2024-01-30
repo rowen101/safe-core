@@ -37,7 +37,6 @@
                                         <th>No</th>
                                         <th></th>
                                         <th>App Name</th>
-                                     
                                         <th>Menu Name</th>
                                         <th>Active</th>
                                         <th>Created Date</th>
@@ -69,7 +68,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @include('admin.menu.form')
+                        @include('admin.safexpress.menu.form')
                     </div>
 
                 </div>
@@ -180,13 +179,18 @@
                 Create Categorie Code
                 --------------------------------------------
                 --------------------------------------------*/
+                // $('#application').change(function () {
+                //     var selectedAppId = $(this).val();
+                //     console.log(selectedAppId); // You can replace this with your desired action
+                // });
                 $('#saveBtn').click(function(e) {
                     e.preventDefault();
                     $(this).html('Sending..');
                     var formData = $('#productForm').serialize();
+
                     $.ajax({
                         data: $('#productForm').serialize(),
-                        url: "{{ url('/admin/menu') }}",
+                        url: "{{ url('/app/SLI/menu') }}",
                         type: "POST",
                         data: formData,
                         dataType: 'json',
@@ -219,7 +223,7 @@
                       --------------------------------------------*/
                 $('body').on('click', '.edit', function() {
                     var id = $(this).data('id');
-                    $.get("{{ url('/admin/menu') }}" + '/' + id + '/edit', function(data) {
+                    $.get("{{ url('/app/SLI/menu') }}" + '/' + id + '/edit', function(data) {
                         $('#modelHeading').html("Edit {{ $title }}");
                         $('#saveBtn').val("edit");
                         $('#saveBtn').html('<i class="fas fa-save"></i>&nbsp;Update');
@@ -292,7 +296,7 @@
                         if (result.isConfirmed) {
                             //AJAX
                             $.ajax({
-                                url: "{{ url('admin/menu') }}" + '/' + id,
+                                url: "{{ url('/app/SLI/menu') }}" + '/' + id,
                                 type: 'DELETE',
                                 data: id,
                                 success: function(response) {
@@ -323,6 +327,9 @@
 
 
                 });
+
+
+
             });
         </script>
     @endpush

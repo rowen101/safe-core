@@ -36,7 +36,7 @@
           <!-- small box -->
           <div class="small-box bg-info">
             <div class="inner">
-              <h3>{{ $mancom}}</h3>
+              {{-- <h3>{{ $mancom}}</h3> --}}
 
               <p>Mancom</p>
             </div>
@@ -66,7 +66,7 @@
           <!-- small box -->
           <div class="small-box bg-warning">
             <div class="inner">
-              <h3>{{ $user}}</h3>
+              {{-- <h3>{{ $user}}</h3> --}}
 
               <p>User Registrations</p>
             </div>

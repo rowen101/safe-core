@@ -26,6 +26,7 @@ class MenuSeeder extends Seeder
             $rowdata->menu_icon = $value["menuIcon"];
             $rowdata->menu_route = $value["menuRoute"];
             $rowdata->sort_order = $value["sortOrder"];
+            $rowdata->menu_tag = $value["menu_tag"];
             $rowdata->is_active = $value["isActive"];
             $rowdata->created_by = 0;
             $rowdata->save();

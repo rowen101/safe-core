@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\Facades\DataTables;
 
-class ApplicationController extends Controller
+class SafeApplicationController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -28,9 +28,10 @@ class ApplicationController extends Controller
         $userId = auth()->user()->id;
 
         $menu = Menu::select('menus.*')
-            ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
+            ->join('usermenus', 'menus.menu_id', '=', 'usermenus.menu_id')
             ->where('menus.is_active', 1)
             ->where('menus.app_id', 1)
+            ->where('menus.menu_tag', "SLIADMIN")
             ->where('menus.parent_id', 0)
             ->where('usermenus.user_id', $userId)
             ->orderBy('menus.sort_order', 'ASC')
@@ -39,8 +40,9 @@ class ApplicationController extends Controller
         // For each top-level menu item, fetch and attach its submenus based on user access
         $menu->each(function ($menuItem) use ($userId) {
             $menuItem->submenus = Menu::select('menus.*')
-                ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
+                ->join('usermenus', 'menus.menu_id', '=', 'usermenus.menu_id')
                 ->where('menus.is_active', 1)
+                ->where('menus.menu_tag', "SLIADMIN")
                 ->where('menus.parent_id', $menuItem->id)
                 ->where('usermenus.user_id', $userId)
                 ->orderBy('menus.sort_order', 'ASC')

@@ -171,7 +171,7 @@
                 var table = $('.data-table').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "{{ route('apps.index') }}",
+                    ajax: "{{ route('application.index') }}",
                     columns: [{
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
@@ -242,7 +242,7 @@
                     var formData = $('#productForm').serialize();
                     $.ajax({
                         data: $('#productForm').serialize(),
-                        url: "{{ url('/admin/apps') }}",
+                        url: "{{ url('/app/SLI/application') }}",
                         type: "POST",
                         data: formData,
                         dataType: 'json',
@@ -276,7 +276,7 @@
                 --------------------------------------------*/
                 $('body').on('click', '.edit', function() {
                     var id = $(this).data('id');
-                    $.get("{{ url('admin/apps') }}" + '/' + id + '/edit', function(data) {
+                    $.get("{{ url('/app/SLI/application') }}" + '/' + id + '/edit', function(data) {
                         $('#modelHeading').html("Edit {{ $title }}");
                         $('#saveBtn').val("edit");
                         $('#saveBtn').html('<i class="fas fa-save"></i>&nbsp;Update');
@@ -291,9 +291,9 @@
 
 
                         //hide span alert
-                        document.getElementById('app_codeErrorMsg').style.visibility = 'hidden';
-                        document.getElementById('app_nameErrorMsg').style.visibility = 'hidden';
-                        document.getElementById('descriptionErrorMsg').style.visibility = 'hidden';
+                        // document.getElementById('app_codeErrorMsg').style.visibility = 'hidden';
+                        // document.getElementById('app_nameErrorMsg').style.visibility = 'hidden';
+                        // document.getElementById('descriptionErrorMsg').style.visibility = 'hidden';
                     })
 
                 });
@@ -329,7 +329,7 @@
                         if (result.isConfirmed) {
                             //AJAX
                             $.ajax({
-                                url: "{{ url('admin/apps') }}" + '/' + id,
+                                url: "{{ url('/app/SLI/application') }}" + '/' + id,
                                 type: 'DELETE',
                                 data: id,
                                 success: function(response) {

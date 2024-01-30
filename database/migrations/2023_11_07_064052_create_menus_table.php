@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('menu_icon')->nullable();
             $table->string('menu_route', 50)->deafault('default')->index()->nullable(); // url
             $table->integer('sort_order')->default(100)->nullable();
+            $table->string('menu_tag',100)->index();
             $table->boolean('is_active')->default(true)->nullable();
             $table->integer('created_by')->default(0);
             $table->integer('updated_by')->nullable();
