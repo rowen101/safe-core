@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Safexpress;
+use App\Http\Controllers\Controller;
 use App\Models\App;
 use App\Models\Menu;
 use App\Models\Posts;

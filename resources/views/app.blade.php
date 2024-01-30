@@ -36,7 +36,7 @@
               <div class="card-body">
                 <h5 class="card-title">{{$item->app_name}}</h5>
                 <p class="card-text">{{$item->description}}</p>
-                <a href="{{$item->app_name}}" target="_bla" class="btn btn-primary">Open App</a>
+                <a href="/app/{{$item->app_code}}" target="_bla" class="btn btn-primary">Open App</a>
               </div>
             </div>
           </div>
