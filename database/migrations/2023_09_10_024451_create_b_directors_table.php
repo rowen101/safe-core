@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('b_directors', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 20);
+            $table->string('name', 150);
             $table->string('image')->nullable();
             $table->string('position', 150);
             $table->text('about')->nullable();

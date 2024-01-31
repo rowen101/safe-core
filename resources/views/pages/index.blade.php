@@ -114,7 +114,7 @@
                             <ul>
 
                                 <li>
-                                    <a href="/admin" target="_blank">Admin Dashboard</a>
+                                    <a href="/app/SLI" target="_blank">Admin Dashboard</a>
                                 </li>
 
                             </ul>

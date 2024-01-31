@@ -25,27 +25,42 @@ class ClientController extends Controller
 
     private function getAdminMenu()
     {
-        $userId = auth()->user()->id;
+        // $userId = auth()->user()->id;
+        // $menu = Menu::select('menus.*')
+        //     ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
+        //     ->where('menus.is_active', 1)
+        //     ->where('menus.app_id', 1)
+        //     ->where('menus.parent_id', 0)
+        //     ->where('usermenus.user_id', $userId)
+        //     ->orderBy('menus.sort_order', 'ASC')
+        //     ->get();
 
-        $menu = Menu::select('menus.*')
-            ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
-            ->where('menus.is_active', 1)
-            ->where('menus.app_id', 1)
-            ->where('menus.parent_id', 0)
-            ->where('usermenus.user_id', $userId)
-            ->orderBy('menus.sort_order', 'ASC')
+        // // For each top-level menu item, fetch and attach its submenus based on user access
+        // $menu->each(function ($menuItem) use ($userId) {
+        //     $menuItem->submenus = Menu::select('menus.*')
+        //         ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
+        //         ->where('menus.is_active', 1)
+        //         ->where('menus.parent_id', $menuItem->id)
+        //         ->where('usermenus.user_id', $userId)
+        //         ->orderBy('menus.sort_order', 'ASC')
+        //         ->get();
+        // });
+
+        $app_id = 2;
+        $menu_tag = "SLIADMIN";
+
+        $menu = Menu::with(['submenus' => function ($query) use ($app_id, $menu_tag) {
+                $query->where('is_active', 1)
+                      ->where('app_id', $app_id)
+                      ->where('menu_tag', $menu_tag)
+                      ->orderBy('sort_order', 'ASC');
+            }])
+            ->where('is_active', 1)
+            ->where('app_id', $app_id)
+            ->where('menu_tag', $menu_tag)
+            ->where('parent_id', 0)
+            ->orderBy('sort_order', 'ASC')
             ->get();
-
-        // For each top-level menu item, fetch and attach its submenus based on user access
-        $menu->each(function ($menuItem) use ($userId) {
-            $menuItem->submenus = Menu::select('menus.*')
-                ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
-                ->where('menus.is_active', 1)
-                ->where('menus.parent_id', $menuItem->id)
-                ->where('usermenus.user_id', $userId)
-                ->orderBy('menus.sort_order', 'ASC')
-                ->get();
-        });
 
         return $menu;
     }

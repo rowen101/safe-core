@@ -30,9 +30,9 @@
                                     placeholder="Menu Title">
                             </div>
                             <div class="form-group required">
-                                <label for="exampleInputPassword1" class="control-label">Description</label>
-                                <input type="text" class="form-control" name="description" id="description"
-                                    placeholder="Menu Code">
+                                <label for="exampleInputPassword1" class="control-label">Menu Tag</label>
+                                <input type="text" class="form-control" name="menu_tag" id="menu_tag"
+                                    placeholder="Menu Tag">
                             </div>
                             <div class="form-group required">
                                 <label for="exampleInputPassword1" class="control-label">Parent Menu</label>

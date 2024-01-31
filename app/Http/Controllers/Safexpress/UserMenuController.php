@@ -26,8 +26,18 @@ class UserMenuController extends Controller
 
      private function getAdminMenu()
      {
-        $menu = Menu::where('is_active', 1)
-            ->where('app_id', 1)
+        $app_id = 2;
+        $menu_tag = "SLIADMIN";
+
+        $menu = Menu::with(['submenus' => function ($query) use ($app_id, $menu_tag) {
+                $query->where('is_active', 1)
+                      ->where('app_id', $app_id)
+                      ->where('menu_tag', $menu_tag)
+                      ->orderBy('sort_order', 'ASC');
+            }])
+            ->where('is_active', 1)
+            ->where('app_id', $app_id)
+            ->where('menu_tag', $menu_tag)
             ->where('parent_id', 0)
             ->orderBy('sort_order', 'ASC')
             ->get();
@@ -37,7 +47,6 @@ class UserMenuController extends Controller
     public function index(Request $request)
     {
         $adminmenu = $this->getAdminMenu();
-
         $title = "User Menu";
         if ($request->ajax()) {
 

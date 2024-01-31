@@ -26,29 +26,44 @@ class SafeMenuController extends Controller
 
     private function getAdminMenu()
     {
-        $userId = auth()->user()->id;
+        // $userId = auth()->user()->id;
+        // $menu = Menu::select('menus.*')
+        //     ->join('usermenus', 'menus.menu_id', '=', 'usermenus.menu_id')
+        //     ->where('menus.is_active', 1)
+        //     ->where('menus.app_id', 1)
+        //     ->where('menus.menu_tag', "SLIADMIN")
+        //     ->where('menus.parent_id', 0)
+        //     ->where('usermenus.user_id', $userId)
+        //     ->orderBy('menus.sort_order', 'ASC')
+        //     ->get();
 
-        $menu = Menu::select('menus.*')
-            ->join('usermenus', 'menus.menu_id', '=', 'usermenus.menu_id')
-            ->where('menus.is_active', 1)
-            ->where('menus.app_id', 1)
-            ->where('menus.menu_tag', "SLIADMIN")
-            ->where('menus.parent_id', 0)
-            ->where('usermenus.user_id', $userId)
-            ->orderBy('menus.sort_order', 'ASC')
+        // // For each top-level menu item, fetch and attach its submenus based on user access
+        // $menu->each(function ($menuItem) use ($userId) {
+        //     $menuItem->submenus = Menu::select('menus.*')
+        //         ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
+        //         ->where('menus.is_active', 1)
+        //         ->where('menus.menu_tag', "SLIADMIN")
+        //         ->where('menus.parent_id', $menuItem->id)
+        //         ->where('usermenus.user_id', $userId)
+        //         ->orderBy('menus.sort_order', 'ASC')
+        //         ->get();
+        // });
+
+        $app_id = 2;
+        $menu_tag = "SLIADMIN";
+
+        $menu = Menu::with(['submenus' => function ($query) use ($app_id, $menu_tag) {
+                $query->where('is_active', 1)
+                      ->where('app_id', $app_id)
+                      ->where('menu_tag', $menu_tag)
+                      ->orderBy('sort_order', 'ASC');
+            }])
+            ->where('is_active', 1)
+            ->where('app_id', $app_id)
+            ->where('menu_tag', $menu_tag)
+            ->where('parent_id', 0)
+            ->orderBy('sort_order', 'ASC')
             ->get();
-
-        // For each top-level menu item, fetch and attach its submenus based on user access
-        $menu->each(function ($menuItem) use ($userId) {
-            $menuItem->submenus = Menu::select('menus.*')
-                ->join('usermenus', 'menus.id', '=', 'usermenus.menu_id')
-                ->where('menus.is_active', 1)
-                ->where('menus.menu_tag', "SLIADMIN")
-                ->where('menus.parent_id', $menuItem->id)
-                ->where('usermenus.user_id', $userId)
-                ->orderBy('menus.sort_order', 'ASC')
-                ->get();
-        });
 
         return $menu;
     }
@@ -131,12 +146,12 @@ class SafeMenuController extends Controller
 
         // Create or update the menu item
         Menu::updateOrCreate(
-            ['menu_id' => $request->id],
+            ['menu_id' => $request->menu_id],
             [
                 'app_id' => $request->app_id,
                 'menu_code' => $menucode, // Use the fetched or generated menu_code
                 'menu_title' => $request->menu_title,
-                // 'description' => $request->description,
+                'menu_tag' => $request->menu_tag,
                 'parent_id' => $request->parent_id,
                 'menu_icon' => $request->menu_icon,
                 'menu_route' => $request->menu_route,
@@ -156,7 +171,7 @@ class SafeMenuController extends Controller
     public function show(string $id)
     {
         $data = Menu::find($id);
-        return view('admin.menu.show')->with(['data' => $data]);
+        return view('menu.show')->with(['data' => $data]);
     }
 
     /**

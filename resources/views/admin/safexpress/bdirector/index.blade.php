@@ -44,7 +44,7 @@
                                     <th><i class="fas fa fa-instagram"></i></th>
                                     <th><i class="fas fa fa-linkedin"></i></th>
                                     <th>Active</th>
-                                    <th>CreateAt</th>
+                                    <th>Created</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -86,7 +86,7 @@
                                                     <img src="" id="profile" alt="" alt="Profile Image" class="img-fluid"/>
                                                     <input type="file" name="image" id="image"
                                                         class="form-control" accept="image/*">
-                                                        
+
                                                 </div>
                                                 <div class="mt-2" id="avatar"></div>
                                             </div>
@@ -353,7 +353,7 @@
                     $("#saveBtn").text('Sending...');
                     var formData = $('#productForm').serialize();
                     $.ajax({
-                        url: "{{ url('/admin/bdirector') }}",
+                        url: "{{ url('/app/SLI/bdirector') }}",
                         method: 'post',
                         data: fd,
                         cache: false,
@@ -398,7 +398,7 @@
                       --------------------------------------------*/
                 $('body').on('click', '.edit', function() {
                     var id = $(this).data('id');
-                    $.get("{{ url('admin/bdirector') }}" + '/' + id + '/edit', function(data) {
+                    $.get("{{ url('/app/SLI/bdirector') }}" + '/' + id + '/edit', function(data) {
                         $('#modelHeading').html("Edit {{ $title }}");
                         $('#saveBtn').val("edit");
                         $('#saveBtn').html('<i class="fas fa-save"></i>&nbsp;Update');
@@ -550,7 +550,7 @@
                         if (result.isConfirmed) {
                             //AJAX
                             $.ajax({
-                                url: "{{ url('admin/bdirector') }}" + '/' + id,
+                                url: "{{ url('app/SLI/bdirector') }}" + '/' + id,
                                 type: 'DELETE',
                                 data: id,
                                 success: function(response) {

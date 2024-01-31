@@ -13,7 +13,6 @@ import MyVsc from './pages/myvsc/MyVsc.vue';
 import MyClosedPrio from './pages/mycloseprio/MyClosePrioList.vue';
 import UserMenu from './pages/usermenu/UserMenuList.vue';
 import Menu from './pages/menu/MenuList.vue';
-import MainLayout from './MainLayout.vue';
 import ErrorLayout from './404.vue';
 import Notifications from './pages/notification/index.vue';
 export default [
@@ -28,86 +27,86 @@ export default [
     //     component: Register,
     // },
         {
-        path: '/app/admin/dashboard',
+        path: '/app/SLIVSC/',
         name: 'Dashboard',
         component: Dashboard,
 
     },
     {
-        path: '/app/admin/appointments/create',
+        path: '/app/SLIVSC/appointments/create',
         name: 'Appointments',
         component: AppointmentForm,
     },
 
     {
-        path: '/app/admin/appointments/:id/edit',
+        path: '/app/SLIVSC/appointments/:id/edit',
         name: 'Appointments',
         component: AppointmentForm,
     },
 
     {
-        path: '/app/admin/user',
+        path: '/app/SLIVSC/user',
         name: 'User',
         component: UserList,
     },
 
     {
-        path: '/app/admin/settings',
+        path: '/app/SLIVSC/settings',
         name: 'Setting',
         component: UpdateSetting,
     },
 
     {
-        path: '/app/admin/profile',
+        path: '/app/SLIVSCSLIVSC/profile',
         name: 'Profile',
         component: UpdateProfile,
     },
 
     {
-        path: '/admin/client',
+        path: '/app/SLIVSC/client',
         name: 'Client',
         component: ClientList,
     },
 
     {
-        path: '/app/admin/tech-recommendation',
+        path: '/app/SLIVSC/tech-recommendation',
         name: 'Tech Recomm',
         component: TechList,
     },
     {
-        path: '/app/admin/weekly-task-schedule/myprio',
+        path: '/app/SLIVSC/weekly-task-schedule/myprio',
         name: 'My Prio',
         component: MyPrio,
     },
 
     {
-        path: '/app/admin/weekly-task-schedule/my-closed-prio',
+        path: '/app/SLIVSC/weekly-task-schedule/my-closed-prio',
         name: 'My Closed Prio',
         component: MyClosedPrio,
     },
     {
-        path: '/app/admin/weekly-task-schedule/myvsc',
+        path: '/app/SLIVSC/weekly-task-schedule/myvsc',
         name: 'My VSC',
         component: MyVsc,
     },
     {
-        path: '/app/admin/usermenu',
+        path: '/app/SLIVSC/usermenu',
         name: 'User Menu',
         component: UserMenu,
     },
     {
-        path: '/app/admin/menu',
+        path: '/app/SLIVSC/menu',
         name: 'Menu',
         component: Menu,
     },
     {
-        path: '/app/admin/notifications',
+        path: '/app/SLIVSC/notifications',
         name: 'Notifications',
         component: Notifications, // Replace with your actual 404 component
     },
 
     {
-        path: '/app/admin/appointments',
+        path: '/app/SLIVSC/appointments',
         name: 'Appointments',
         component: ListAppointments,
     },

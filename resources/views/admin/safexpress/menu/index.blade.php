@@ -38,6 +38,7 @@
                                         <th></th>
                                         <th>App Name</th>
                                         <th>Menu Name</th>
+                                        <th>Menu Tag</th>
                                         <th>Active</th>
                                         <th>Created Date</th>
                                         <th>Action</th>
@@ -124,7 +125,7 @@
                             searchable: false
                         },
                         {
-                            data: 'id',
+                            data: 'menu_id',
                             name: 'id',
                             searchable: true,
                             visible: false
@@ -137,6 +138,10 @@
                         {
                             data: 'menu_title',
                             name: 'menu_title'
+                        },
+                        {
+                            data: 'menu_tag',
+                            name: 'menu_tag'
                         },
                         {
                             data: 'is_active',
@@ -223,14 +228,15 @@
                       --------------------------------------------*/
                 $('body').on('click', '.edit', function() {
                     var id = $(this).data('id');
-                    $.get("{{ url('/app/SLI/menu') }}" + '/' + id + '/edit', function(data) {
+                    $.get("{{ url('app/SLI/menu') }}" + '/' + id + '/edit', function(data) {
                         $('#modelHeading').html("Edit {{ $title }}");
                         $('#saveBtn').val("edit");
                         $('#saveBtn').html('<i class="fas fa-save"></i>&nbsp;Update');
                         $('#ajaxModel').modal('show');
-                        $('#txtid').val(data[0].id);
+                        $('#txtid').val(data[0].menu_id);
                         $('#menu_code').val(data[0].menu_code);
                         $('#menu_title').val(data[0].menu_title);
+                        $('#menu_tag').val(data[0].menu_tag);
                         $('#description').val(data[0].description);
                         $('#menu_icon').val(data[0].menu_icon);
                         $('#menu_route').val(data[0].menu_route);
