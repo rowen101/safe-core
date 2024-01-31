@@ -13,7 +13,8 @@ import MyVsc from './pages/myvsc/MyVsc.vue';
 import MyClosedPrio from './pages/mycloseprio/MyClosePrioList.vue';
 import UserMenu from './pages/usermenu/UserMenuList.vue';
 import Menu from './pages/menu/MenuList.vue';
-import page404 from "./pages/404.vue";
+import MainLayout from './MainLayout.vue';
+import ErrorLayout from './404.vue';
 import Notifications from './pages/notification/index.vue';
 export default [
     {
@@ -26,18 +27,12 @@ export default [
     //     name: 'admin.register',
     //     component: Register,
     // },
-    {
+        {
         path: '/app/admin/dashboard',
         name: 'Dashboard',
         component: Dashboard,
-    },
 
-    {
-        path: '/app/admin/appointments',
-        name: 'Appointments',
-        component: ListAppointments,
     },
-
     {
         path: '/app/admin/appointments/create',
         name: 'Appointments',
@@ -105,17 +100,24 @@ export default [
         name: 'Menu',
         component: Menu,
     },
-    // Add the following 404 route at the end
-    {
-        path: '/:catchAll(.*)',
-        name: '404 Error Page',
-        component: page404, // Replace with your actual 404 component
-    },
     {
         path: '/app/admin/notifications',
         name: 'Notifications',
         component: Notifications, // Replace with your actual 404 component
     },
+
+    {
+        path: '/app/admin/appointments',
+        name: 'Appointments',
+        component: ListAppointments,
+    },
+    // Add the following 404 route at the end
+    {
+        path: '/:catchAll(.*)',
+        name: '404 Error Page',
+        component: ErrorLayout, // Replace with your actual 404 component
+    },
+
 
 
 ]
