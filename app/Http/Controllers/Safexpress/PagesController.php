@@ -11,7 +11,7 @@ use App\Models\Setting;
 use App\Models\Carousel;
 use App\Models\BDirector;
 use Illuminate\Http\Request;
-use App\Models\comimgprofile;
+use App\Models\Comimgprofile;
 use Illuminate\Support\Facades\DB;
 
 class PagesController extends Controller
@@ -61,7 +61,7 @@ class PagesController extends Controller
         ->where('org_type','board')
         ->get();
 
-        $companyprofile = comimgprofile::where('is_active',1)->get();
+        $companyprofile = Comimgprofile::where('is_active',1)->get();
 
         return view('pages.about',compact('menuItem','directors','app','companyprofile'))->with(['title'=> $title]);
     }
