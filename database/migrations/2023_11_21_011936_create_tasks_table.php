@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('taskdate');
             $table->integer('tasktype');
             $table->timestamp('plandate')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('planenddate');
+            $table->timestamp('planenddate')->default(DB::raw('CURRENT_TIMESTAMP'));;
             $table->string('project')->nullable();
             $table->timestamp('startdate')->nullable();
             $table->timestamp('enddate')->nullable();
