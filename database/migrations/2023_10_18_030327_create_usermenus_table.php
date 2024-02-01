@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('usermenus', function (Blueprint $table) {
-
+            $table->increments('id');
             $table->integer('user_id')->nullable();
             $table->integer('menu_id')->nullable();
             $table->string('flag')->nullable();

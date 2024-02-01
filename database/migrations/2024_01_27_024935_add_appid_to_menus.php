@@ -16,7 +16,7 @@ return new class extends Migration
 
         Schema::table('menus', function (Blueprint $table) {
             $table->integer('app_id')->unsigned()->after('menu_id');
-            $table->foreign('app_id')->references('id')->on('app');
+            $table->foreignId('app_id')->references('id')->on('app');
             $table->string('menu_code', 20)->default('NONE')->after('app_id');
         });
     }
