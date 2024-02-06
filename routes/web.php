@@ -65,7 +65,7 @@ Route::get('/other-services', [App\Http\Controllers\Safexpress\PagesController::
 //     return view('dashboard');
 // });
 
-Route::group(['middleware' => ['web']], function () {
+Route::middleware('auth')->group(function () {
     Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
     Route::get('/api/stats/users', [DashboardStatController::class, 'users']);
     Route::get('/api/users', [UserController::class, 'index']);
@@ -141,7 +141,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('/api/notifications', NotificationController::class);
     Route::put('/api/notifications/{id}/markAsRead',[NotificationController::class, 'markAsRead']);
 
-    Auth::routes();
+
     //Safexpress
 Route::get('/app/SLI', [App\Http\Controllers\Safexpress\AdminController::class, 'index'])->name('admin.safexpress.index');
 Route::get('/app/SLI/activity', [App\Http\Controllers\Safexpress\AdminController::class, 'activity'])->name('admin.safexpress.activity');

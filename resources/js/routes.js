@@ -16,11 +16,11 @@ import Menu from './pages/menu/MenuList.vue';
 import ErrorLayout from './404.vue';
 import Notifications from './pages/notification/index.vue';
 export default [
-    // {
-    //     path: '/login',
-    //     name: 'admin.login',
-    //     component: Login,
-    // },
+    {
+        path: '/login',
+        name: 'admin.login',
+        component: Login,
+    },
     // {
     //     path: '/register',
     //     name: 'admin.register',
