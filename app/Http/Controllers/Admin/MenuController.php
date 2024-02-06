@@ -22,18 +22,17 @@ class MenuController extends Controller
             if ($userId == 1) {
                 // If user ID is 1, show all menus
                 $menu = Menu::select('menus.*')
-                    ->where('app_id', '=', 1)
-                    ->where('is_active', 1)
-                    ->where('parent_id', 0)
-                    ->orderBy('sort_order', 'ASC')
+                    ->where('menus.is_active', 1)
+                    ->where('menus.parent_id', 0)
+                    ->orderBy('menus.sort_order', 'ASC')
                     ->get();
 
                  // For each top-level menu item, fetch and attach its submenus based on user access
                  $menu->each(function ($menuItem){
                     $menuItem->submenus = Menu::select('menus.*')
-                        ->where('is_active', 1)
-                        ->where('parent_id', $menuItem->menu_id)
-                        ->orderBy('sort_order', 'ASC')
+                        ->where('menus.is_active', 1)
+                        ->where('menus.parent_id', $menuItem->menu_id)
+                        ->orderBy('menus.sort_order', 'ASC')
                         ->get();
                 });
 
@@ -41,7 +40,6 @@ class MenuController extends Controller
                 // If user ID is not 1, show menus based on user access
                 $menu = Menu::select('menus.*')
                     ->join('usermenus', 'menus.menu_id', '=', 'usermenus.menu_id')
-                    ->where('app_id', '=', 1)
                     ->where('menus.is_active', 1)
                     ->where('menus.parent_id', 0)
                     ->where('usermenus.user_id', $userId)
