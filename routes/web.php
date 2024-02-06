@@ -45,9 +45,6 @@ use App\Http\Controllers\Safexpress\SafeApplicationController;
 // Route::get('/', function () {
 //     return view('safexpress.layouts.app');
 // });
-Route::get('/app', [App\Http\Controllers\AppController::class, 'index'])->name('app');
-
-
 Route::get('/', [App\Http\Controllers\Safexpress\PagesController::class, 'index'])->name('pages.index');
 Route::get('/about', [App\Http\Controllers\Safexpress\PagesController::class, 'about'])->name('about');
 Route::get('/services', [App\Http\Controllers\Safexpress\PagesController::class, 'services'])->name('services');
@@ -60,12 +57,17 @@ Route::get('/blog-details/{id}', [App\Http\Controllers\Safexpress\PagesControlle
 Route::get('/warehouse-management', [App\Http\Controllers\Safexpress\PagesController::class, 'warehouse']);
 Route::get('/transport-services', [App\Http\Controllers\Safexpress\PagesController::class, 'transport']);
 Route::get('/other-services', [App\Http\Controllers\Safexpress\PagesController::class, 'other']);
+Route::middleware('auth')->group(function () {
+Route::get('/app', [App\Http\Controllers\AppController::class, 'index'])->name('app');
+
+
+
 
 // Route::get('/admin/dashboard', function () {
 //     return view('dashboard');
 // });
 
-Route::middleware('auth')->group(function () {
+
     Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
     Route::get('/api/stats/users', [DashboardStatController::class, 'users']);
     Route::get('/api/users', [UserController::class, 'index']);
