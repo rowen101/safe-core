@@ -22,7 +22,7 @@ const handleSubmit = () => {
 
      // Get the CSRF token from the meta tag in your HTML
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
+    
     axios
         .post("/login", form,{
                headers: {
