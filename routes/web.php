@@ -141,7 +141,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('/api/notifications', NotificationController::class);
     Route::put('/api/notifications/{id}/markAsRead',[NotificationController::class, 'markAsRead']);
 
-
+    Auth::routes();
     //Safexpress
 Route::get('/app/SLI', [App\Http\Controllers\Safexpress\AdminController::class, 'index'])->name('admin.safexpress.index');
 Route::get('/app/SLI/activity', [App\Http\Controllers\Safexpress\AdminController::class, 'activity'])->name('admin.safexpress.activity');
