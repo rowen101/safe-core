@@ -65,7 +65,7 @@ Route::get('/other-services', [App\Http\Controllers\Safexpress\PagesController::
 //     return view('dashboard');
 // });
 
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => ['web']], function () {
     Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
     Route::get('/api/stats/users', [DashboardStatController::class, 'users']);
     Route::get('/api/users', [UserController::class, 'index']);
