@@ -1,56 +1,36 @@
-#### Configuration (Optional)
+# Multipurpose Laravel and Vue 3 Application
 
-```bash
-composer require yajra/laravel-datatables-oracle:"^10.0"
-```
+This is a part of YouTube tutorial series on building application using Laravel and Vue 3.
+Here is the YouTube playlist link: https://www.youtube.com/watch?v=IoPOi-Xp_Ng&list=PLGg3vnFos8GN3MAvxbI-QXKSkBKi2yIFO
+## Topics Covered
 
-#### Service Provider & Facade (Optional on Laravel 5.5+)
-
-Register provider and facade on your `config/app.php` file.
-```php
-'providers' => [
-    ...,
-    Yajra\DataTables\DataTablesServiceProvider::class,
-]
-
-'aliases' => [
-    ...,
-    'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-]
-```
-
-```bash
-php artisan vendor:publish --provider="Yajra\DataTables\DataTablesServiceProvider"
-```
-
-And that's it! Start building out some awesome DataTables!
-
-
-## Breadcrumbs
-```bash
-composer require diglactic/laravel-breadcrumbs
-```
-## Intervention image
-```bash
-composer require intervention/image
-```
-
-## Debugging Mode
-
-To enable debugging mode, just set `APP_DEBUG=true` and the package will include the queries and inputs used when processing the table.
-
-**IMPORTANT:** Please make sure that APP_DEBUG is set to false when your app is on production.
-
-## PHP ARTISAN SERVE BUG
-
-Please avoid using `php artisan serve` when developing with the package.
-There are known bugs when using this where Laravel randomly returns a redirect and 401 (Unauthorized) if the route requires authentication and a 404 NotFoundHttpException on valid routes.
-
-It is advised to use [Homestead](https://laravel.com/docs/5.4/homestead) or [Valet](https://laravel.com/docs/5.4/valet) when working with the package.
-
-## Contributing
-
-Please see [CONTRIBUTING](https://github.com/yajra/laravel-datatables/blob/master/.github/CONTRIBUTING.md) for details.
+* How to filter results using Laravel and Vue 3
+* How to add search functionality with Laravel and Vue 3
+* How to use SweetAlert with Laravel and Vue 3
+* How to install AdminLTE 3 with Laravel
+* How to use toast notification using Laravel and Vue 3
+* How to use bootstrap confirmation modal using Laravel and Vue 3
+* How to use bootstrap modal for editing data using Laravel and Vue 3
+* How to use date picker, time picker & text-area input with laravel and Vue 3
+* How to use Vue 3 components for re-usability
+* How to use Laravel fortify for authentication
+* How to use Vue 3 events
+* How to use toast notification with Laravel and Vue 3
+* How to use bootstrap modal for deleting data using Laravel and Vue 3
+* How to display alert window before deleting data using Laravel and Vue 3
+* How to use pagination in Laravel and Vue 3
+* How to use bootstrap for pagination in Laravel and Vue 3
+* How to use flatpickr datepicker using Laravel and Vue 3
+* How to use flatpickr timepicker using Laravel and Vue 3
+* How to use datepicker and timepicker with Laravel and Vue 3
+* How to perform bulk delete using Laravel and Vue 3
+* How to use vue-router using Laravel and Vue 3
+* How to use axios using Laravel and Vue 3
+* How to use vee-validate for frontend validation using Vue 3
+* How to use moment js for formatting date using Vue 3
+* How to use laravel-vue-pagination library with Vue 3 and Laravel
+* How to use Laravel Macros
+* And more...
 
 
 ## Installation

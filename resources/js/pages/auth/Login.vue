@@ -20,15 +20,7 @@ const handleSubmit = () => {
     loading.value = true;
     errorMessage.value = "";
 
-     // Get the CSRF token from the meta tag in your HTML
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-    
-    axios
-        .post("/login", form,{
-               headers: {
-                'X-CSRF-TOKEN': csrfToken,
-            },
-        })
+       axios.post('/login', form)
         .then(() => {
             // router.push('/admin/dashboard');
             window.location.href = "/app";
