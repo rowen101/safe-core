@@ -51,7 +51,8 @@ class UserController extends Controller
         ThemeVsc::create([
             'userid' => $user->id,
             'background' => '#B98D65',
-            'active_background' => '#72461F'
+            'active_background' => '#72461F',
+            'font_background' => '#F8F9FA'
 
         ]);
 
@@ -88,8 +89,13 @@ class UserController extends Controller
     public function destory(User $user)
     {
         $user->delete();
-
         return response()->noContent();
+
+        ThemeVsc::where([
+            'userid' => $user->id,
+        ])->delete();
+
+            return response()->noContent();
     }
 
     public function changesitehead(User $user)
