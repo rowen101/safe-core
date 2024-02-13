@@ -7,7 +7,7 @@ use App\Models\Comimgprofile;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class CommingSeeder extends Seeder
+class ComimgProfileSeeder extends Seeder
 {
     /**
      * Run the database seeds.

@@ -15,6 +15,8 @@ import UserMenu from './pages/usermenu/UserMenuList.vue';
 import Menu from './pages/menu/MenuList.vue';
 import ErrorLayout from './404.vue';
 import Notifications from './pages/notification/index.vue';
+
+
 export default [
     {
         path: '/login',
@@ -57,7 +59,7 @@ export default [
     },
 
     {
-        path: '/app/SLIVSCSLIVSC/profile',
+        path: '/app/SLIVSC/profile',
         name: 'Profile',
         component: UpdateProfile,
     },
@@ -110,13 +112,26 @@ export default [
         name: 'Appointments',
         component: ListAppointments,
     },
-    // Add the following 404 route at the end
+
     {
-        path: '/:catchAll(.*)',
-        name: '404 Error Page',
-        component: ErrorLayout, // Replace with your actual 404 component
+        path: '/app/SLI',
+        name: 'Appointments',
+        component: Dashboard,
     },
 
 
+  //////////////////////////////////////////////
+  //
+  //    admin routes
+  //
+  //////////////////////////////////////////////
+
+
+   // Add the following 404 route at the end
+   {
+    path: '/:catchAll(.*)',
+    name: '404 Error Page',
+    component: ErrorLayout, // Replace with your actual 404 component
+},
 
 ]

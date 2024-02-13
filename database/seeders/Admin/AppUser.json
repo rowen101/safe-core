@@ -1,33 +1,17 @@
 [
     {
         "id": 1,
-        "": "SLIVSC",
-        "app_name": "SLIVSC",
-        "description": "SLI Visual Staff Scheduler",
-        "app_icon": "default",
+        "user_id": 1,
+        "app_id": 1,
         "is_active": 1,
-        "status_message": "Welcome",
-        "site_email": null,
-        "site_phone": "09276459970",
-        "site_address": "Unit E, Vag Bldg, Brgy. Patubig, Marilao, Bulacan",
-        "created_by": 1,
-        "updated_by": null,
         "created_at": null,
         "updated_at": null
     },
     {
         "id": 2,
-        "app_code": "SLI",
-        "app_name": "Safexpress Logistics Inc.",
-        "description": "Logistics Company",
-        "app_icon": "default",
+        "user_id": 1,
+        "app_id": 2,
         "is_active": 1,
-        "status_message": "Welcome",
-        "site_email": null,
-        "site_phone": "09276459970",
-        "site_address": "Unit E, Vag Bldg, Brgy. Patubig, Marilao, Bulacan",
-        "created_by": 1,
-        "updated_by": null,
         "created_at": null,
         "updated_at": null
     }
