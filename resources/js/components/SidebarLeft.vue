@@ -34,7 +34,16 @@ const logout = () => {
 };
 
 onMounted(() => {
-    // $('[data-widget="treeview"]').Treeview("init");
+    //$('[data-widget="treeview"]').Treeview("init");
+
+     const $treeview = $('[data-widget="treeview"]');
+    $treeview.Treeview("init");
+
+    // Handle click event for Treeview toggle
+    $treeview.on('click', '.treeview-menu', function(e) {
+        e.stopPropagation(); // Prevent the click event from bubbling up
+        $(this).slideToggle();
+    });
     getmenu();
 });
 </script>

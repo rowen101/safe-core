@@ -18,7 +18,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div id="app"></div>
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', () => {
             const toggleMenuIcon = document.getElementById('toggleMenuIcon');
             const body = document.querySelector('body');
@@ -35,7 +35,7 @@
                 body.classList.add('sidebar-collapse');
             }
         });
-    </script>
+    </script> --}}
 
 
 
