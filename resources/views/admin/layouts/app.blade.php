@@ -18,26 +18,24 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div id="app"></div>
-    {{-- <script>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const toggleMenuIcon = document.getElementById('toggleMenuIcon');
-
             const body = document.querySelector('body');
 
             toggleMenuIcon.addEventListener('click', () => {
-                if (body.classList.contains('sidebar-collapse')) {
-                    localStorage.setItem('sidebarState', 'expanded');
-                } else {
-                    localStorage.setItem('sidebarState', 'collapsed');
-                }
+                body.classList.toggle('sidebar-collapse'); // Toggle the sidebar state class
+                const sidebarState = body.classList.contains('sidebar-collapse') ? 'collapsed' : 'expanded';
+                localStorage.setItem('sidebarState', sidebarState); // Store the sidebar state in local storage
             });
 
+            // Check if there's a stored sidebar state and apply it
             const sidebarState = localStorage.getItem('sidebarState');
             if (sidebarState === 'collapsed') {
                 body.classList.add('sidebar-collapse');
             }
         });
-    </script> --}}
+    </script>
 
 
 
