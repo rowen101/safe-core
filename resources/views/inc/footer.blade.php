@@ -78,7 +78,7 @@
 <script src="{{ asset("js/lightbox-plus-jquery.min.js") }}"></script>
 <!-- Template Main JS File -->
 <script src="{{ asset('js/main.js')}}"></script>
-@vite('resources/js/app.js')
+{{-- @vite('resources/js/app.js') --}}
 
 
 <script>

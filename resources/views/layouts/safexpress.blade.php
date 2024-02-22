@@ -36,9 +36,9 @@
     <link href="{{ asset('vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/remixicon/remixicon.css') }}" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    {{-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous">
-    </script>
+    </script> --}}
     <!-- Template Main CSS File -->
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
     <style>
