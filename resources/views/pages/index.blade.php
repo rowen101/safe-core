@@ -460,7 +460,7 @@
 
     <!-- Template Main JS File -->
     <script src="{{ asset('js/main-home.js') }}"></script>
-    @vite('resources/js/app.js')
+    {{-- @vite('resources/js/app.js') --}}
     <script>
         var x, i, j, l, ll, selElmnt, a, b, c;
         /*look for any elements with the class "custom-select":*/
