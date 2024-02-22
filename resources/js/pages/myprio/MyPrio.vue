@@ -14,8 +14,6 @@ import "flatpickr/dist/themes/light.css";
 import moment from "moment";
 import { inject } from "vue";
 import { ContentLoader } from "vue-content-loader";
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
 import Datepicker from "vue3-datepicker";
 const isloading = ref(false);
 const isloadingTask = ref(false);
