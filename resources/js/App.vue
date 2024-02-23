@@ -2,8 +2,9 @@
 
 <template>
   <div>
-    <MainLayout v-if="!is404" />
-    <ErrorLayout v-else />
+    <MainLayout/>
+    <!-- <MainLayout v-if="!is404" />
+    <ErrorLayout v-else /> -->
   </div>
 </template>
 

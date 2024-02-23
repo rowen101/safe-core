@@ -4,11 +4,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SLIVSC</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="16x16" href="http://safexpress.com.ph/favicon.ico">
      <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -21,15 +20,17 @@
     {{-- <script>
         document.addEventListener('DOMContentLoaded', () => {
             const toggleMenuIcon = document.getElementById('toggleMenuIcon');
+
             const body = document.querySelector('body');
 
             toggleMenuIcon.addEventListener('click', () => {
-                body.classList.toggle('sidebar-collapse'); // Toggle the sidebar state class
-                const sidebarState = body.classList.contains('sidebar-collapse') ? 'collapsed' : 'expanded';
-                localStorage.setItem('sidebarState', sidebarState); // Store the sidebar state in local storage
+                if (body.classList.contains('sidebar-collapse')) {
+                    localStorage.setItem('sidebarState', 'expanded');
+                } else {
+                    localStorage.setItem('sidebarState', 'collapsed');
+                }
             });
 
-            // Check if there's a stored sidebar state and apply it
             const sidebarState = localStorage.getItem('sidebarState');
             if (sidebarState === 'collapsed') {
                 body.classList.add('sidebar-collapse');

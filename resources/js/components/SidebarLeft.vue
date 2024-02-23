@@ -34,7 +34,7 @@ const logout = () => {
 };
 
 onMounted(() => {
-   $('[data-widget="treeview"]').Treeview("init");
+ $('[data-widget="treeview"]').Treeview("init");
 
     //  const $treeview = $('[data-widget="treeview"]');
     // $treeview.Treeview("init");
