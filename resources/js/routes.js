@@ -29,95 +29,91 @@ export default [
     //     component: Register,
     // },
         {
-        path: '/app/SLIVSC/',
+        path: '/sli/dashboard/',
         name: 'Dashboard',
         component: Dashboard,
 
     },
     {
-        path: '/app/SLIVSC/appointments/create',
+        path: '/sli/appointments/create',
         name: 'Appointments',
         component: AppointmentForm,
     },
 
     {
-        path: '/app/SLIVSC/appointments/:id/edit',
+        path: '/sli/appointments/:id/edit',
         name: 'Appointments',
         component: AppointmentForm,
     },
 
     {
-        path: '/app/SLIVSC/user',
+        path: '/sli/user',
         name: 'User',
         component: UserList,
     },
 
     {
-        path: '/app/SLIVSC/settings',
+        path: '/sli/settings',
         name: 'Setting',
         component: UpdateSetting,
     },
 
     {
-        path: '/app/SLIVSC/profile',
+        path: '/sli/profile',
         name: 'Profile',
         component: UpdateProfile,
     },
 
     {
-        path: '/app/SLIVSC/client',
+        path: '/sli/client',
         name: 'Client',
         component: ClientList,
     },
 
     {
-        path: '/app/SLIVSC/tech-recommendation',
+        path: '/sli/tech-recommendation',
         name: 'Tech Recomm',
         component: TechList,
     },
     {
-        path: '/app/SLIVSC/weekly-task-schedule/myprio',
+        path: '/sli/weekly-task-schedule/myprio',
         name: 'My Prio',
         component: MyPrio,
     },
 
     {
-        path: '/app/SLIVSC/weekly-task-schedule/my-closed-prio',
+        path: '/sli/weekly-task-schedule/my-closed-prio',
         name: 'My Closed Prio',
         component: MyClosedPrio,
     },
     {
-        path: '/app/SLIVSC/weekly-task-schedule/myvsc',
+        path: '/sli/weekly-task-schedule/myvsc',
         name: 'My VSC',
         component: MyVsc,
     },
     {
-        path: '/app/SLIVSC/usermenu',
+        path: '/sli/usermenu',
         name: 'User Menu',
         component: UserMenu,
     },
     {
-        path: '/app/SLIVSC/menu',
+        path: '/sli/menu',
         name: 'Menu',
         component: Menu,
     },
     {
-        path: '/app/SLIVSC/notifications',
+        path: '/sli/notifications',
         name: 'Notifications',
         component: Notifications, // Replace with your actual 404 component
     },
 
     {
-        path: '/app/SLIVSC/appointments',
+        path: '/sli/appointments',
         name: 'Appointments',
         component: ListAppointments,
     },
 
-    {
-        path: '/app/SLI',
-        name: 'Appointments',
-        component: Dashboard,
-    },
+ 
 
 
   //////////////////////////////////////////////

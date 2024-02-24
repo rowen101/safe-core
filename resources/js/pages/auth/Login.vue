@@ -22,8 +22,8 @@ const handleSubmit = () => {
 
        axios.post('/login', form)
         .then(() => {
-            // router.push('/admin/dashboard');
-            window.location.href = "/app";
+            router.push('/sli/dashboard');
+
             //toastr.success("Login Success");
         })
         .catch((error) => {
