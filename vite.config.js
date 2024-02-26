@@ -4,8 +4,10 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     server: {
-        // Disable WebSocket server
-        webSocketServer: false,
+        hmr: {
+            host: "localhost",
+            protocol: "ws",
+        },
     },
     define: {
         // enable hydration mismatch details in production build

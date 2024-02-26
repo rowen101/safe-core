@@ -59,7 +59,7 @@ Route::get('/transport-services', [App\Http\Controllers\Safexpress\PagesControll
 Route::get('/other-services', [App\Http\Controllers\Safexpress\PagesController::class, 'other']);
 
 Route::middleware('auth')->group(function () {
-    // Route::get('/app', [App\Http\Controllers\AppController::class, 'index'])->name('app');
+    Route::get('/app', [App\Http\Controllers\AppController::class, 'index'])->name('app');
 
 
 
