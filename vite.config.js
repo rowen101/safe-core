@@ -5,8 +5,7 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
     server: {
         hmr: {
-            protocol: 'ws',
-            port: 3000
+            port: 443
         },
     },
     define: {
