@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     server: {
-        host: "0.0.0.0",
+        host: '127.0.0.1',
         port: 3000,
         strictPort: true,
         hmr: {
@@ -35,5 +35,6 @@ export default defineConfig({
     ],
     build: {
         chunkSizeWarningLimit: 1600,
+        rollupOptions: {}
       },
 });
