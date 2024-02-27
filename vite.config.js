@@ -4,12 +4,7 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     server: {
-        host: '127.0.0.1',
-        port: 3000,
-        strictPort: true,
-        hmr: {
-            port: 443,
-        },
+        port: 443 // Specify the port here
     },
     define: {
         // enable hydration mismatch details in production build
