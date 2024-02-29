@@ -6,7 +6,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SLIVSC</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    <link rel="stylesheet" href="https://safexpress.com.ph/resources/css/app.css" />
+    <script type="module" src="https://safexpress.com.ph/resources/js/app.js"></script>
     {{-- <link rel="icon" type="image/png" sizes="16x16" href="http://safexpress.com.ph/favicon.ico"> --}}
      <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
