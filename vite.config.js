@@ -3,7 +3,11 @@ import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-    base: 'https://safexpress.com.ph/',
+    server: {
+        hmr: {
+            host: 'localhost',
+        },
+    },
     define: {
         // enable hydration mismatch details in production build
         __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true'
