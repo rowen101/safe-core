@@ -15,7 +15,8 @@ import UserMenu from './pages/usermenu/UserMenuList.vue';
 import Menu from './pages/menu/MenuList.vue';
 import ErrorLayout from './404.vue';
 import Notifications from './pages/notification/index.vue';
-
+import page404 from "./404.vue";
+import TechRecomApprove from "./pages/techrecomm/TechRecommApprove.vue";
 
 export default [
     {
@@ -132,6 +133,11 @@ export default [
     path: '/:catchAll(.*)',
     name: '404 Error Page',
     component: ErrorLayout, // Replace with your actual 404 component
+},
+{
+    path: '/app/SLIVSC/tech-approved/:id/view',
+    name: 'Tech-Approved',
+    component: TechRecomApprove, // Replace with your actual 404 component
 },
 
 ]

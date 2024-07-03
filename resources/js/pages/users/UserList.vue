@@ -271,8 +271,9 @@ onMounted(() => {
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Registered Date</th>
-                                        <th>Site Head</th>
-                                        <th>Options</th>
+                                        <th>Role</th>
+                                        <th>Head</th>
+                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="users.data.length > 0">
@@ -338,6 +339,7 @@ onMounted(() => {
                                         >
                                             <option
                                                 v-for="item in listofuser"
+                                                :key="item.id"
                                                 :value="item.id"
                                                 :selected="
                                                     item.sitehead_user_id ===
@@ -458,7 +460,7 @@ onMounted(() => {
                                 :class="{ 'is-invalid': errors.name }"
                                 id="name"
                                 aria-describedby="nameHelp"
-                                placeholder="Enter full username"
+                                placeholder="Enter Username"
                             />
                             <span class="invalid-feedback">{{
                                 errors.name
@@ -475,7 +477,7 @@ onMounted(() => {
                                         :class="{ 'is-invalid': errors.email }"
                                         id="email"
                                         aria-describedby="nameHelp"
-                                        placeholder="Enter full name"
+                                        placeholder="Enter Email"
                                     />
                                     <span class="invalid-feedback">{{
                                         errors.email
@@ -503,7 +505,7 @@ onMounted(() => {
                                             {{ item.name }}
                                         </option>
                                     </Field>
-                                 
+
                                 </div>
                             </div>
                         </div>

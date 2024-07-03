@@ -4,7 +4,7 @@ import { ref } from "vue";
 import { useToastr } from "../../toastr.js";
 import axios from "axios";
 import { useAuthUserStore } from "../../stores/AuthUserStore";
-import DOMPurify from 'dompurify';
+
 const toastr = useToastr();
 const authUserStore = useAuthUserStore();
 const props = defineProps({
@@ -19,20 +19,17 @@ const toggleSelection = () => {
     emit("toggleSelection", props.item);
 };
 
-const getStatusHtml = (status) => {
-    if (status.name === 'APPROVED') {
-        // Sanitize and return the HTML
-        return DOMPurify.sanitize('<a   href="" target="_blank"><i class="fas fa-download" ></i></a>');
-      } else {
-        // Otherwise, return the status name
-        return status.name;
-      }
-}
+
 </script>
 <template>
     <tr>
         <!-- <td><input type="checkbox" :checked="selectAll" @change="toggleSelection" /></td> -->
-        <td><span v-if="item.statusid == 2" class="badge badge-success">Download </span></td>
+        <td>
+            <!-- <span v-if="item.statusid == 2" class="badge badge-success">Download </span> -->
+ <router-link :to="`/admin/tech-approved/${item.recommnum}/view`" target="_blank">
+        <span v-if="item.statusid == 2" class="badge badge-success">Download</span>
+    </router-link>
+        </td>
         <td>{{ item.recommnum }}</td>
         <td>{{ item.user }}</td>
         <td>{{ item.branch }}</td>

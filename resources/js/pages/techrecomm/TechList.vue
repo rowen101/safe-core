@@ -11,7 +11,7 @@ import { useAuthUserStore } from "../../stores/AuthUserStore";
 import { ContentLoader } from "vue-content-loader";
 
 const statusid = ref();
-
+const listsite = ref();
 const toastr = useToastr();
 const lists = ref({ data: [] });
 const tecstatus = ref([
@@ -28,11 +28,36 @@ const tecstatus = ref([
         value: 3,
     },
 ]);
-
+const getSite = () => {
+    axios
+        .get(`/api/getsite`)
+        .then((response) => {
+            listsite.value = response.data.sites;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
 const isloading = ref(false);
 const editing = ref(false);
 const formValues = ref();
-const form = ref(null);
+
+const form = reactive({
+    id: '',
+    recommnum: '',
+    branch: '',
+    department: '',
+    warehouse: '',
+    user: '',
+    problem: '',
+    brand: '',
+    model: '',
+    assettag: '',
+    serialnum: '',
+    assconducted: '',
+    recommendation: '',
+    ceated_by: '',
+});
 const authUserStore = useAuthUserStore();
 const selectedStatus = ref(null);
 const getItems = (page = 1) => {
@@ -87,31 +112,47 @@ const createData = (values, { resetForm, setErrors }) => {
 
 const addUser = () => {
     editing.value = false;
+
     $("#FormModal").modal("show");
 };
+const resetForm = () => {
+    form.id = "";
+    form.recommnum = "";
+    form.branch = "";
+    form.department = "";
+    form.warehouse = "";
+    form.user = "";
+    form.problem = "";
+    form.brand = "";
+    form.model = "";
+    form.assettag = "";
+    form.serialnum = "";
+    form.assconducted = "";
+    form.recommendation = "";
+    form.ceated_by = "";
+}
+const editData = ( item ) => {
 
-const editData = (item) => {
-    statusid.value = item.id;
+    statusid.value = item;
     editing.value = true;
-    form.value.resetForm();
-    $("#FormModal").modal("show");
-    formValues.value = {
-        id: item.id,
-        recommnum: item.recommnum,
-        company: item.company,
-        branch: item.branch,
-        department: item.department,
-        warehouse: item.warehouse,
-        user: item.user,
-        problem: item.problem,
-        brand: item.brand,
-        model: item.model,
-        assettag: item.assettag,
-        serialnum: item.serialnum,
-        assconducted: item.assconducted,
-        recommendation: item.recommendation,
-        ceated_by: item.created_by,
-    };
+
+       resetForm();
+        form.id = item.id,
+        form.branch= item.branch,
+        form.department=item.department,
+        form.warehouse= item.warehouse,
+        form.user= item.user,
+        form.problem= item.problem,
+        form.brand= item.brand,
+        form.model= item.model,
+        form.assettag= item.assettag,
+        form.serialnum= item.serialnum,
+        form.assconducted= item.assconducted,
+        form.recommendation= item.recommendation,
+        form.ceated_by= item.ceated_by
+
+ $("#FormModal").modal("show");
+
 };
 
 const viewItem = (item) => {
@@ -121,15 +162,13 @@ const viewItem = (item) => {
     $("#FormModalView").modal("show");
     formValues.value = {
         id: item.id,
-        recommnum: item.recommnum,
-        company: item.company,
         branch: item.branch,
+        brand: item.brand,
         department: item.department,
         warehouse: item.warehouse,
         user: item.user,
         status: item.status.name,
         problem: item.problem,
-        brand: item.brand,
         model: item.model,
         assettag: item.assettag,
         serialnum: item.serialnum,
@@ -253,6 +292,7 @@ watch(
 
 onMounted(() => {
     getItems();
+    getSite();
 });
 </script>
 
@@ -507,7 +547,7 @@ onMounted(() => {
                     </button>
                 </div>
                 <Form
-                    ref="form"
+
                     @submit="handleSubmit"
                     :validation-schema="
                         editing ? editUserSchema : createUserSchema
@@ -525,23 +565,40 @@ onMounted(() => {
                                         id="created_by"
                                         v-model="authUserStore.user.id"
                                     />
+
+
                                     <div class="form-group">
-                                        <label for="user">Branch</label>
+                                        <label for="branch">Branch</label>
                                         <Field
+                                            as="select"
                                             name="branch"
-                                            type="text"
                                             class="form-control"
                                             :class="{
                                                 'is-invalid': errors.branch,
                                             }"
                                             id="branch"
-                                            aria-describedby="nameHelp"
-                                            placeholder="Enter branch"
-                                        />
+                                            aria-describedby="branchHelp"
+                                            v-model="form.branch"
+                                        >
+                                            <option value="" disabled>
+                                                Select Branch
+                                            </option>
+                                            <!-- Default empty option -->
+                                            <!-- Populate options from listsite -->
+                                            <option
+                                                v-for="site in listsite"
+                                                :key="site.site_name"
+                                                :value="site.site_name"
+                                            >
+                                                {{ site.site_name }}
+                                            </option>
+                                        </Field>
                                         <span class="invalid-feedback">{{
                                             errors.branch
                                         }}</span>
                                     </div>
+
+
 
                                     <div class="form-group">
                                         <label for="department"
@@ -557,6 +614,7 @@ onMounted(() => {
                                             id="department"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Department"
+                                            v-model="form.department"
                                         />
                                         <span class="invalid-feedback">{{
                                             errors.department
@@ -575,6 +633,7 @@ onMounted(() => {
                                             id="email"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Warehouse"
+                                            v-model="form.warehouse"
                                         />
                                         <span class="invalid-feedback">{{
                                             errors.warehouse
@@ -592,6 +651,7 @@ onMounted(() => {
                                             id="user"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter User"
+                                            v-model="form.user"
                                         />
                                         <span class="invalid-feedback">{{
                                             errors.user
@@ -608,6 +668,7 @@ onMounted(() => {
                                             id="brand"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter brand"
+                                            v-model="form.brand"
                                         />
                                     </div>
                                     <div class="form-group">
@@ -620,6 +681,7 @@ onMounted(() => {
                                                 'is-invalid': errors.model,
                                             }"
                                             id="model"
+                                            v-model="form.model"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Model"
                                         />
@@ -637,6 +699,7 @@ onMounted(() => {
                                                 'is-invalid': errors.assettag,
                                             }"
                                             id="assettag"
+                                            v-model="form.assettag"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Asset Tag"
                                         />
@@ -648,7 +711,7 @@ onMounted(() => {
                                         <label for="serialnum"
                                             >Serial number</label
                                         >
-                                        <Field
+                                        <input
                                             name="serialnum"
                                             type="text"
                                             class="form-control"
@@ -658,6 +721,7 @@ onMounted(() => {
                                             id="serialnum"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Serial Number"
+                                            v-model="form.serialnum"
                                         />
                                         <span class="invalid-feedback">{{
                                             errors.serialnum
@@ -679,6 +743,7 @@ onMounted(() => {
                                             id="problem"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Report problem"
+                                            v-model="form.problem"
                                         />
                                         <span class="invalid-feedback">{{
                                             errors.problem
@@ -699,6 +764,7 @@ onMounted(() => {
                                             id="assconducted"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Assessment conducted"
+                                            v-model="form.assconducted"
                                         />
                                         <span class="invalid-feedback">{{
                                             errors.assconducted
@@ -719,6 +785,7 @@ onMounted(() => {
                                             id="recommendation"
                                             aria-describedby="nameHelp"
                                             placeholder="Enter Recommendation"
+                                            v-model="form.recommendation"
                                         />
                                         <span class="invalid-feedback">{{
                                             errors.recommendation

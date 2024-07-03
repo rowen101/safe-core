@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -51,7 +50,7 @@
               </div>
             </div>
             @endforeach
-        
+
 
             <!-- Iterate over data and generate cards dynamically -->
             <!-- Replace this with your foreach loop -->
